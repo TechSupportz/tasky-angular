@@ -4,12 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PrimengModule } from '../primeng.module';
-
-
+import { LoginScreenComponent } from './screens/login-screen/login.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { HomeScreenComponent } from './screens/home-screen/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { CategoryScreenComponent } from './screens/category-screen/category-screen.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, PrimengModule],
+  declarations: [AppComponent, LoginScreenComponent, HomeScreenComponent, NavbarComponent, CategoryScreenComponent],
+  imports: [BrowserModule, AppRoutingModule, FlexLayoutModule, PrimengModule],
   providers: [],
   bootstrap: [AppComponent],
 })
