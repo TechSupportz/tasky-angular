@@ -9,9 +9,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeScreenComponent } from './screens/home-screen/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CategoryScreenComponent } from './screens/category-screen/category-screen.component';
+import { GroupCategoryComponent } from './screens/group-category/group-category.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginScreenComponent, HomeScreenComponent, NavbarComponent, CategoryScreenComponent],
+  declarations: [AppComponent, LoginScreenComponent, HomeScreenComponent, NavbarComponent, CategoryScreenComponent, GroupCategoryComponent],
   imports: [BrowserModule, AppRoutingModule, FlexLayoutModule, PrimengModule],
   providers: [],
   bootstrap: [AppComponent],

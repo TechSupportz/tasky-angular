@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeScreenComponent } from './home.component';
+import { GroupCategoryComponent } from './group-category.component';
 
-describe('HomeComponent', () => {
-  let component: HomeScreenComponent;
-  let fixture: ComponentFixture<HomeScreenComponent>;
+describe('GroupCategoryComponent', () => {
+  let component: GroupCategoryComponent;
+  let fixture: ComponentFixture<GroupCategoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeScreenComponent ]
+      declarations: [ GroupCategoryComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomeScreenComponent);
+    fixture = TestBed.createComponent(GroupCategoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

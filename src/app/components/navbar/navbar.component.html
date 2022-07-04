@@ -3,24 +3,10 @@
   <p-divider></p-divider>
   <div class="flex flex-column gap-3 h-full">
     <p-button
+      *ngFor="let category of categoryList"
       icon="pi pi-book"
       styleClass="p-button-rounded"
-      routerLink="/category/one"
-    ></p-button>
-    <p-button
-      icon="pi pi-book"
-      styleClass="p-button-rounded"
-      routerLink="/category/two"
-    ></p-button>
-    <p-button
-      icon="pi pi-book"
-      styleClass="p-button-rounded"
-      routerLink="/category/three"
-    ></p-button>
-    <p-button
-      icon="pi pi-book"
-      styleClass="p-button-rounded"
-      routerLink="/category/four"
+      routerLink="/category/{{ category.id }}"
     ></p-button>
   </div>
   <p-button

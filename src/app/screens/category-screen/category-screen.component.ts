@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CategoryService } from 'src/app/services/category.service';
+import { Category } from 'src/app/types/category';
 
 @Component({
   selector: 'app-category-screen',
@@ -8,14 +10,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./category-screen.component.css'],
 })
 export class CategoryScreenComponent implements OnInit {
-  categoryName: any;
+  categoryId: any;
+  category?: Category;
   private routeSubscription!: Subscription;
-  constructor(private route: ActivatedRoute) {}
+
+  constructor(
+    private route: ActivatedRoute,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params) => {
       console.log(params);
-      this.categoryName = params['categoryName'];
+      this.categoryId = params['id'];
+      this.category = this.categoryService.getCategoryById(this.categoryId);
     });
   }
 
