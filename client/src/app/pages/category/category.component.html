@@ -1,15 +1,56 @@
 <div class="grid min-h-full max-w-full gap-3 p-5">
-  <div class="col-8 shadow-4 border-round-lg py-3 px-4">
-    <p class="text-4xl font-semibold mb-5">{{ category?.categoryName }}</p>
-    <p class="text-2xl font-medium">Upcoming Tasks</p>
-  </div>
-  <div class="grid col-4 gap-4">
-    <div class="col-12 shadow-4 border-round-lg py-3 px-4">
-      <p class="text-4xl font-semibold mb-5">Calendar</p>
-    </div>
+	<div class="col-8 shadow-4 border-round-lg py-3 px-4">
+		<p class="text-4xl font-semibold mb-5">{{ category?.categoryName }}</p>
+		<p class="text-2xl font-medium">Upcoming Tasks</p>
+	</div>
+	<div class="grid col-4 gap-4">
+		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
+			<p class="text-4xl font-semibold mb-5">Calendar</p>
+		</div>
 
-    <div class="col-12 shadow-4 border-round-lg py-3 px-4">
-      <p class="text-4xl font-semibold mb-5">Settings</p>
-    </div>
-  </div>
+		<div class="w-full">
+			<div (click)="showSettingsDialog()">
+        <div
+          class="flex justify-content-between align-items-center col-12 shadow-4 border-round-lg py-3 px-4">
+          <p class="text-4xl font-semibold">Settings</p>
+          <i class="pi pi-cog text-4xl"></i>
+        </div>
+      </div>
+		</div>
+	</div>
 </div>
+
+<form [formGroup]="categorySettingsForm" (ngSubmit)="onEdit()">
+	<p-dialog
+		header="Edit Category"
+		[(visible)]="isSettingsDialogVisible"
+		[modal]="isSettingsDialogVisible"
+	>
+		<span class="p-float-label mt-4">
+			<input
+				formControlName="categoryName"
+				id="categoryName"
+				type="text"
+				pInputText
+			/>
+			<label for="categoryName">Category Name</label>
+		</span>
+		<ng-template pTemplate="footer">
+			<button
+				pButton
+				type="submit"
+				[disabled]="!categorySettingsForm.valid"
+			>
+				Confirm
+			</button>
+			<button pButton class="p-button-danger" (click)="deleteCategory()">
+				Delete
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>
+
+<p-confirmDialog
+	header="Delete Confirmation"
+	icon="pi pi-exclamation-triangle"
+></p-confirmDialog>

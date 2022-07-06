@@ -17,6 +17,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
+import { ConfirmDialogModule } from "primeng/confirmdialog"
 
 @NgModule({
   exports: [
@@ -38,6 +39,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     AvatarGroupModule,
     ProgressSpinnerModule,
     SkeletonModule,
+    ConfirmDialogModule,
   ],
 })
 export class PrimengModule {}

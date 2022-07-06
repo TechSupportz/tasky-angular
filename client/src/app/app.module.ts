@@ -11,6 +11,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CategoryComponent } from './pages/category/category.component';
 import { GroupCategoryComponent } from './pages/group-category/group-category.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConfirmationService } from "primeng/api"
+
 
 @NgModule({
 	declarations: [
@@ -27,8 +30,9 @@ import { GroupCategoryComponent } from './pages/group-category/group-category.co
 		AppRoutingModule,
 		FlexLayoutModule,
 		PrimengModule,
+		ReactiveFormsModule,
 	],
-	providers: [],
+	providers: [ConfirmationService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

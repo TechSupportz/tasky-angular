@@ -1,9 +1,25 @@
-<p-dialog header="Add Category" [(visible)]="isAddDialogVisible" [modal]="true">
-	<div>
-		<input type="text" pInputText />
-	</div>
-	<ng-template pTemplate="footer"></ng-template>
-</p-dialog>
+<form [formGroup]="addCategoryForm" (ngSubmit)="onSubmit()">
+	<p-dialog
+		header="Add Category"
+		[(visible)]="isAddDialogVisible"
+		[modal]="isAddDialogVisible"
+	>
+		<span class="p-float-label mt-4">
+			<input
+				formControlName="categoryName"
+				id="categoryName"
+				type="text"
+				pInputText
+			/>
+			<label for="categoryName">Category Name</label>
+		</span>
+		<ng-template pTemplate="footer">
+			<button pButton type="submit" [disabled]="!addCategoryForm.valid">
+				ok
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>
 
 <div class="flex flex-column align-items-center h-screen bg-gray-100 p-3">
 	<p-button icon="pi pi-home" routerLink="/home"></p-button>
