@@ -9,6 +9,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { PasswordModule } from 'primeng/password';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DividerModule } from 'primeng/divider';
+import { DialogModule } from 'primeng/dialog';
 import { DynamicDialogModule } from 'primeng/dynamicdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
@@ -29,6 +30,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     PasswordModule,
     RadioButtonModule,
     DividerModule,
+    DialogModule,
     DynamicDialogModule,
     TooltipModule,
     ToastModule,

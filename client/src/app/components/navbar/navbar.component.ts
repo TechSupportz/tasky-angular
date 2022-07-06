@@ -9,10 +9,14 @@ import { Category } from 'src/app/types/category';
 })
 export class NavbarComponent implements OnInit {
   categoryList: Category[] = [];
-
+  isAddDialogVisible: boolean = true;
   constructor(private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.categoryList = this.categoryService.getCategoryList();
+  }
+
+  showAddDialog() {
+    this.isAddDialogVisible = true;
   }
 }

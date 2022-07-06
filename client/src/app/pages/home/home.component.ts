@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeScreenComponent implements OnInit {
+export class HomeComponent implements OnInit {
 
   username: string = 'JohnDoe';
 

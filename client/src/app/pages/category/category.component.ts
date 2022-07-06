@@ -5,11 +5,11 @@ import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/types/category';
 
 @Component({
-  selector: 'app-category-screen',
-  templateUrl: './category-screen.component.html',
-  styleUrls: ['./category-screen.component.css'],
+  selector: 'app-category',
+  templateUrl: './category.component.html',
+  styleUrls: ['./category.component.css'],
 })
-export class CategoryScreenComponent implements OnInit {
+export class CategoryComponent implements OnInit {
   categoryId: any;
   category?: Category;
   private routeSubscription!: Subscription;
