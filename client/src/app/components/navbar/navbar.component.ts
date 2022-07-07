@@ -19,7 +19,11 @@ export class NavbarComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.categoryList = this.categoryService.getCategoryList()
+		this.categoryService.getCategoryList().subscribe(
+			(categoryList) => {
+				this.categoryList = categoryList
+			}
+		)
 
 		this.addCategoryForm = this.fb.group({
 			categoryName: ["", Validators.required],

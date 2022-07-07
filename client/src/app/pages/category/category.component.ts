@@ -31,13 +31,16 @@ export class CategoryComponent implements OnInit {
 		this.routeSubscription = this.route.params.subscribe((params) => {
 			console.log(params)
 			this.categoryId = params["id"]
-			this.category = this.categoryService.getCategoryById(
-				this.categoryId,
-			)
-		})
+			this.categoryService
+				.getCategoryById(this.categoryId)
+				.subscribe((category) => (this.category = category))
 
-		this.categorySettingsForm = this.fb.group({
-			categoryName: ["", Validators.required],
+			this.categorySettingsForm = this.fb.group({
+				categoryName: [
+					this.category?.categoryName,
+					Validators.required,
+				],
+			})
 		})
 	}
 
@@ -46,7 +49,21 @@ export class CategoryComponent implements OnInit {
 	}
 
 	onEdit() {
-		console.log("balls")
+		this.categoryService
+			.editCategory({
+				id: this.categoryId,
+				categoryName: this.categorySettingsForm.value.categoryName,
+			})
+			.subscribe((category) => {
+				this.categoryId = category.id
+				this.category = category
+			})
+		this.isSettingsDialogVisible = false
+		this.messageService.add({
+			severity: "success",
+			summary: "Updated!",
+			detail: "Category has been edited successfully",
+		})
 	}
 
 	deleteCategory() {

@@ -10,12 +10,13 @@
 
 		<div class="w-full">
 			<div class="cursor-pointer" (click)="showSettingsDialog()">
-        <div
-          class="flex justify-content-between align-items-center col-12 shadow-4 border-round-lg py-3 px-4">
-          <p class="text-4xl font-semibold">Settings</p>
-          <i class="pi pi-cog text-4xl"></i>
-        </div>
-      </div>
+				<div
+					class="flex justify-content-between align-items-center col-12 shadow-4 border-round-lg py-3 px-4"
+				>
+					<p class="text-4xl font-semibold">Settings</p>
+					<i class="pi pi-cog text-4xl"></i>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -43,7 +44,12 @@
 			>
 				Confirm
 			</button>
-			<button pButton class="p-button-danger" (click)="deleteCategory()">
+			<button
+				pButton
+				type="button"
+				class="p-button-danger"
+				(click)="deleteCategory()"
+			>
 				Delete
 			</button>
 		</ng-template>

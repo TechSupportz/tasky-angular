@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core"
 import { Category } from "../types/category"
+import { Observable, of } from "rxjs"
 
 @Injectable({
 	providedIn: "root",
@@ -26,12 +27,16 @@ export class CategoryService {
 
 	constructor() {}
 
-	getCategoryList(): Category[] {
-		return this.categoryList
+	getCategoryList(): Observable<Category[]> {
+		const categoryList = of(this.categoryList)
+		return categoryList
 	}
 
-	getCategoryById(id: number) {
-		return this.categoryList.find((category) => category.id == id)
+	getCategoryById(id: number): Observable<Category> {
+		const category = of(
+			this.categoryList.find((category) => category.id == id)!,
+		)
+		return category
 	}
 
 	addCategory(categoryName: string): void {
@@ -41,15 +46,15 @@ export class CategoryService {
 		})
 	}
 
-  editCategory(category: Category): void {
-    const index = this.categoryList.findIndex(
-      (c) => c.id == category.id
-    )
-    this.categoryList[index] = category
-  }
+	editCategory(category: Category): Observable<Category> {
+		const index = this.categoryList.findIndex((c) => c.id == category.id)
+		this.categoryList[index] = category
 
-  deleteCategory(id: number): void {
-    const index = this.categoryList.findIndex((c) => c.id == id)
-    this.categoryList.splice(index, 1)
-  }
+		return of(this.categoryList[index])
+	}
+
+	deleteCategory(id: number): void {
+		const index = this.categoryList.findIndex((c) => c.id == id)
+		this.categoryList.splice(index, 1)
+	}
 }
