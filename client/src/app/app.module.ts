@@ -13,6 +13,7 @@ import { CategoryComponent } from './pages/category/category.component';
 import { GroupCategoryComponent } from './pages/group-category/group-category.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationService } from "primeng/api"
+import { MessageService } from "primeng/api"
 
 
 @NgModule({
@@ -32,7 +33,7 @@ import { ConfirmationService } from "primeng/api"
 		PrimengModule,
 		ReactiveFormsModule,
 	],
-	providers: [ConfirmationService],
+	providers: [ConfirmationService, MessageService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}
