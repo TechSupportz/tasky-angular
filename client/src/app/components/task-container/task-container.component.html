@@ -1,0 +1,22 @@
+<div class="w-full shadow-2 border-round-lg p-3">
+	<div class="flex justify-content-between align-items-center w-full">
+		<app-task></app-task>
+		<p-button
+			*ngIf="isHomePage; else categoryPage"
+			styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
+			icon="pi pi-external-link text-xl"
+		></p-button>
+		<ng-template #categoryPage>
+			<p-button
+				styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
+				icon="pi pi-plus text-xl"
+			></p-button>
+		</ng-template>
+	</div>
+	<p-divider></p-divider>
+	<div class="flex flex-column gap-3 ml-5">
+		<app-task></app-task>
+		<app-task></app-task>
+		<app-task></app-task>
+	</div>
+</div>
