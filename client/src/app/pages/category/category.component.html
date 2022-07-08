@@ -6,21 +6,31 @@
 			<p-button
 				styleClass="p-button-rounded p-button-text p-button-sm"
 				icon="pi pi-plus-circle text-2xl"
+				(onClick)="showAddTaskDialog()"
 			></p-button>
 		</div>
 		<br />
-		<div *ngIf="tasks.length === 0" class="flex flex-column align-items-center justify-content-center w-full shadow-2 border-round-lg p-3">
-			<p class="font-medium mb-2"><em>FINALLY</em>, some peace and quiet</p>
+		<div
+			*ngIf="taskList.length === 0"
+			class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
+		>
+			<p class="font-medium mb-2">
+				<em>FINALLY</em>, some peace and quiet
+			</p>
 			<p class="text-xs">enjoy it while it lasts ;-;</p>
 		</div>
-		
-		<app-task-container *ngFor="let task of tasks" [task]="task"></app-task-container>
+
+		<div class="flex flex-column gap-3">
+			<app-task-container
+				*ngFor="let task of taskList"
+				[task]="task"
+			></app-task-container>
+		</div>
 	</div>
 	<div class="grid col-4 gap-4">
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
 			<p class="text-4xl font-semibold mb-5">Calendar</p>
 		</div>
-
 		<div class="w-full">
 			<div class="cursor-pointer" (click)="showSettingsDialog()">
 				<div
@@ -38,17 +48,23 @@
 	<p-dialog
 		header="Edit Category"
 		[(visible)]="isSettingsDialogVisible"
-		[modal]="isSettingsDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
 	>
-		<span class="p-float-label mt-4">
+		<div class="field">
+			<label for="categoryName" class="font-medium text-lg"
+				>Category Name</label
+			>
 			<input
+				class="w-full"
 				formControlName="categoryName"
 				id="categoryName"
 				type="text"
+				placeholder="Enter the new name of your category"
 				pInputText
 			/>
-			<label for="categoryName">Category Name</label>
-		</span>
+		</div>
 		<ng-template pTemplate="footer">
 			<button
 				pButton
@@ -73,3 +89,59 @@
 	header="Delete Confirmation"
 	icon="pi pi-exclamation-triangle"
 ></p-confirmDialog>
+
+<form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
+	<p-dialog
+	header="Add Task"
+	[(visible)]="isAddTaskDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+	>
+		<div class="field">
+			<label for="taskName" class="font-medium text-lg">Task Name</label>
+			<input
+				id="taskName"
+				formControlName="taskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<div class="field">
+			<label for="taskDueDate" class="font-medium text-lg w-full">Due Date</label>
+			<small id="username-help"
+				>Select the date & time when the assignment is due.
+			</small>
+			<p-calendar
+			id="taskDueDate"
+			formControlName="taskDueDate"
+				styleClass="w-full"
+				[inline]="true"
+				[showTime]="true"
+			></p-calendar>
+		</div>
+		<div class="field">
+			<label for="taskPriority" class="font-medium text-lg"
+				>Priority</label
+			>
+			<input
+				id="taskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<ng-template pTemplate="footer">
+			<button
+				pButton
+				type="submit"
+				[disabled]="!categorySettingsForm.valid"
+			>
+				Add it
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>

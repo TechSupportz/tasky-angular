@@ -14,11 +14,13 @@ import { Tasks } from "src/app/types/task"
 	styleUrls: ["./category.component.css"],
 })
 export class CategoryComponent implements OnInit {
-	categoryId: any
+	categoryId: number
 	category?: Category
-	tasks: Tasks[]
+	taskList: Tasks[]
 	isSettingsDialogVisible: boolean = false
+	isAddTaskDialogVisible: boolean = false
 	categorySettingsForm: FormGroup
+	addTaskForm: FormGroup
 	private routeSubscription!: Subscription
 
 	constructor(
@@ -41,7 +43,7 @@ export class CategoryComponent implements OnInit {
 
 			this.taskService
 				.getTaskByCategoryId(this.categoryId)
-				.subscribe((tasks) => (this.tasks = tasks))
+				.subscribe((tasks) => (this.taskList = tasks))
 
 			this.categorySettingsForm = this.fb.group({
 				categoryName: [
@@ -49,11 +51,21 @@ export class CategoryComponent implements OnInit {
 					Validators.required,
 				],
 			})
+
+			this.addTaskForm = this.fb.group({
+				taskName: ["", Validators.required],
+				taskDueDate: ["", Validators.required],
+				taskPriority: ["", Validators.required],
+			})
 		})
 	}
 
 	showSettingsDialog() {
 		this.isSettingsDialogVisible = true
+	}
+
+	showAddTaskDialog() {
+		this.isAddTaskDialogVisible = true
 	}
 
 	onEdit() {
@@ -65,13 +77,13 @@ export class CategoryComponent implements OnInit {
 			.subscribe((category) => {
 				this.categoryId = category.id
 				this.category = category
+				this.isSettingsDialogVisible = false
+				this.messageService.add({
+					severity: "success",
+					summary: "Updated!",
+					detail: "Category has been edited successfully",
+				})
 			})
-		this.isSettingsDialogVisible = false
-		this.messageService.add({
-			severity: "success",
-			summary: "Updated!",
-			detail: "Category has been edited successfully",
-		})
 	}
 
 	deleteCategory() {
@@ -89,6 +101,25 @@ export class CategoryComponent implements OnInit {
 				})
 			},
 		})
+	}
+
+	addTask() {
+		this.taskService
+			.addTask(
+				this.categoryId,
+				this.addTaskForm.value.taskName,
+				this.addTaskForm.value.taskDueDate,
+				"High",
+			)
+			.subscribe((task) => {
+				this.taskList.push(task)
+				this.isAddTaskDialogVisible = false
+				this.messageService.add({
+					severity: "success",
+					summary: "Task added!",
+					detail: "More stuff to do now ;-;",
+				})
+			})
 	}
 
 	ngOnDestroy() {

@@ -2,17 +2,23 @@
 	<p-dialog
 		header="Add Category"
 		[(visible)]="isAddDialogVisible"
-		[modal]="isAddDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
 	>
-		<span class="p-float-label mt-4">
+		<div class="field">
+			<label for="categoryName" class="font-medium text-lg"
+				>Category Name</label
+			>
 			<input
+				class="w-full"
 				formControlName="categoryName"
 				id="categoryName"
 				type="text"
+				placeholder="Enter the name of your category"
 				pInputText
 			/>
-			<label for="categoryName">Category Name</label>
-		</span>
+		</div>
 		<ng-template pTemplate="footer">
 			<button pButton type="submit" [disabled]="!addCategoryForm.valid">
 				ok

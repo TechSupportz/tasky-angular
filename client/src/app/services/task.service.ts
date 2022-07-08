@@ -67,8 +67,20 @@ export class TaskService {
 		return taskList
 	}
 
-	addTask(task: Tasks): void {
+	addTask(categoryId: number ,taskName: string, taskDueDate: string, taskPriority: string): Observable<Tasks> {
+
+		const task: Tasks = {
+			id: this.taskList.length + 1,
+			categoryId: categoryId,
+			creatorId: 1,
+			name: taskName,
+			dueDate: taskDueDate,
+			priority: taskPriority,
+		}
+
 		this.taskList.push(task)
+
+		return of(task)
 	}
 
 	editTask(task: Tasks): Observable<Tasks> {
