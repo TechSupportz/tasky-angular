@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Tasks } from 'src/app/types/task';
 
 @Component({
   selector: 'app-task-container',
@@ -8,6 +9,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TaskContainerComponent implements OnInit {
 
   @Input() isHomePage: boolean = false;
+
+  @Input() task: Tasks ;
 
   constructor() { }
 

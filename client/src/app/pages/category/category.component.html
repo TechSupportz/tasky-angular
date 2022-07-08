@@ -6,11 +6,15 @@
 			<p-button
 				styleClass="p-button-rounded p-button-text p-button-sm"
 				icon="pi pi-plus-circle text-2xl"
-				
 			></p-button>
 		</div>
 		<br />
-		<app-task-container></app-task-container>
+		<div *ngIf="tasks.length === 0" class="flex flex-column align-items-center justify-content-center w-full shadow-2 border-round-lg p-3">
+			<p class="font-medium mb-2"><em>FINALLY</em>, some peace and quiet</p>
+			<p class="text-xs">enjoy it while it lasts ;-;</p>
+		</div>
+		
+		<app-task-container *ngFor="let task of tasks" [task]="task"></app-task-container>
 	</div>
 	<div class="grid col-4 gap-4">
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">

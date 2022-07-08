@@ -5,6 +5,8 @@ import { CategoryService } from "src/app/services/category.service"
 import { Category } from "src/app/types/category"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { ConfirmationService, MessageService } from "primeng/api"
+import { TaskService } from "src/app/services/task.service"
+import { Tasks } from "src/app/types/task"
 
 @Component({
 	selector: "app-category",
@@ -14,6 +16,7 @@ import { ConfirmationService, MessageService } from "primeng/api"
 export class CategoryComponent implements OnInit {
 	categoryId: any
 	category?: Category
+	tasks: Tasks[]
 	isSettingsDialogVisible: boolean = false
 	categorySettingsForm: FormGroup
 	private routeSubscription!: Subscription
@@ -21,6 +24,7 @@ export class CategoryComponent implements OnInit {
 	constructor(
 		private route: ActivatedRoute,
 		private categoryService: CategoryService,
+		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
 		private messageService: MessageService,
 		private fb: FormBuilder,
@@ -34,6 +38,10 @@ export class CategoryComponent implements OnInit {
 			this.categoryService
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => (this.category = category))
+
+			this.taskService
+				.getTaskByCategoryId(this.categoryId)
+				.subscribe((tasks) => (this.tasks = tasks))
 
 			this.categorySettingsForm = this.fb.group({
 				categoryName: [

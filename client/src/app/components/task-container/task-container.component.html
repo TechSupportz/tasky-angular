@@ -1,6 +1,6 @@
 <div class="w-full shadow-2 border-round-lg p-3">
 	<div class="flex justify-content-between align-items-center w-full">
-		<app-task></app-task>
+		<app-task [task]="task"></app-task>
 		<p-button
 			*ngIf="isHomePage; else categoryPage"
 			styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
@@ -13,10 +13,13 @@
 			></p-button>
 		</ng-template>
 	</div>
-	<p-divider></p-divider>
-	<div class="flex flex-column gap-3 ml-5">
-		<app-task></app-task>
-		<app-task></app-task>
-		<app-task></app-task>
+	<div *ngIf="task.subTask != undefined">
+		<p-divider></p-divider>
+		<div class="flex flex-column gap-3 ml-5">
+			<app-task
+			*ngFor="let subTask of task.subTask"
+			[task]="subTask"
+			></app-task>
+		</div>
 	</div>
 </div>
