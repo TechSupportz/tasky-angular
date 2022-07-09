@@ -39,7 +39,7 @@ export class TaskComponent implements OnInit {
 		e.preventDefault()
 		this.isEditTaskDialogVisible = true
 	}
-
+	// fix bug where when u try to edit a edited thing everything is blank
 	editTask() {
 		if (this.isSubTask) {
 			this.taskService
@@ -52,7 +52,6 @@ export class TaskComponent implements OnInit {
 				)
 				.subscribe(() => {
 					this.isEditTaskDialogVisible = false
-					this.editTaskForm.reset()
 					this.message.add({
 						severity: "success",
 						summary: "Success",
@@ -69,7 +68,6 @@ export class TaskComponent implements OnInit {
 				)
 				.subscribe(() => {
 					this.isEditTaskDialogVisible = false
-					this.editTaskForm.reset()
 					this.message.add({
 						severity: "success",
 						summary: "Success",
@@ -88,11 +86,17 @@ export class TaskComponent implements OnInit {
 					this.taskService.deleteSubTask(this.parentId, this.task.id)
 					this.editTaskForm.reset()
 					this.isEditTaskDialogVisible = false
+					this.message.add({
+						severity: "success",
+						summary: "Out of sight, out of mind... right?",
+						detail: "Subtask deleted successfully",
+					})
 				},
 			})
 		} else {
 			this.confirmationService.confirm({
-				message: "Are you sure that you want to delete this task? THIS WILL DELETE ALL SUBTASKS!",
+				message:
+					"Are you sure that you want to delete this task? THIS WILL DELETE ALL SUBTASKS!",
 				accept: () => {
 					this.taskService.deleteTask(this.parentId)
 					this.editTaskForm.reset()
@@ -100,6 +104,11 @@ export class TaskComponent implements OnInit {
 					setTimeout(() => {
 						this.isDeleted.emit(true)
 					}, 150)
+					this.message.add({
+						severity: "success",
+						summary: "Out of sight, out of mind... right?",
+						detail: "Task deleted successfully",
+					})
 				},
 			})
 		}

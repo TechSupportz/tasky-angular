@@ -81,7 +81,6 @@ export class CategoryComponent implements OnInit {
 				this.categoryId = category.id
 				this.category = category
 				this.isSettingsDialogVisible = false
-				this.addTaskForm.reset()
 				this.message.add({
 					severity: "success",
 					summary: "Updated!",
