@@ -1,6 +1,6 @@
-<div class="w-full shadow-1 border-round-lg p-3">
+<div *ngIf="!isDeleted" class="w-full shadow-1 border-round-lg p-3">
 	<div class="flex justify-content-between align-items-center w-full">
-		<app-task [task]="task"></app-task>
+		<app-task (isDeleted)="setIsDelete($event)" [task]="task" [parentId]="task.id" [isSubTask]="false"></app-task>
 		<p-button
 			*ngIf="isHomePage; else categoryPage"
 			styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
@@ -18,8 +18,10 @@
 		<p-divider></p-divider>
 		<div class="flex flex-column gap-3 ml-5">
 			<app-task
-			*ngFor="let subTask of task.subTask"
-			[task]="subTask"
+				*ngFor="let subTask of task.subTask"
+				[task]="subTask"
+				[parentId]="task.id"
+				[isSubTask]="true"
 			></app-task>
 		</div>
 	</div>
@@ -27,14 +29,16 @@
 
 <form [formGroup]="addSubTaskForm" (ngSubmit)="addSubTask()">
 	<p-dialog
-	header="Add Sub-Task"
-	[(visible)]="isAddSubTaskDialogVisible"
+		header="Add Sub-Task"
+		[(visible)]="isAddSubTaskDialogVisible"
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"
 	>
 		<div class="field">
-			<label for="taskName" class="font-medium text-lg">Sub-Task Name</label>
+			<label for="taskName" class="font-medium text-lg"
+				>Sub-Task Name</label
+			>
 			<input
 				id="subTaskName"
 				formControlName="subTaskName"
@@ -45,13 +49,15 @@
 			/>
 		</div>
 		<div class="field">
-			<label for="subTaskDueDate" class="font-medium text-lg w-full">Due Date</label>
+			<label for="subTaskDueDate" class="font-medium text-lg w-full"
+				>Due Date</label
+			>
 			<small id="username-help"
 				>Select the date & time when the assignment is due.
 			</small>
 			<p-calendar
-			id="subTaskDueDate"
-			formControlName="subTaskDueDate"
+				id="subTaskDueDate"
+				formControlName="subTaskDueDate"
 				styleClass="w-full"
 				[inline]="true"
 				[showTime]="true"
@@ -64,7 +70,7 @@
 			<p-dropdown
 				[options]="priorityOptions"
 				formControlName="subTaskPriority"
-				placeholder="Enter the name of your task"
+				placeholder="How important is this task?"
 			></p-dropdown>
 		</div>
 		<ng-template pTemplate="footer">

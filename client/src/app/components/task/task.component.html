@@ -1,5 +1,69 @@
-<div class="field-checkbox">
-	<p-checkbox id="taskName" value="Task"></p-checkbox>
-	<label for="taskName" class="text-xl font-medium">{{ task.name }}</label>
+<div (contextmenu)="showEditTaskDialog($event)">
+	<div class="field-checkbox w-full">
+		<p-checkbox id="taskName" value="Task"></p-checkbox>
+		<label for="taskName" class="text-xl font-medium">{{ task.name }}</label>
+	</div>
+	<p class="due-date ml-5 text-black-alpha-70">Due on {{ task.dueDate | date: 'dd MMMM yyyy, HH:mm ' }}</p>
 </div>
-<p class="due-date ml-5 text-black-alpha-70">Due on {{ task.dueDate | date: 'dd MMMM yyyy, HH:mm ' }}</p>
+
+<form [formGroup]="editTaskForm" (ngSubmit)="editTask()">
+	<p-dialog
+	header="Edit Task"
+	[(visible)]="isEditTaskDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+	>
+		<div class="field">
+			<label for="taskName" class="font-medium text-lg">Task Name</label>
+			<input
+				id="taskName"
+				formControlName="taskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<div class="field">
+			<label for="taskDueDate" class="font-medium text-lg w-full">Due Date</label>
+			<small id="username-help"
+				>Select the date & time when the assignment is due.
+			</small>
+			<p-calendar
+			id="taskDueDate"
+			formControlName="taskDueDate"
+				styleClass="w-full"
+				[inline]="true"
+				[showTime]="true"
+			></p-calendar>
+		</div>
+		<div class="field">
+			<label for="taskPriority" class="font-medium text-lg w-full"
+				>Priority</label
+			>
+			<p-dropdown
+				[options]="priorityOptions"
+				formControlName="taskPriority"
+				placeholder="How important is this task?"
+			></p-dropdown>
+		</div>
+		<ng-template pTemplate="footer">
+			<button
+				pButton
+				type="submit"
+				[disabled]="!editTaskForm.valid"
+			>
+				Confirm changes
+			</button>
+			<button
+				pButton
+				type="button"
+				class="p-button-danger"
+				(click)="deleteTask()"
+			>
+				Delete
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>

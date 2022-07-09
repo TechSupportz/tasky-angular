@@ -93,7 +93,7 @@ export class TaskService {
 		}
 
 		this.taskList.push(task)
-		
+
 		return of(task)
 	}
 
@@ -115,15 +115,44 @@ export class TaskService {
 		return of(subTask)
 	}
 
-	editTask(task: Tasks): Observable<Tasks> {
-		const index = this.taskList.findIndex((t) => t.id == task.id)
-		this.taskList[index] = task
+	editTask(
+		taskId: number,
+		taskName: string,
+		taskDueDate: string,
+		taskPriority: string,
+	): Observable<Tasks> {
+		const task = this.taskList.find((t) => t.id == taskId)
+		task!.name = taskName
+		task!.dueDate = taskDueDate
+		task!.priority = taskPriority
 
-		return of(this.taskList[index])
+		return of(this.taskList.find((t) => t.id == taskId)!)
+	}
+
+	editSubTask(
+		taskId: number,
+		subTaskId: number,
+		subTaskName: string,
+		subTaskDueDate: string,
+		subTaskPriority: string,
+	): Observable<SubTask> {
+		const task = this.taskList.find((t) => t.id == taskId)
+		const subTask = task!.subTask.find((t) => t.id == subTaskId)
+		subTask!.name = subTaskName
+		subTask!.dueDate = subTaskDueDate
+		subTask!.priority = subTaskPriority
+
+		return of(task!.subTask.find((t) => t.id == subTaskId)!)
 	}
 
 	deleteTask(id: number): void {
 		const index = this.taskList.findIndex((t) => t.id == id)
 		this.taskList.splice(index, 1)
+	}
+
+	deleteSubTask(taskId: number, subTaskId: number): void {
+		const task = this.taskList.find((t) => t.id == taskId)
+		const index = task!.subTask.findIndex((t) => t.id == subTaskId)
+		task!.subTask.splice(index, 1)
 	}
 }

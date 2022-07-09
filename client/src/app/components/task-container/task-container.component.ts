@@ -14,6 +14,7 @@ export class TaskContainerComponent implements OnInit {
 	@Input() task: Tasks
 
 	isAddSubTaskDialogVisible: boolean = false
+	isDeleted: boolean = false
 	addSubTaskForm: FormGroup
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 
@@ -53,5 +54,9 @@ export class TaskContainerComponent implements OnInit {
 					detail: "More stuff to do now ;-;",
 				})
 			})
+	}
+
+	setIsDelete(isDeleted: boolean): void {
+		this.isDeleted = isDeleted
 	}
 }
