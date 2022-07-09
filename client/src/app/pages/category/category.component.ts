@@ -28,7 +28,7 @@ export class CategoryComponent implements OnInit {
 		private categoryService: CategoryService,
 		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
-		private messageService: MessageService,
+		private message: MessageService,
 		private fb: FormBuilder,
 		private router: Router,
 	) {}
@@ -43,7 +43,9 @@ export class CategoryComponent implements OnInit {
 
 			this.taskService
 				.getTaskByCategoryId(this.categoryId)
-				.subscribe((tasks) => (this.taskList = tasks))
+				.subscribe((tasks) => {
+					this.taskList = tasks
+				})
 
 			this.categorySettingsForm = this.fb.group({
 				categoryName: [
@@ -54,8 +56,8 @@ export class CategoryComponent implements OnInit {
 
 			this.addTaskForm = this.fb.group({
 				taskName: ["", Validators.required],
-				taskDueDate: ["", Validators.required],
-				taskPriority: ["", Validators.required],
+				taskDueDate: [""],
+				taskPriority: [""],
 			})
 		})
 	}
@@ -78,7 +80,7 @@ export class CategoryComponent implements OnInit {
 				this.categoryId = category.id
 				this.category = category
 				this.isSettingsDialogVisible = false
-				this.messageService.add({
+				this.message.add({
 					severity: "success",
 					summary: "Updated!",
 					detail: "Category has been edited successfully",
@@ -94,7 +96,7 @@ export class CategoryComponent implements OnInit {
 				this.categoryService.deleteCategory(this.categoryId)
 				this.isSettingsDialogVisible = false
 				this.router.navigate(["/home"])
-				this.messageService.add({
+				this.message.add({
 					severity: "success",
 					summary: "Poof!",
 					detail: "Category deleted successfully",
@@ -114,7 +116,7 @@ export class CategoryComponent implements OnInit {
 			.subscribe((task) => {
 				this.taskList.push(task)
 				this.isAddTaskDialogVisible = false
-				this.messageService.add({
+				this.message.add({
 					severity: "success",
 					summary: "Task added!",
 					detail: "More stuff to do now ;-;",

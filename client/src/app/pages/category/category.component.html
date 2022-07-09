@@ -6,7 +6,7 @@
 			<p-button
 				styleClass="p-button-rounded p-button-text p-button-sm"
 				icon="pi pi-plus-circle text-2xl"
-				(onClick)="showAddTaskDialog()"
+				(click)="showAddTaskDialog()"
 			></p-button>
 		</div>
 		<br />
@@ -138,7 +138,7 @@
 			<button
 				pButton
 				type="submit"
-				[disabled]="!categorySettingsForm.valid"
+				[disabled]="!addTaskForm.valid"
 			>
 				Add it
 			</button>

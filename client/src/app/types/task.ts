@@ -5,7 +5,7 @@ export interface Tasks {
 	name: string
 	dueDate: string
 	priority: string
-	subTask?: SubTask[]
+	subTask: SubTask[]
 }
 
 export interface SubTask {

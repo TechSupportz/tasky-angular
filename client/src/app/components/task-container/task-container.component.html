@@ -10,10 +10,11 @@
 			<p-button
 				styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
 				icon="pi pi-plus text-xl"
+				(click)="showAddSubTaskDialog()"
 			></p-button>
 		</ng-template>
 	</div>
-	<div *ngIf="task.subTask != undefined">
+	<div *ngIf="task.subTask.length != 0">
 		<p-divider></p-divider>
 		<div class="flex flex-column gap-3 ml-5">
 			<app-task
@@ -23,3 +24,59 @@
 		</div>
 	</div>
 </div>
+
+<form [formGroup]="addSubTaskForm" (ngSubmit)="addSubTask()">
+	<p-dialog
+	header="Add Sub-Task"
+	[(visible)]="isAddSubTaskDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+	>
+		<div class="field">
+			<label for="taskName" class="font-medium text-lg">Sub-Task Name</label>
+			<input
+				id="subTaskName"
+				formControlName="subTaskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<div class="field">
+			<label for="subTaskDueDate" class="font-medium text-lg w-full">Due Date</label>
+			<small id="username-help"
+				>Select the date & time when the assignment is due.
+			</small>
+			<p-calendar
+			id="subTaskDueDate"
+			formControlName="subTaskDueDate"
+				styleClass="w-full"
+				[inline]="true"
+				[showTime]="true"
+			></p-calendar>
+		</div>
+		<div class="field">
+			<label for="subTaskPriority" class="font-medium text-lg"
+				>Priority</label
+			>
+			<input
+				id="subTaskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<ng-template pTemplate="footer">
+			<button
+				pButton
+				type="submit"
+				[disabled]="addSubTaskForm.valid"
+			>
+				Add it
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>

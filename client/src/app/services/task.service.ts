@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
-import { Tasks } from "../types/task"
+import { SubTask, Tasks } from "../types/task"
 
 @Injectable({
 	providedIn: "root",
@@ -51,6 +51,15 @@ export class TaskService {
 				},
 			],
 		},
+		{
+			id: 3,
+			categoryId: 2,
+			creatorId: 1,
+			name: "MBAP Part 3",
+			dueDate: "2022-06-29T23:59:00",
+			priority: "High",
+			subTask: [],
+		},
 	]
 
 	constructor() {}
@@ -67,8 +76,12 @@ export class TaskService {
 		return taskList
 	}
 
-	addTask(categoryId: number ,taskName: string, taskDueDate: string, taskPriority: string): Observable<Tasks> {
-
+	addTask(
+		categoryId: number,
+		taskName: string,
+		taskDueDate: string,
+		taskPriority: string,
+	): Observable<Tasks> {
 		const task: Tasks = {
 			id: this.taskList.length + 1,
 			categoryId: categoryId,
@@ -76,11 +89,30 @@ export class TaskService {
 			name: taskName,
 			dueDate: taskDueDate,
 			priority: taskPriority,
+			subTask: [],
 		}
 
 		this.taskList.push(task)
-
+		
 		return of(task)
+	}
+
+	addSubTask(
+		taskId: number,
+		subTaskName: string,
+		subTaskDueDate: string,
+		subTaskPriority: string,
+	): Observable<SubTask> {
+		const task = this.taskList.find((t) => t.id == taskId)
+		const subTask: SubTask = {
+			id: task!.subTask.length + 1,
+			name: subTaskName,
+			dueDate: subTaskDueDate,
+			priority: subTaskPriority,
+		}
+		task!.subTask.push(subTask)
+
+		return of(subTask)
 	}
 
 	editTask(task: Tasks): Observable<Tasks> {
