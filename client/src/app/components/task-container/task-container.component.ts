@@ -15,6 +15,7 @@ export class TaskContainerComponent implements OnInit {
 
 	isAddSubTaskDialogVisible: boolean = false
 	addSubTaskForm: FormGroup
+	priorityOptions: string[] = ["High", "Medium", "Low"]
 
 	constructor(
 		private fb: FormBuilder,
@@ -42,9 +43,10 @@ export class TaskContainerComponent implements OnInit {
 				this.addSubTaskForm.value.subTaskDueDate,
 				this.addSubTaskForm.value.subTaskPriority,
 			)
-			.subscribe((subTask) => {
+			.subscribe(() => {
 				// this.task.subTask.push(subTask)
 				this.isAddSubTaskDialogVisible = false
+				this.addSubTaskForm.reset()
 				this.message.add({
 					severity: "success",
 					summary: "Task added!",

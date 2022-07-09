@@ -123,16 +123,14 @@
 			></p-calendar>
 		</div>
 		<div class="field">
-			<label for="taskPriority" class="font-medium text-lg"
+			<label for="taskPriority" class="font-medium text-lg w-full"
 				>Priority</label
 			>
-			<input
-				id="taskName"
-				class="w-full"
-				type="text"
+			<p-dropdown
+				[options]="priorityOptions"
+				formControlName="taskPriority"
 				placeholder="Enter the name of your task"
-				pInputText
-			/>
+			></p-dropdown>
 		</div>
 		<ng-template pTemplate="footer">
 			<button

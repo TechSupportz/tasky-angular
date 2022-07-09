@@ -21,6 +21,7 @@ export class CategoryComponent implements OnInit {
 	isAddTaskDialogVisible: boolean = false
 	categorySettingsForm: FormGroup
 	addTaskForm: FormGroup
+	priorityOptions: string[] = ["High", "Medium", "Low"]
 	private routeSubscription!: Subscription
 
 	constructor(
@@ -80,6 +81,7 @@ export class CategoryComponent implements OnInit {
 				this.categoryId = category.id
 				this.category = category
 				this.isSettingsDialogVisible = false
+				this.addTaskForm.reset()
 				this.message.add({
 					severity: "success",
 					summary: "Updated!",
@@ -111,11 +113,12 @@ export class CategoryComponent implements OnInit {
 				this.categoryId,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
-				"High",
+				this.addTaskForm.value.taskPriority,
 			)
 			.subscribe((task) => {
 				this.taskList.push(task)
 				this.isAddTaskDialogVisible = false
+				this.addTaskForm.reset()
 				this.message.add({
 					severity: "success",
 					summary: "Task added!",

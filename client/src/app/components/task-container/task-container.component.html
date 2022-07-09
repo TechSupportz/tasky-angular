@@ -58,22 +58,21 @@
 			></p-calendar>
 		</div>
 		<div class="field">
-			<label for="subTaskPriority" class="font-medium text-lg"
+			<label for="subTaskPriority" class="font-medium text-lg w-full"
 				>Priority</label
 			>
-			<input
-				id="subTaskName"
-				class="w-full"
-				type="text"
+			<p-dropdown
+				[options]="priorityOptions"
+				formControlName="subTaskPriority"
 				placeholder="Enter the name of your task"
-				pInputText
-			/>
+			></p-dropdown>
 		</div>
 		<ng-template pTemplate="footer">
 			<button
 				pButton
+				class="mt-2"
 				type="submit"
-				[disabled]="addSubTaskForm.valid"
+				[disabled]="!addSubTaskForm.valid"
 			>
 				Add it
 			</button>

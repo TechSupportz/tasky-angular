@@ -39,5 +39,6 @@ export class NavbarComponent implements OnInit {
 			this.addCategoryForm.value.categoryName,
 		)
 		this.isAddDialogVisible = false
+		this.addCategoryForm.reset()
 	}
 }
