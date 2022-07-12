@@ -22,13 +22,13 @@ export class TaskService {
 	
 	setCompleteTaskState(taskId: number, isCompleted: boolean): void {
 		const task = taskList.find((t) => t.id == taskId)
-		task!.isCompleted = true
+		task!.isCompleted = isCompleted
 	}
 
 	setCompleteSubTaskState(taskId: number, subTaskId: number, isCompleted: boolean): void {
 		const task = taskList.find((t) => t.id == taskId)
 		const subTask = task!.subTask.find((t) => t.id == subTaskId)
-		subTask!.isCompleted = true
+		subTask!.isCompleted = isCompleted
 	}
 
 	addTask(
