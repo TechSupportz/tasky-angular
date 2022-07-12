@@ -116,6 +116,7 @@ export class CategoryComponent implements OnInit {
 				this.addTaskForm.value.taskPriority,
 			)
 			.subscribe((task) => {
+				console.log(task)
 				this.taskList.push(task)
 				this.isAddTaskDialogVisible = false
 				this.addTaskForm.reset()

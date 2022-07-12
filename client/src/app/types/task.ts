@@ -5,6 +5,7 @@ export interface Tasks {
 	name: string
 	dueDate: string
 	priority: string
+	isCompleted: boolean
 	subTask: SubTask[]
 }
 
@@ -13,4 +14,5 @@ export interface SubTask {
 	name: string
 	dueDate: string
 	priority: string
+	isCompleted: boolean
 }

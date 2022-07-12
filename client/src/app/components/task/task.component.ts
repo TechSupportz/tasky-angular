@@ -3,6 +3,7 @@ import { SubTask, Tasks } from "src/app/types/task"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
+import { taskList } from "src/app/mock-data/mock-task"
 
 @Component({
 	selector: "app-task",
@@ -15,7 +16,9 @@ export class TaskComponent implements OnInit {
 	@Input() parentId: number // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
 
 	@Output() isDeleted = new EventEmitter<boolean>()
+	@Output() isCompleted = new EventEmitter<boolean>()
 
+	isTaskCompleted: boolean
 	isEditTaskDialogVisible: boolean = false
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	editTaskForm: FormGroup
@@ -33,13 +36,27 @@ export class TaskComponent implements OnInit {
 			taskDueDate: [this.task.dueDate],
 			taskPriority: [this.task.priority, Validators.required],
 		})
+
+		this.isTaskCompleted = this.task.isCompleted
 	}
 
 	showEditTaskDialog(e: Event) {
 		e.preventDefault()
 		this.isEditTaskDialogVisible = true
 	}
-	// fix bug where when u try to edit a edited thing everything is blank
+
+	onCompleteStateChange(isCompleted: boolean) {
+		if (this.isSubTask) {
+			this.taskService.setCompleteSubTaskState(
+				this.parentId,
+				this.task.id,
+				isCompleted,
+			)
+		} else {
+			this.taskService.setCompleteTaskState(this.parentId, isCompleted)
+		}
+	}
+
 	editTask() {
 		if (this.isSubTask) {
 			this.taskService

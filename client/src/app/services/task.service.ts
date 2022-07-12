@@ -19,6 +19,17 @@ export class TaskService {
 		)
 		return filteredTaskList
 	}
+	
+	setCompleteTaskState(taskId: number, isCompleted: boolean): void {
+		const task = taskList.find((t) => t.id == taskId)
+		task!.isCompleted = true
+	}
+
+	setCompleteSubTaskState(taskId: number, subTaskId: number, isCompleted: boolean): void {
+		const task = taskList.find((t) => t.id == taskId)
+		const subTask = task!.subTask.find((t) => t.id == subTaskId)
+		subTask!.isCompleted = true
+	}
 
 	addTask(
 		categoryId: number,
@@ -33,6 +44,7 @@ export class TaskService {
 			name: taskName,
 			dueDate: taskDueDate,
 			priority: taskPriority,
+			isCompleted: false,
 			subTask: [],
 		}
 
@@ -53,6 +65,7 @@ export class TaskService {
 			name: subTaskName,
 			dueDate: subTaskDueDate,
 			priority: subTaskPriority,
+			isCompleted: false,
 		}
 		task!.subTask.push(subTask)
 
