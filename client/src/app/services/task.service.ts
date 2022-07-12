@@ -1,79 +1,23 @@
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { SubTask, Tasks } from "../types/task"
+import { taskList } from "../mock-data/mock-task"
 
 @Injectable({
 	providedIn: "root",
 })
 export class TaskService {
-	private taskList: Tasks[] = [
-		{
-			id: 1,
-			categoryId: 1,
-			creatorId: 1,
-			name: "FWEB Part 2",
-			dueDate: "2022-07-17T23:59:00",
-			priority: "High",
-			subTask: [
-				{
-					id: 1,
-					name: "something about why react is better",
-					dueDate: "2022-07-17T23:59:00",
-					priority: "High",
-				},
-				{
-					id: 2,
-					name: "idk man something about angular being bad",
-					dueDate: "2022-07-17T23:59:00",
-					priority: "High",
-				},
-			],
-		},
-		{
-			id: 2,
-			categoryId: 2,
-			creatorId: 1,
-			name: "MBAP Part 2",
-			dueDate: "2022-06-29T23:59:00",
-			priority: "High",
-			subTask: [
-				{
-					id: 1,
-					name: "something about why flutter is amazing",
-					dueDate: "2022-08-29T23:59:00",
-					priority: "High",
-				},
-				{
-					id: 2,
-					name: "something about us having to make a widget tree",
-					dueDate: "2022-08-29T23:59:00",
-					priority: "High",
-				},
-			],
-		},
-		{
-			id: 3,
-			categoryId: 2,
-			creatorId: 1,
-			name: "MBAP Part 3",
-			dueDate: "2022-06-29T23:59:00",
-			priority: "High",
-			subTask: [],
-		},
-	]
-
 	constructor() {}
 
 	getTaskList(): Observable<Tasks[]> {
-		const taskList = of(this.taskList)
-		return taskList
+		return of(taskList)
 	}
 
 	getTaskByCategoryId(categoryId: number): Observable<Tasks[]> {
-		const taskList = of(
-			this.taskList.filter((task) => task.categoryId == categoryId),
+		const filteredTaskList = of(
+			taskList.filter((task) => task.categoryId == categoryId),
 		)
-		return taskList
+		return filteredTaskList
 	}
 
 	addTask(
@@ -83,7 +27,7 @@ export class TaskService {
 		taskPriority: string,
 	): Observable<Tasks> {
 		const task: Tasks = {
-			id: this.taskList.length + 1,
+			id: taskList.length + 1,
 			categoryId: categoryId,
 			creatorId: 1,
 			name: taskName,
@@ -92,7 +36,7 @@ export class TaskService {
 			subTask: [],
 		}
 
-		this.taskList.push(task)
+		taskList.push(task)
 
 		return of(task)
 	}
@@ -103,7 +47,7 @@ export class TaskService {
 		subTaskDueDate: string,
 		subTaskPriority: string,
 	): Observable<SubTask> {
-		const task = this.taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t.id == taskId)
 		const subTask: SubTask = {
 			id: task!.subTask.length + 1,
 			name: subTaskName,
@@ -121,12 +65,12 @@ export class TaskService {
 		taskDueDate: string,
 		taskPriority: string,
 	): Observable<Tasks> {
-		const task = this.taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t.id == taskId)
 		task!.name = taskName
 		task!.dueDate = taskDueDate
 		task!.priority = taskPriority
 
-		return of(this.taskList.find((t) => t.id == taskId)!)
+		return of(taskList.find((t) => t.id == taskId)!)
 	}
 
 	editSubTask(
@@ -136,7 +80,7 @@ export class TaskService {
 		subTaskDueDate: string,
 		subTaskPriority: string,
 	): Observable<SubTask> {
-		const task = this.taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t.id == taskId)
 		const subTask = task!.subTask.find((t) => t.id == subTaskId)
 		subTask!.name = subTaskName
 		subTask!.dueDate = subTaskDueDate
@@ -146,12 +90,12 @@ export class TaskService {
 	}
 
 	deleteTask(id: number): void {
-		const index = this.taskList.findIndex((t) => t.id == id)
-		this.taskList.splice(index, 1)
+		const index = taskList.findIndex((t) => t.id == id)
+		taskList.splice(index, 1)
 	}
 
 	deleteSubTask(taskId: number, subTaskId: number): void {
-		const task = this.taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t.id == taskId)
 		const index = task!.subTask.findIndex((t) => t.id == subTaskId)
 		task!.subTask.splice(index, 1)
 	}

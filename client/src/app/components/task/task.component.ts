@@ -81,7 +81,9 @@ export class TaskComponent implements OnInit {
 		if (this.isSubTask) {
 			console.log("what?")
 			this.confirmationService.confirm({
-				message: "Are you sure that you want to delete this subtask?",
+				header: "Delete Subtask",
+				message:
+					"Are you sure that you want to delete this subtask? This is NOT reversible",
 				accept: () => {
 					this.taskService.deleteSubTask(this.parentId, this.task.id)
 					this.editTaskForm.reset()
@@ -95,6 +97,7 @@ export class TaskComponent implements OnInit {
 			})
 		} else {
 			this.confirmationService.confirm({
+				header: "Delete Task",
 				message:
 					"Are you sure that you want to delete this task? THIS WILL DELETE ALL SUBTASKS!",
 				accept: () => {

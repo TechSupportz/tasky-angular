@@ -91,6 +91,7 @@ export class CategoryComponent implements OnInit {
 
 	deleteCategory() {
 		this.confirmationService.confirm({
+			header: "Delete category",
 			message:
 				"Are you sure you want to delete this category? This is NOT reversible",
 			accept: () => {
