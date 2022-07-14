@@ -33,10 +33,29 @@ export class CalendarComponent implements OnChanges {
 					const eventTaskList = tasks.map((task) => ({
 						title: task.name,
 						date: task.dueDate.split("T")[0],
+						color:
+							task.priority === "Low"
+								? "green"
+								: task.priority === "Medium"
+								? "orange"
+								: "red",
 					}))
-					console.log("test")
 
-					this.calendarOptions.events = eventTaskList
+					const eventSubTaskList = tasks.flatMap((task) =>
+						task.subTask.map((subTask) => ({
+							title: subTask.name,
+							date: subTask.dueDate.split("T")[0],
+							color:
+								subTask.priority === "Low"
+									? "green"
+									: subTask.priority === "Medium"
+									? "orange"
+									: "red",
+						})),
+					)
+
+
+					this.calendarOptions.events = eventTaskList.concat(eventSubTaskList)
 				})
 		}
 	}

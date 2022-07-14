@@ -39,7 +39,7 @@ export const taskList: Tasks[] = [
 				id: 1,
 				name: "something about why flutter is amazing",
 				dueDate: "2022-08-29T23:59:00",
-				priority: "High",
+				priority: "Medium",
 				isCompleted: false,
 			},
 			{
