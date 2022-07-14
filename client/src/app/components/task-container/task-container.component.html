@@ -1,6 +1,12 @@
 <div *ngIf="!isDeleted" class="w-full shadow-1 border-round-lg p-3">
 	<div class="flex justify-content-between align-items-center w-full">
-		<app-task (isDeleted)="setIsDelete($event)" [task]="task" [parentId]="task.id" [isSubTask]="false"></app-task>
+		<app-task
+			(isDeleted)="setIsDelete($event)"
+			(isCompleted)="setIsCompleted($event)"
+			[task]="task"
+			[parentId]="task.id"
+			[isSubTask]="false"
+		></app-task>
 		<p-button
 			*ngIf="isHomePage; else categoryPage"
 			styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
@@ -8,13 +14,26 @@
 		></p-button>
 		<ng-template #categoryPage>
 			<p-button
+				*ngIf="!isCompleted"
 				styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
 				icon="pi pi-plus text-xl"
 				(click)="showAddSubTaskDialog()"
 			></p-button>
+			<div *ngIf="isCompleted">
+				<p-button
+					styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
+					icon="pi pi-undo text-xl"
+					(click)="undoTaskCompletion()"
+				></p-button>
+				<p-button
+					styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
+					icon="pi pi-trash text-xl"
+					(click)="deleteTask()"
+				></p-button>
+			</div>
 		</ng-template>
 	</div>
-	<div *ngIf="task.subTask.length != 0">
+	<div *ngIf="task.subTask.length != 0 && !isCompleted">
 		<p-divider></p-divider>
 		<div class="flex flex-column gap-3 ml-5">
 			<app-task
@@ -34,6 +53,7 @@
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"
+		[dismissableMask]="true"
 	>
 		<div class="field">
 			<label for="taskName" class="font-medium text-lg"

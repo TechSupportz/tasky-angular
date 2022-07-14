@@ -1,9 +1,15 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core"
+import {
+	Component,
+	Input,
+	OnInit,
+	Output,
+	EventEmitter,
+	ChangeDetectorRef,
+} from "@angular/core"
 import { SubTask, Tasks } from "src/app/types/task"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
-import { taskList } from "src/app/mock-data/mock-task"
 
 @Component({
 	selector: "app-task",
@@ -27,6 +33,7 @@ export class TaskComponent implements OnInit {
 		private taskService: TaskService,
 		private message: MessageService,
 		private confirmationService: ConfirmationService,
+		private cd: ChangeDetectorRef,
 		private fb: FormBuilder,
 	) {}
 
@@ -38,11 +45,17 @@ export class TaskComponent implements OnInit {
 		})
 
 		this.isTaskCompleted = this.task.isCompleted
+
+		if (!this.isSubTask) {
+			this.isCompleted.emit(this.isTaskCompleted)
+		}
 	}
 
 	showEditTaskDialog(e: Event) {
-		e.preventDefault()
-		this.isEditTaskDialogVisible = true
+		if (!this.isTaskCompleted) {
+			e.preventDefault()
+			this.isEditTaskDialogVisible = true
+		}
 	}
 
 	onCompleteStateChange(isCompleted: boolean) {
@@ -54,6 +67,8 @@ export class TaskComponent implements OnInit {
 			)
 		} else {
 			this.taskService.setCompleteTaskState(this.parentId, isCompleted)
+			this.cd.detectChanges() // prevents error NG0100 (https://angular.io/errors/NG0100)
+			this.isCompleted.emit(this.isTaskCompleted)
 		}
 	}
 

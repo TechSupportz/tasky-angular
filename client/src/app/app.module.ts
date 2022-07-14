@@ -16,7 +16,8 @@ import { ConfirmationService } from "primeng/api"
 import { MessageService } from "primeng/api"
 import { TaskComponent } from "./components/task/task.component"
 import { TaskContainerComponent } from "./components/task-container/task-container.component"
-import { CommonModule } from "@angular/common"
+import { CommonModule } from "@angular/common";
+import { CompletedTaskComponent } from './components/completed-task/completed-task.component'
 
 @NgModule({
 	declarations: [
@@ -28,6 +29,7 @@ import { CommonModule } from "@angular/common"
 		GroupCategoryComponent,
 		TaskComponent,
 		TaskContainerComponent,
+  CompletedTaskComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

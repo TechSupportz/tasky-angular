@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
-import { MessageService } from "primeng/api"
+import { ConfirmationService, MessageService } from "primeng/api"
 import { TaskService } from "src/app/services/task.service"
 import { Tasks } from "src/app/types/task"
 
@@ -15,12 +15,14 @@ export class TaskContainerComponent implements OnInit {
 
 	isAddSubTaskDialogVisible: boolean = false
 	isDeleted: boolean = false
+	isCompleted: boolean = false
 	addSubTaskForm: FormGroup
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 
 	constructor(
 		private fb: FormBuilder,
 		private taskService: TaskService,
+		private confirmationService: ConfirmationService,
 		private message: MessageService,
 	) {}
 
@@ -56,7 +58,45 @@ export class TaskContainerComponent implements OnInit {
 			})
 	}
 
+	deleteTask() {
+		this.confirmationService.confirm({
+			header: "Delete task",
+			message:
+				"Are you sure you want to delete this task? This is NOT reversible",
+			accept: () => {
+				this.taskService.deleteTask(this.task.id)
+				this.isDeleted = true
+				this.message.add({
+					severity: "success",
+					summary: "Into the trash it goes!",
+					detail: "Task deleted successfully",
+				})
+			}
+		})
+	}
+
 	setIsDelete(isDeleted: boolean): void {
 		this.isDeleted = isDeleted
+	}
+
+	setIsCompleted(isCompleted: boolean): void {
+		this.isCompleted = isCompleted
+	}
+
+	undoTaskCompletion(): void {
+		this.confirmationService.confirm({
+			header: "Undo task completion",
+			message:
+				"Are you sure you want to undo task completion and restore the task?",
+			accept: () => {
+				this.taskService.setCompleteTaskState(this.task.id, false)
+				this.isCompleted = false
+				this.message.add({
+					severity: "success",
+					summary: "ITS ALIVE!",
+					detail: "Task restored successfully",
+				})
+			},
+		})
 	}
 }

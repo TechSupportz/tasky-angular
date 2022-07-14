@@ -51,6 +51,7 @@
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"
+		[dismissableMask]="true"
 	>
 		<div class="field">
 			<label for="categoryName" class="font-medium text-lg"
@@ -83,7 +84,7 @@
 			</button>
 		</ng-template>
 	</p-dialog>
-</form>
+</form> 
 
 <form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
 	<p-dialog
@@ -92,6 +93,7 @@
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"
+		[dismissableMask]="true"
 	>
 		<div class="field">
 			<label for="taskName" class="font-medium text-lg">Task Name</label>
