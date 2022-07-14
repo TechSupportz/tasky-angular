@@ -16,8 +16,12 @@ import { ConfirmationService } from "primeng/api"
 import { MessageService } from "primeng/api"
 import { TaskComponent } from "./components/task/task.component"
 import { TaskContainerComponent } from "./components/task-container/task-container.component"
-import { CommonModule } from "@angular/common";
-import { CompletedTaskComponent } from './components/completed-task/completed-task.component'
+import { CommonModule } from "@angular/common"
+import { CompletedTaskComponent } from "./components/completed-task/completed-task.component"
+import { CalendarComponent } from "./components/calendar/calendar.component"
+import { CalendarModule } from "primeng/calendar"
+import { DatePipe } from "@angular/common"
+
 
 @NgModule({
 	declarations: [
@@ -29,7 +33,8 @@ import { CompletedTaskComponent } from './components/completed-task/completed-ta
 		GroupCategoryComponent,
 		TaskComponent,
 		TaskContainerComponent,
-  CompletedTaskComponent,
+		CompletedTaskComponent,
+		CalendarComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,
@@ -39,9 +44,10 @@ import { CompletedTaskComponent } from './components/completed-task/completed-ta
 		PrimengModule,
 		ReactiveFormsModule,
 		CommonModule,
-		FormsModule
+		FormsModule,
+		CalendarModule,
 	],
-	providers: [ConfirmationService, MessageService],
+	providers: [ConfirmationService, MessageService, DatePipe],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

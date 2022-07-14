@@ -2,12 +2,13 @@ import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { SubTask, Tasks } from "../types/task"
 import { taskList } from "../mock-data/mock-task"
+import { DatePipe } from "@angular/common"
 
 @Injectable({
 	providedIn: "root",
 })
 export class TaskService {
-	constructor() {}
+	constructor(private datePipe: DatePipe) {}
 
 	getTaskList(): Observable<Tasks[]> {
 		return of(taskList)
@@ -19,13 +20,17 @@ export class TaskService {
 		)
 		return filteredTaskList
 	}
-	
+
 	setCompleteTaskState(taskId: number, isCompleted: boolean): void {
 		const task = taskList.find((t) => t.id == taskId)
 		task!.isCompleted = isCompleted
 	}
 
-	setCompleteSubTaskState(taskId: number, subTaskId: number, isCompleted: boolean): void {
+	setCompleteSubTaskState(
+		taskId: number,
+		subTaskId: number,
+		isCompleted: boolean,
+	): void {
 		const task = taskList.find((t) => t.id == taskId)
 		const subTask = task!.subTask.find((t) => t.id == subTaskId)
 		subTask!.isCompleted = isCompleted
@@ -42,7 +47,10 @@ export class TaskService {
 			categoryId: categoryId,
 			creatorId: 1,
 			name: taskName,
-			dueDate: taskDueDate,
+			dueDate: this.datePipe.transform(
+				taskDueDate,
+				"yyyy-MM-ddTHH:mm:ss",
+			)!,
 			priority: taskPriority,
 			isCompleted: false,
 			subTask: [],
@@ -63,7 +71,10 @@ export class TaskService {
 		const subTask: SubTask = {
 			id: task!.subTask.length + 1,
 			name: subTaskName,
-			dueDate: subTaskDueDate,
+			dueDate: this.datePipe.transform(
+				subTaskDueDate,
+				"yyyy-MM-ddTHH:mm:ss",
+			)!,
 			priority: subTaskPriority,
 			isCompleted: false,
 		}
@@ -80,7 +91,10 @@ export class TaskService {
 	): Observable<Tasks> {
 		const task = taskList.find((t) => t.id == taskId)
 		task!.name = taskName
-		task!.dueDate = taskDueDate
+		task!.dueDate = this.datePipe.transform(
+			taskDueDate,
+			"yyyy-MM-ddTHH:mm:ss",
+		)!
 		task!.priority = taskPriority
 
 		return of(taskList.find((t) => t.id == taskId)!)
@@ -96,7 +110,10 @@ export class TaskService {
 		const task = taskList.find((t) => t.id == taskId)
 		const subTask = task!.subTask.find((t) => t.id == subTaskId)
 		subTask!.name = subTaskName
-		subTask!.dueDate = subTaskDueDate
+		subTask!.dueDate = this.datePipe.transform(
+			subTaskDueDate,
+			"yyyy-MM-ddTHH:mm:ss",
+		)!
 		subTask!.priority = subTaskPriority
 
 		return of(task!.subTask.find((t) => t.id == subTaskId)!)
