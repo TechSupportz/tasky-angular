@@ -38,15 +38,15 @@ export const taskList: Tasks[] = [
 			{
 				id: 1,
 				name: "something about why flutter is amazing",
-				dueDate: "2022-08-29T23:59:00",
+				dueDate: "2022-07-16T23:59:00",
 				priority: "Medium",
 				isCompleted: false,
 			},
 			{
 				id: 2,
 				name: "something about us having to make a widget tree",
-				dueDate: "2022-08-29T23:59:00",
-				priority: "High",
+				dueDate: "2022-07-19T23:59:00",
+				priority: "Low",
 				isCompleted: false,
 			},
 			
@@ -58,7 +58,7 @@ export const taskList: Tasks[] = [
 		categoryId: 2,
 		creatorId: 1,
 		name: "MBAP Part 3",
-		dueDate: "2022-06-29T23:59:00",
+		dueDate: "2022-08-05T23:59:00",
 		priority: "High",
 		isCompleted: false,
 		subTask: [],
