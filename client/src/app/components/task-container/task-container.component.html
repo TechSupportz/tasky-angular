@@ -6,11 +6,13 @@
 			[task]="task"
 			[parentId]="task.id"
 			[isSubTask]="false"
+			[isHomePage]="isHomePage"
 		></app-task>
 		<p-button
 			*ngIf="isHomePage; else categoryPage"
 			styleClass="addBtn p-button-rounded p-button-secondary p-button-text p-button-sm"
 			icon="pi pi-external-link text-xl"
+			(click)="goToCategory()"
 		></p-button>
 		<ng-template #categoryPage>
 			<p-button
@@ -41,6 +43,7 @@
 				[task]="subTask"
 				[parentId]="task.id"
 				[isSubTask]="true"
+				[isHomePage]="isHomePage"
 			></app-task>
 		</div>
 	</div>

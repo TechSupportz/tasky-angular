@@ -5,7 +5,7 @@
 			(onChange)="onCompleteStateChange($event.checked)"
 			[(ngModel)]="isTaskCompleted"
 			[binary]="true"
-			[disabled]="isTaskCompleted && !isSubTask"
+			[disabled]="(isTaskCompleted && !isSubTask) || isHomePage"
 		></p-checkbox>
 		<label for="taskName" class="text-xl font-medium">{{
 			task.name

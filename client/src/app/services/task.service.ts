@@ -3,6 +3,7 @@ import { Observable, of } from "rxjs"
 import { SubTask, Tasks } from "../types/task"
 import { taskList } from "../mock-data/mock-task"
 import { DatePipe } from "@angular/common"
+import { DateTime } from "luxon"
 
 @Injectable({
 	providedIn: "root",
@@ -12,6 +13,28 @@ export class TaskService {
 
 	getTaskList(): Observable<Tasks[]> {
 		return of(taskList)
+	}
+
+	getUpcomingTasks(): Observable<Tasks[]> {
+		const currentDate = DateTime.now()
+
+		const taskListCopy: Tasks[] = JSON.parse(JSON.stringify(taskList))
+
+		const upcomingTaskList = taskListCopy.filter((task) => {
+			const taskDate = DateTime.fromISO(task.dueDate)
+			const diff = taskDate.diff(currentDate, "days")
+			return diff.days <= 14
+		})
+
+		upcomingTaskList.forEach((task) => {
+			task.subTask = task.subTask.filter((subTask) => {
+				const subTaskDate = DateTime.fromISO(subTask.dueDate)
+				const diff = subTaskDate.diff(currentDate, "days")
+				return diff.days <= 14
+			})
+		})
+
+		return of(upcomingTaskList)
 	}
 
 	getTaskByCategoryId(categoryId: number): Observable<Tasks[]> {

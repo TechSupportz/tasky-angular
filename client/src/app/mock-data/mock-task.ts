@@ -49,6 +49,13 @@ export const taskList: Tasks[] = [
 				priority: "Low",
 				isCompleted: false,
 			},
+			{
+				id: 3,
+				name: "something else I guess",
+				dueDate: "2022-08-19T23:59:00",
+				priority: "Low",
+				isCompleted: false,
+			},
 			
 			
 		],

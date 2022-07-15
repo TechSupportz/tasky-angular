@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { Router } from "@angular/router"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { TaskService } from "src/app/services/task.service"
 import { Tasks } from "src/app/types/task"
@@ -24,6 +25,7 @@ export class TaskContainerComponent implements OnInit {
 		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
 		private message: MessageService,
+		private router: Router,
 	) {}
 
 	ngOnInit(): void {
@@ -32,6 +34,10 @@ export class TaskContainerComponent implements OnInit {
 			subTaskDueDate: [""],
 			subTaskPriority: ["", Validators.required],
 		})
+	}
+
+	goToCategory(): void {
+		this.router.navigate([`/category/${this.task.categoryId}`])
 	}
 
 	showAddSubTaskDialog(): void {
@@ -71,7 +77,7 @@ export class TaskContainerComponent implements OnInit {
 					summary: "Into the trash it goes!",
 					detail: "Task deleted successfully",
 				})
-			}
+			},
 		})
 	}
 

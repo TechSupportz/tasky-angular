@@ -20,6 +20,7 @@ export class TaskComponent implements OnInit {
 	@Input() task: Tasks | SubTask
 	@Input() isSubTask: boolean
 	@Input() parentId: number // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
+	@Input() isHomePage: boolean = false
 
 	@Output() isDeleted = new EventEmitter<boolean>()
 	@Output() isCompleted = new EventEmitter<boolean>()

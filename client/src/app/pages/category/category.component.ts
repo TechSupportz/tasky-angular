@@ -46,6 +46,7 @@ export class CategoryComponent implements OnInit {
 				.getTaskByCategoryId(this.categoryId)
 				.subscribe((tasks) => {
 					this.taskList = tasks
+					console.log(tasks)
 				})
 
 			this.categorySettingsForm = this.fb.group({

@@ -71,6 +71,6 @@ export class CalendarComponent implements OnChanges {
 
 	eventClick(info: any): void {
 		info.jsEvent.preventDefault()
-		this.router.navigateByUrl(info.event.url)
+		this.router.navigate([info.event.url])
 	}
 }
