@@ -18,7 +18,6 @@ import { TaskComponent } from "./components/task/task.component"
 import { TaskContainerComponent } from "./components/task-container/task-container.component"
 import { CommonModule } from "@angular/common"
 import { CalendarComponent } from "./components/calendar/calendar.component"
-import { CalendarModule } from "primeng/calendar"
 import { DatePipe } from "@angular/common"
 
 
@@ -43,7 +42,6 @@ import { DatePipe } from "@angular/common"
 		ReactiveFormsModule,
 		CommonModule,
 		FormsModule,
-		CalendarModule,
 	],
 	providers: [ConfirmationService, MessageService, DatePipe],
 	bootstrap: [AppComponent],

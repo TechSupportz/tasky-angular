@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core"
-import { Category } from "../types/category"
+import { Category, CategoryType } from "../types/category"
 import { Observable, of } from "rxjs"
 import { categoryList } from "../mock-data/mock-category"
 
@@ -18,10 +18,11 @@ export class CategoryService {
 		return category
 	}
 
-	addCategory(categoryName: string): void {
+	addCategory(categoryName: string, categoryType: CategoryType): void {
 		categoryList.push({
 			id: categoryList.length + 1,
 			categoryName: categoryName,
+			categoryType: categoryType,
 		})
 	}
 

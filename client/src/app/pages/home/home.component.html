@@ -4,8 +4,8 @@
 	>
 		<p class="text-4xl font-semibold mb-5">Good Morning, {{ username }}</p>
 		<p class="text-2xl font-medium">Upcoming Tasks</p>
-    <br>
-    <div
+		<br />
+		<div
 			*ngIf="taskList.length === 0"
 			class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
 		>
@@ -17,7 +17,7 @@
 		<div class="flex flex-column gap-3 p-1">
 			<app-task-container
 				*ngFor="let task of taskList"
-        [isHomePage]="true"
+				[isHomePage]="true"
 				[task]="task"
 			></app-task-container>
 		</div>

@@ -22,7 +22,7 @@ export class CategoryComponent implements OnInit {
 	categorySettingsForm: FormGroup
 	addTaskForm: FormGroup
 	priorityOptions: string[] = ["High", "Medium", "Low"]
-	private routeSubscription!: Subscription
+	private routeSubscription: Subscription
 
 	constructor(
 		private route: ActivatedRoute,
@@ -77,6 +77,7 @@ export class CategoryComponent implements OnInit {
 			.editCategory({
 				id: this.categoryId,
 				categoryName: this.categorySettingsForm.value.categoryName,
+				categoryType: this.category?.categoryType!,
 			})
 			.subscribe((category) => {
 				this.categoryId = category.id
