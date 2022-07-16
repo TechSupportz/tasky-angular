@@ -46,7 +46,7 @@ export class TaskComponent implements OnInit {
 	ngOnInit(): void {
 		this.editTaskForm = this.fb.group({
 			taskName: [this.task.name, Validators.required],
-			taskDueDate: [this.task.dueDate],
+			taskDueDate: [this.task.dueDate, Validators.required],
 			taskPriority: [this.task.priority, Validators.required],
 		})
 

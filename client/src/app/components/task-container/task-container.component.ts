@@ -31,7 +31,7 @@ export class TaskContainerComponent implements OnInit {
 	ngOnInit(): void {
 		this.addSubTaskForm = this.fb.group({
 			subTaskName: ["", Validators.required],
-			subTaskDueDate: [""],
+			subTaskDueDate: ["", Validators.required],
 			subTaskPriority: ["", Validators.required],
 		})
 	}

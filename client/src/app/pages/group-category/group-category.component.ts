@@ -49,8 +49,8 @@ export class GroupCategoryComponent implements OnInit {
 
 			this.addTaskForm = this.fb.group({
 				taskName: ["", Validators.required],
-				taskDueDate: [""],
-				taskPriority: [""],
+				taskDueDate: ["", Validators.required],
+				taskPriority: ["", Validators.required],
 			})
 		})
 	}
