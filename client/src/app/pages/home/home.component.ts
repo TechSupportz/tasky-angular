@@ -2,13 +2,14 @@ import { Component, OnInit } from "@angular/core"
 import { TaskService } from "src/app/services/task.service"
 import { UserService } from "src/app/services/user.service"
 import { Tasks } from "src/app/types/task"
+import { User } from "src/app/types/user"
 
 @Component({
 	templateUrl: "./home.component.html",
 	styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
-	username: string 
+	user: User
 	taskList: Tasks[]
 
 	constructor(
@@ -17,12 +18,12 @@ export class HomeComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.taskService
-			.getUpcomingTasks()
-			.subscribe((tasks) => (this.taskList = tasks))
-
 		this.userService
 			.getCurrentUser()
-			.subscribe((user) => (this.username = user.username))
+			.subscribe((user) => (this.user = user))
+
+		this.taskService
+			.getUpcomingTasks(this.user.id)
+			.subscribe((tasks) => (this.taskList = tasks))
 	}
 }

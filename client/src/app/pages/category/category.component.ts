@@ -7,6 +7,8 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { TaskService } from "src/app/services/task.service"
 import { Tasks } from "src/app/types/task"
+import { UserService } from "src/app/services/user.service"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-category",
@@ -16,6 +18,7 @@ import { Tasks } from "src/app/types/task"
 export class CategoryComponent implements OnInit {
 	categoryId: number
 	category?: Category
+	user: User
 	taskList: Tasks[]
 	isSettingsDialogVisible: boolean = false
 	isAddTaskDialogVisible: boolean = false
@@ -24,8 +27,9 @@ export class CategoryComponent implements OnInit {
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	private routeSubscription: Subscription
 
-	constructor(	
+	constructor(
 		private route: ActivatedRoute,
+		private userService: UserService,
 		private categoryService: CategoryService,
 		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
@@ -42,6 +46,10 @@ export class CategoryComponent implements OnInit {
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => (this.category = category))
 
+			this.userService
+				.getCurrentUser()
+				.subscribe((user) => (this.user = user))
+
 			this.taskService
 				.getTaskByCategoryId(this.categoryId)
 				.subscribe((tasks) => {
@@ -50,10 +58,7 @@ export class CategoryComponent implements OnInit {
 				})
 
 			this.categorySettingsForm = this.fb.group({
-				categoryName: [
-					this.category?.name,
-					Validators.required,
-				],
+				categoryName: [this.category?.name, Validators.required],
 			})
 
 			this.addTaskForm = this.fb.group({
@@ -76,6 +81,7 @@ export class CategoryComponent implements OnInit {
 		this.categoryService
 			.editCategory({
 				id: this.categoryId,
+				creatorId: this.user.id,
 				name: this.categorySettingsForm.value.categoryName,
 				type: this.category?.type!,
 			})

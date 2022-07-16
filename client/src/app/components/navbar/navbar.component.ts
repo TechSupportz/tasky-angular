@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core"
 import { CategoryService } from "src/app/services/category.service"
 import { Category, CategoryType } from "src/app/types/category"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { UserService } from "src/app/services/user.service"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-navbar",
@@ -9,20 +11,26 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 	styleUrls: ["./navbar.component.css"],
 })
 export class NavbarComponent implements OnInit {
+	user: User
 	categoryList: Category[] = []
 	isAddDialogVisible: boolean = false
 	addCategoryForm: FormGroup
 	readonly CategoryType = CategoryType
 
-
 	constructor(
 		private categoryService: CategoryService,
+		private userService: UserService,
 		private fb: FormBuilder,
 	) {}
 
 	ngOnInit(): void {
-		this.categoryService.getCategoryList().subscribe((categoryList) => {
-			this.categoryList = categoryList
+		this.userService.getCurrentUser().subscribe((user) => {
+			this.categoryService
+				.getCategoryList(user.id)
+				.subscribe((categoryList) => {
+					this.categoryList = categoryList
+					console.log(categoryList)
+				})
 		})
 
 		this.addCategoryForm = this.fb.group({
@@ -44,6 +52,7 @@ export class NavbarComponent implements OnInit {
 		console.log(categoryType)
 
 		this.categoryService.addCategory(
+			this.user.id,
 			this.addCategoryForm.value.categoryName,
 			categoryType,
 		)

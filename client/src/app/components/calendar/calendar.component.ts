@@ -8,7 +8,9 @@ import {
 import { Router } from "@angular/router"
 import { CalendarOptions, EventSourceInput } from "@fullcalendar/angular"
 import { TaskService } from "src/app/services/task.service"
+import { UserService } from "src/app/services/user.service"
 import { Tasks } from "src/app/types/task"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-calendar",
@@ -19,14 +21,23 @@ export class CalendarComponent implements OnChanges {
 	@Input() isCategory: boolean = false
 	@Input() categoryId?: number
 
+	user: User
 	calendarOptions: CalendarOptions = {
 		initialView: "dayGridMonth",
 		events: [],
 	}
 
-	constructor(private taskService: TaskService, private router: Router) {}
+	constructor(
+		private userService: UserService,
+		private taskService: TaskService,
+		private router: Router,
+	) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
+		this.userService
+			.getCurrentUser()
+			.subscribe((user) => (this.user = user))
+
 		if (changes.categoryId) {
 			this.taskService
 				.getTaskByCategoryId(this.categoryId!)
@@ -34,7 +45,7 @@ export class CalendarComponent implements OnChanges {
 					this.generateEventList(tasks)
 				})
 		} else {
-			this.taskService.getTaskList().subscribe((tasks) => {
+			this.taskService.getTaskList(this.user.id).subscribe((tasks) => {
 				this.generateEventList(tasks)
 			})
 		}

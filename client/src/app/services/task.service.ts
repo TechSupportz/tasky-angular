@@ -11,27 +11,36 @@ import { DateTime } from "luxon"
 export class TaskService {
 	constructor(private datePipe: DatePipe) {}
 
-	getTaskList(): Observable<Tasks[]> {
-		return of(taskList)
+	getTaskList(userId: number): Observable<Tasks[]> {
+		return of(taskList.filter((task) => task.creatorId == userId))
 	}
 
-	getUpcomingTasks(): Observable<Tasks[]> {
+	getUpcomingTasks(userId: number): Observable<Tasks[]> {
 		const currentDate = DateTime.now()
 
-		const taskListCopy: Tasks[] = JSON.parse(JSON.stringify(taskList)) // creates a deep copy of the taskList (https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
+		const taskListCopy: Tasks[] = JSON.parse(
+			JSON.stringify(taskList.filter((task) => task.creatorId == userId)),
+		) // creates a deep copy of the taskList (https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
 
-		const upcomingTaskList = taskListCopy.filter((task) => {
-			const taskDate = DateTime.fromISO(task.dueDate)
-			const diff = taskDate.diff(currentDate, "days")
-			return diff.days <= 14
-		})
-
-		upcomingTaskList.forEach((task) => {
+		taskListCopy.forEach((task) => {
 			task.subTask = task.subTask.filter((subTask) => {
 				const subTaskDate = DateTime.fromISO(subTask.dueDate)
 				const diff = subTaskDate.diff(currentDate, "days")
 				return diff.days <= 14
 			})
+		})
+
+		const upcomingTaskList = taskListCopy.filter((task) => {
+			const taskDate = DateTime.fromISO(task.dueDate)
+			const diff = taskDate.diff(currentDate, "days")
+			if (diff.days <= 14) {
+				return task
+			} else if (diff.days > 14 && task.subTask.length > 0) {
+				return task
+			} else {
+				return null
+			}
+			
 		})
 
 		return of(upcomingTaskList)

@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.userService
-			.getUserById(1)
+			.getUserById(2)
 			.subscribe((user) => this.userService.setCurrentUser(user))
 	}
 }

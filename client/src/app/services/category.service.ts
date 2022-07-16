@@ -9,8 +9,23 @@ import { categoryList } from "../mock-data/mock-category"
 export class CategoryService {
 	constructor() {}
 
-	getCategoryList(): Observable<Category[]> {
-		return of(categoryList)
+	getCategoryList(userId: number): Observable<Category[]> {
+		return of(
+			categoryList.filter((category) => {
+				if (category.type == CategoryType.GRP) {
+					return category.members?.find(
+						(member) => member.userId === userId,
+					)
+				} else {
+					console.log(category.id)
+					if (category.creatorId == userId) {
+						return category
+					} else {
+						return null
+					}
+				}
+			}),
+		)
 	}
 
 	getCategoryById(id: number): Observable<Category> {
@@ -25,9 +40,14 @@ export class CategoryService {
 		return category?.type == CategoryType.GRP
 	}
 
-	addCategory(categoryName: string, categoryType: CategoryType): void {
+	addCategory(
+		creatorId: number,
+		categoryName: string,
+		categoryType: CategoryType,
+	): void {
 		categoryList.push({
 			id: categoryList.length + 1,
+			creatorId: creatorId,
 			name: categoryName,
 			type: categoryType,
 		})
