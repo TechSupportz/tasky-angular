@@ -44,13 +44,15 @@ export class CategoryService {
 		creatorId: number,
 		categoryName: string,
 		categoryType: CategoryType,
-	): void {
+	): Observable<Category> {
 		categoryList.push({
 			id: categoryList.length + 1,
 			creatorId: creatorId,
 			name: categoryName,
 			type: categoryType,
 		})
+
+		return of(categoryList[categoryList.length - 1])
 	}
 
 	editCategory(category: Category): Observable<Category> {

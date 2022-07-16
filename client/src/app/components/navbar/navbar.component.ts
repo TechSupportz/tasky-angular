@@ -3,7 +3,7 @@ import { CategoryService } from "src/app/services/category.service"
 import { Category, CategoryType } from "src/app/types/category"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { UserService } from "src/app/services/user.service"
-import { User } from "src/app/types/user"
+import { User, UserType } from "src/app/types/user"
 
 @Component({
 	selector: "app-navbar",
@@ -12,6 +12,7 @@ import { User } from "src/app/types/user"
 })
 export class NavbarComponent implements OnInit {
 	user: User
+	UserType = UserType
 	categoryList: Category[] = []
 	isAddDialogVisible: boolean = false
 	addCategoryForm: FormGroup
@@ -29,13 +30,14 @@ export class NavbarComponent implements OnInit {
 				.getCategoryList(user.id)
 				.subscribe((categoryList) => {
 					this.categoryList = categoryList
+					this.user = user
 					console.log(categoryList)
 				})
 		})
 
 		this.addCategoryForm = this.fb.group({
 			categoryName: ["", Validators.required],
-			categoryType: [Boolean],
+			categoryType: [],
 		})
 	}
 
@@ -51,11 +53,13 @@ export class NavbarComponent implements OnInit {
 
 		console.log(categoryType)
 
-		this.categoryService.addCategory(
-			this.user.id,
-			this.addCategoryForm.value.categoryName,
-			categoryType,
-		)
+		this.categoryService
+			.addCategory(
+				this.user.id,
+				this.addCategoryForm.value.categoryName,
+				categoryType,
+			)
+			.subscribe((category) => this.categoryList.push(category))
 		this.isAddDialogVisible = false
 		this.addCategoryForm.reset()
 	}

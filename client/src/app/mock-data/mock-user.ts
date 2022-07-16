@@ -5,7 +5,7 @@ export const userList: User[] = [
 		id: 1,
 		username: "Steven",
 		email: "StevenGrant@gmail.com",
-		type: UserType.PRO,
+		type: UserType.FREE,
 	},
 	{
 		id: 2,
