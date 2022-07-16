@@ -1,24 +1,24 @@
-import { Category, CategoryType } from "../types/category";
+import { Category, CategoryType } from "../types/category"
 
 export const categoryList: Category[] = [
-		{
-			id: 1,
-			categoryName: "FWEB",
-			categoryType: CategoryType.INDIV,
-		},
-		{
-			id: 2,
-			categoryName: "MBAP",
-			categoryType: CategoryType.INDIV,
-		},
-		{
-			id: 3,
-			categoryName: "AMDT",
-			categoryType: CategoryType.INDIV,
-		},
-		{
-			id: 4,
-			categoryName: "INNOVA",
-			categoryType: CategoryType.GRP,
-		},
-	]
+	{
+		id: 1,
+		name: "FWEB",
+		type: CategoryType.INDIV,
+	},
+	{
+		id: 2,
+		name: "MBAP",
+		type: CategoryType.INDIV,
+	},
+	{
+		id: 3,
+		name: "AMDT",
+		type: CategoryType.INDIV,
+	},
+	{
+		id: 4,
+		name: "INNOVA",
+		type: CategoryType.GRP,
+	},
+]

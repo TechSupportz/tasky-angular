@@ -21,8 +21,8 @@ export class CategoryService {
 	addCategory(categoryName: string, categoryType: CategoryType): void {
 		categoryList.push({
 			id: categoryList.length + 1,
-			categoryName: categoryName,
-			categoryType: categoryType,
+			name: categoryName,
+			type: categoryType,
 		})
 	}
 

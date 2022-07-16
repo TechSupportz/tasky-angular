@@ -93,6 +93,7 @@ export class TaskService {
 		const task = taskList.find((t) => t.id == taskId)
 		const subTask: SubTask = {
 			id: task!.subTask.length + 1,
+			creatorId: 1,
 			name: subTaskName,
 			dueDate: this.datePipe.transform(
 				subTaskDueDate,
