@@ -12,6 +12,7 @@ export const taskList: Tasks[] = [
 		subTask: [
 			{
 				id: 1,
+				creatorId: 1,
 				name: "something about why react is better",
 				dueDate: "2022-07-17T23:59:00",
 				priority: "High",
@@ -19,6 +20,8 @@ export const taskList: Tasks[] = [
 			},
 			{
 				id: 2,
+				creatorId: 1,
+
 				name: "idk man something about angular being bad",
 				dueDate: "2022-07-17T23:59:00",
 				priority: "High",
@@ -37,6 +40,7 @@ export const taskList: Tasks[] = [
 		subTask: [
 			{
 				id: 1,
+				creatorId: 1,
 				name: "something about why flutter is amazing",
 				dueDate: "2022-07-16T23:59:00",
 				priority: "Medium",
@@ -44,6 +48,8 @@ export const taskList: Tasks[] = [
 			},
 			{
 				id: 2,
+				creatorId: 1,
+
 				name: "something about us having to make a widget tree",
 				dueDate: "2022-07-19T23:59:00",
 				priority: "Low",
@@ -51,13 +57,12 @@ export const taskList: Tasks[] = [
 			},
 			{
 				id: 3,
+				creatorId: 1,
 				name: "something else I guess",
 				dueDate: "2022-08-19T23:59:00",
 				priority: "Low",
 				isCompleted: false,
 			},
-			
-			
 		],
 	},
 	{
@@ -69,5 +74,24 @@ export const taskList: Tasks[] = [
 		priority: "High",
 		isCompleted: false,
 		subTask: [],
+	},
+	{
+		id: 4,
+		categoryId: 4,
+		creatorId: 1,
+		name: "Innova BMC Quiz",
+		dueDate: "2022-08-05T23:59:00",
+		priority: "High",
+		isCompleted: false,
+		subTask: [
+			{
+				id: 1,
+				creatorId: 1,
+				name: "Study for quiz",
+				dueDate: "2022-07-031T23:59:00",
+				priority: "Medium",
+				isCompleted: false,
+			},
+		],
 	},
 ]

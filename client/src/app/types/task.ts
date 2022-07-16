@@ -11,6 +11,7 @@ export interface Tasks {
 
 export interface SubTask {
 	id: number
+	creatorId: number
 	name: string
 	dueDate: string
 	priority: string

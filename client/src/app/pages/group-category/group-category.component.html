@@ -1,6 +1,6 @@
 <div class="grid min-h-full max-w-full gap-3 p-5">
 	<div class="col-8 shadow-4 border-round-lg py-3 px-4">
-		<p class="text-4xl font-semibold mb-5">{{ category!.categoryName }}</p>
+		<p class="text-4xl font-semibold mb-5">{{ category!.name }}</p>
 
 		<div class="flex justify-content-between align-items-center">
 			<p class="text-2xl font-medium">Tasks</p>
@@ -44,3 +44,57 @@
 		</div>
 	</div>
 </div>
+
+<form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
+	<p-dialog
+		header="Add Task"
+		[(visible)]="isAddTaskDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[dismissableMask]="true"
+	>
+		<div class="field">
+			<label for="taskName" class="font-medium text-lg">Task Name</label>
+			<input
+				id="taskName"
+				formControlName="taskName"
+				class="w-full"
+				type="text"
+				placeholder="Enter the name of your task"
+				pInputText
+			/>
+		</div>
+		<div class="field">
+			<label for="taskDueDate" class="font-medium text-lg w-full"
+				>Due Date</label
+			>
+			<small id="username-help"
+				>Select the date & time when the assignment is due.
+			</small>
+			<p-calendar
+				id="taskDueDate"
+				formControlName="taskDueDate"
+				styleClass="w-full"
+				[dateFormat]="'yyyy-mm-ddThh:mm:ss'"
+				[inline]="true"
+				[showTime]="true"
+			></p-calendar>
+		</div>
+		<div class="field">
+			<label for="taskPriority" class="font-medium text-lg w-full"
+				>Priority</label
+			>
+			<p-dropdown
+				[options]="priorityOptions"
+				formControlName="taskPriority"
+				placeholder="How important is this task?"
+			></p-dropdown>
+		</div>
+		<ng-template pTemplate="footer">
+			<button pButton type="submit" [disabled]="!addTaskForm.valid">
+				Add it
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>

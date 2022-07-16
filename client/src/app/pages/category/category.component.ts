@@ -24,7 +24,7 @@ export class CategoryComponent implements OnInit {
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	private routeSubscription: Subscription
 
-	constructor(
+	constructor(	
 		private route: ActivatedRoute,
 		private categoryService: CategoryService,
 		private taskService: TaskService,
@@ -51,7 +51,7 @@ export class CategoryComponent implements OnInit {
 
 			this.categorySettingsForm = this.fb.group({
 				categoryName: [
-					this.category?.categoryName,
+					this.category?.name,
 					Validators.required,
 				],
 			})
@@ -76,8 +76,8 @@ export class CategoryComponent implements OnInit {
 		this.categoryService
 			.editCategory({
 				id: this.categoryId,
-				categoryName: this.categorySettingsForm.value.categoryName,
-				categoryType: this.category?.categoryType!,
+				name: this.categorySettingsForm.value.categoryName,
+				type: this.category?.type!,
 			})
 			.subscribe((category) => {
 				this.categoryId = category.id

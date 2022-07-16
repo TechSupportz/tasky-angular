@@ -5,13 +5,13 @@
 		<p-button
 			*ngFor="let category of categoryList"
 			icon="{{
-				category.categoryType === CategoryType.INDIV
+				category.type === CategoryType.INDIV
 					? 'pi pi-book'
 					: 'pi pi-users'
 			}}"
 			styleClass="p-button-rounded"
 			routerLink="/{{
-				category.categoryType === CategoryType.INDIV
+				category.type === CategoryType.INDIV
 					? 'category'
 					: 'group'
 			}}/{{ category.id }}"

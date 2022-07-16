@@ -1,8 +1,8 @@
 export interface Category {
 	id: number;
-	categoryName: string;
-	categoryType: CategoryType;
-	categoryIcon?: string;
+	name: string;
+	type: CategoryType;
+	icon?: string;
 }
 
 export enum CategoryType {
