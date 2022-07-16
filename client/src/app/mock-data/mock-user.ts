@@ -3,20 +3,20 @@ import { User, UserType } from "../types/user"
 export const userList: User[] = [
 	{
 		id: 1,
-		username: "John",
-		email: "john@gmail.com",
-		type: UserType.PRO_PLUS,
+		username: "Steven",
+		email: "StevenGrant@gmail.com",
+		type: UserType.PRO,
 	},
 	{
 		id: 2,
-		username: "Mary",
-		email: "mary@gmail.com",
+		username: "Marc",
+		email: "MarcSpector@gmail.com",
 		type: UserType.PRO_PLUS,
 	},
 	{
 		id: 3,
-		username: "",
-		email: "john@gmail.com",
+		username: "Jake",
+		email: "JakeLockley@gmail.com",
 		type: UserType.PRO_PLUS,
 	},
 ]

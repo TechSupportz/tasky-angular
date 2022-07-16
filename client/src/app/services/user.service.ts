@@ -11,6 +11,11 @@ export class UserService {
 
 	constructor() {}
 
+	// ONLY HERE FOR TESTING PURPOSES,TO BE REMOVED IN FINAL VERSION
+	getAllUsers(): User[] {
+		return userList
+	}
+
 	getCurrentUser(): Observable<User> {
 		return of(this.currentUser)
 	}
