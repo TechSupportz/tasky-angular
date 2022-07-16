@@ -10,6 +10,8 @@ import { SubTask, Tasks } from "src/app/types/task"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
+import { UserService } from "src/app/services/user.service"
+import { CategoryService } from "src/app/services/category.service"
 
 @Component({
 	selector: "app-task",
@@ -25,6 +27,8 @@ export class TaskComponent implements OnInit {
 	@Output() isDeleted = new EventEmitter<boolean>()
 	@Output() isCompleted = new EventEmitter<boolean>()
 
+	username: string
+	isGroupTask: boolean
 	isTaskCompleted: boolean
 	isEditTaskDialogVisible: boolean = false
 	priorityOptions: string[] = ["High", "Medium", "Low"]
@@ -32,6 +36,7 @@ export class TaskComponent implements OnInit {
 
 	constructor(
 		private taskService: TaskService,
+		private userService: UserService,
 		private message: MessageService,
 		private confirmationService: ConfirmationService,
 		private cd: ChangeDetectorRef,
@@ -50,6 +55,10 @@ export class TaskComponent implements OnInit {
 		if (!this.isSubTask) {
 			this.isCompleted.emit(this.isTaskCompleted)
 		}
+
+		this.userService
+			.getUserById(this.task.creatorId)
+			.subscribe((user) => (this.username = user.username))
 	}
 
 	showEditTaskDialog(e: Event) {

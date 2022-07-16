@@ -86,9 +86,9 @@ export const taskList: Tasks[] = [
 		subTask: [
 			{
 				id: 1,
-				creatorId: 1,
+				creatorId: 2,
 				name: "Study for quiz",
-				dueDate: "2022-07-031T23:59:00",
+				dueDate: "2022-07-31T23:59:00",
 				priority: "Medium",
 				isCompleted: false,
 			},

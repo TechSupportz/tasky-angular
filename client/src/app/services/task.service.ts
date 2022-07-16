@@ -18,7 +18,7 @@ export class TaskService {
 	getUpcomingTasks(): Observable<Tasks[]> {
 		const currentDate = DateTime.now()
 
-		const taskListCopy: Tasks[] = JSON.parse(JSON.stringify(taskList))
+		const taskListCopy: Tasks[] = JSON.parse(JSON.stringify(taskList)) // creates a deep copy of the taskList (https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
 
 		const upcomingTaskList = taskListCopy.filter((task) => {
 			const taskDate = DateTime.fromISO(task.dueDate)

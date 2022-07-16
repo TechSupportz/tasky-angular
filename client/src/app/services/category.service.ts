@@ -18,6 +18,13 @@ export class CategoryService {
 		return category
 	}
 
+	isGroupCategory(categoryId: number): boolean {
+		const category = categoryList.find(
+			(category) => category.id == categoryId,
+		)
+		return category?.type == CategoryType.GRP
+	}
+
 	addCategory(categoryName: string, categoryType: CategoryType): void {
 		categoryList.push({
 			id: categoryList.length + 1,
