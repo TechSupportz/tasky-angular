@@ -66,6 +66,16 @@ export class CategoryService {
 		}
 	}
 
+	removeMember(categoryId: number, userId: number): void {
+		const category = categoryList.find((c) => c.id == categoryId)
+		if (category?.members) {
+			const index = category.members.findIndex(
+				(member) => member.userId == userId,
+			)
+			category.members.splice(index, 1)
+		}
+	}
+
 	editCategory(category: Category): Observable<Category> {
 		const index = categoryList.findIndex((c) => c.id == category.id)
 		categoryList[index] = category

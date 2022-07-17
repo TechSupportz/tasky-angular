@@ -76,7 +76,7 @@
 					(click)="showAddMemberDialog()"
 				></p-button>
 			</div>
-			<div *ngFor="let member of category!.members">
+			<div *ngFor="let member of category?.members">
 				<div
 					class="px-1 flex justify-content-between align-items-center"
 				>
@@ -84,7 +84,8 @@
 					<p-button
 						styleClass="p-button-rounded p-button-text p-button-sm p-button-danger"
 						icon="pi pi-times text-lg"
-						(click)="removeMember(member.userId)"
+						[disabled]="member.userId === user.id"
+						(click)="removeMember(member)"
 					></p-button>
 				</div>
 				<p-divider></p-divider>

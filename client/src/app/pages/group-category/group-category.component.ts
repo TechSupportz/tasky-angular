@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
-import { Category } from "src/app/types/category"
+import { Category, CategoryMember } from "src/app/types/category"
 import { Tasks } from "src/app/types/task"
 import { Subscription } from "rxjs"
 import { CategoryService } from "src/app/services/category.service"
@@ -19,6 +19,7 @@ export class GroupCategoryComponent implements OnInit {
 	categoryId: number
 	category: Category
 	user: User
+	members: CategoryMember[]
 	taskList: Tasks[]
 	newMemberUsername: string
 	isSettingsDialogVisible: boolean = false
@@ -63,6 +64,10 @@ export class GroupCategoryComponent implements OnInit {
 					)
 				) {
 					this.router.navigate(["/404"])
+				} else {
+					this.members = this.category?.members.filter(
+						(member) => member.userId !== user.id,
+					)
 				}
 			})
 
@@ -127,7 +132,13 @@ export class GroupCategoryComponent implements OnInit {
 		)
 
 		if (newMember) {
-			if (
+			if (newMember.id === this.user.id) {
+				this.message.add({
+					severity: "error",
+					summary: "Thats... you?",
+					detail: "You can't add yourself AGAIN to the category",
+				})
+			} else if (
 				this.category.members?.some(
 					(member) => member.userId === newMember.id,
 				)
@@ -162,8 +173,32 @@ export class GroupCategoryComponent implements OnInit {
 		}
 	}
 
-	removeMember(memberId: number) {
-		console.log(memberId)
+	removeMember(member: CategoryMember) {
+		if (member.userId === this.user.id) {
+			this.message.add({
+				severity: "error",
+				summary: "You can't delete yourself",
+				detail: "You can't leave your own category.",
+			})
+		} else {
+			this.confirmationService.confirm({
+				header: "Remove member",
+				message: `Are you sure you want to remove ${member.username} from this category?`,
+				accept: () => {
+					this.categoryService.removeMember(
+						this.categoryId,
+						member.userId,
+					)
+					this.message.add({
+						severity: "success",
+						summary: "YEET!",
+						detail: "User has been removed from this category",
+					})
+					this.isAddMemberDialogVisible = false
+					this.isSettingsDialogVisible = false
+				},
+			})
+		}
 	}
 
 	deleteCategory() {
