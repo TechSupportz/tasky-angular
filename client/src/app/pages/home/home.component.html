@@ -31,7 +31,7 @@
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
 			<p class="text-4xl font-semibold mb-5">Bookmarks</p>
 			<div class="grid align-items-center">
-				<div *ngFor="let bookmark of bookmarkList" class="col-3">
+				<div (contextmenu)="deleteConfirm(bookmark, $event)" *ngFor="let bookmark of bookmarkList" class="col-3">
 					<app-bookmark [bookmark]="bookmark"></app-bookmark>
 				</div>
 				<div *ngIf="bookmarkList.length < 8" class="max-w-min">

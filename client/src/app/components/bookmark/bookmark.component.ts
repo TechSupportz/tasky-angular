@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ConfirmationService } from 'primeng/api';
 import { Bookmark } from 'src/app/models/bookmark';
+import { BookmarkService } from 'src/app/services/bookmark.service';
 
 @Component({
   selector: 'app-bookmark',
@@ -9,7 +11,7 @@ import { Bookmark } from 'src/app/models/bookmark';
 export class BookmarkComponent implements OnInit {
   @Input() bookmark: Bookmark;
 
-  constructor() { }
+  constructor(private bookmarkService: BookmarkService, private confirmation: ConfirmationService) { }
 
   ngOnInit(): void {
   }
@@ -17,5 +19,6 @@ export class BookmarkComponent implements OnInit {
   navigate() {
     window.open(this.bookmark.link, '_blank');
   }
+  
 
 }

@@ -13,12 +13,30 @@ export class BookmarkService {
 		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
 	}
 
-	addBookmark(newBookmark: Bookmark): Observable<Bookmark[]> {
+	addBookmark(
+		userId: number,
+		title: string,
+		link: string,
+	): Observable<Bookmark[]> {
+		const newBookmark: Bookmark = {
+			id: bookmarkList.length + 1,
+			userId: userId,
+			title: title,
+			link: link,
+		}
 		bookmarkList.push(newBookmark)
 		return of(
 			bookmarkList.filter(
 				(bookmark) => bookmark.userId === newBookmark.userId,
 			),
 		)
+	}
+
+	deleteBookmark(bookmarkId: number, userId: number): Observable<Bookmark[]> {
+		bookmarkList.splice(
+			bookmarkList.findIndex((bookmark) => bookmark.id === bookmarkId),
+			1,
+		)
+		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
 	}
 }

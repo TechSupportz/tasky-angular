@@ -1,4 +1,7 @@
-<div class="flex flex-column justify-content-center align-items-center max-w-min">
+<div
+	(contextmenu)="$event.preventDefault()"
+	class="flex flex-column justify-content-center align-items-center max-w-min"
+>
 	<button
 		pButton
 		(click)="navigate()"

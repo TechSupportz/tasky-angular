@@ -6,7 +6,7 @@ import { User } from "src/app/models/user"
 import { BookmarkService } from "src/app/services/bookmark.service"
 import { Bookmark } from "src/app/models/bookmark"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
-import { MessageService } from "primeng/api"
+import { ConfirmationService, MessageService } from "primeng/api"
 
 @Component({
 	templateUrl: "./home.component.html",
@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
 		private userService: UserService,
 		private bookmarkService: BookmarkService,
 		private message: MessageService,
-
+		private confirmationService: ConfirmationService,
 		private fb: FormBuilder,
 	) {}
 
@@ -53,11 +53,11 @@ export class HomeComponent implements OnInit {
 
 	addBookmark() {
 		this.bookmarkService
-			.addBookmark({
-				userId: this.user.id,
-				title: this.addBookmarkForm.value.bookmarkTitle,
-				link: this.addBookmarkForm.value.bookmarkLink,
-			})
+			.addBookmark(
+				this.user.id,
+				this.addBookmarkForm.value.bookmarkTitle,
+				this.addBookmarkForm.value.bookmarkLink,
+			)
 			.subscribe((newBookmarkList) => {
 				this.bookmarkList = newBookmarkList
 				this.isAddBookmarkDialogVisible = false
@@ -67,5 +67,24 @@ export class HomeComponent implements OnInit {
 					detail: "Bookmark added successfully",
 				})
 			})
+	}
+
+	deleteConfirm(bookmark: Bookmark, e: Event) {
+		e.preventDefault
+		this.confirmationService.confirm({
+			message: "Are you sure you want to delete this bookmark?",
+			accept: () => {
+				this.bookmarkService
+					.deleteBookmark(bookmark.id, bookmark.userId)
+					.subscribe((newBookmarkList) => {
+						this.bookmarkList = newBookmarkList
+						this.message.add({
+							severity: "success",
+							summary: "Poof!",
+							detail: "Bookmark deleted successfully",
+						})
+					})
+			},
+		})
 	}
 }
