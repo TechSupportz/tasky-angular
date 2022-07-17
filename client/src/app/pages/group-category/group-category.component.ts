@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
-import { Category, CategoryMember } from "src/app/types/category"
-import { Tasks } from "src/app/types/task"
+import { Category, CategoryMember } from "src/app/models/category"
+import { Tasks } from "src/app/models/task"
 import { Subscription } from "rxjs"
 import { CategoryService } from "src/app/services/category.service"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { UserService } from "src/app/services/user.service"
-import { User, UserType } from "src/app/types/user"
+import { User, UserType } from "src/app/models/user"
 
 @Component({
 	selector: "app-group-category",

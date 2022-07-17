@@ -1,4 +1,4 @@
-import { Category, CategoryType } from "../types/category"
+import { Category, CategoryType } from "../models/category"
 
 export const categoryList: Category[] = [
 	{

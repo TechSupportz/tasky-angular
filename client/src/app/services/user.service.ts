@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { userList } from "../mock-data/mock-user"
-import { User, UserType } from "../types/user"
+import { User, UserType } from "../models/user"
 
 @Injectable({
 	providedIn: "root",

@@ -1,14 +1,15 @@
 import { Injectable } from "@angular/core"
-import { Category, CategoryType } from "../types/category"
-import { Observable, of } from "rxjs"
+import { Category, CategoryType } from "../models/category"
+import { Observable, of, Subject } from "rxjs"
 import { categoryList } from "../mock-data/mock-category"
-import { User } from "../types/user"
+import { User } from "../models/user"
+import { TaskService } from "./task.service"
 
 @Injectable({
 	providedIn: "root",
 })
 export class CategoryService {
-	constructor() {}
+	constructor(private taskService: TaskService) {}
 
 	getCategoryList(userId: number): Observable<Category[]> {
 		return of(
@@ -83,8 +84,13 @@ export class CategoryService {
 		return of(categoryList[index])
 	}
 
+	private deletedIndex: Subject<number> = new Subject<number>()
+	public readonly notifyDeleteCategory$: Observable<number> =
+		new Subject<number>()
+
 	deleteCategory(id: number): void {
 		const index = categoryList.findIndex((c) => c.id == id)
 		categoryList.splice(index, 1)
+		this.taskService.deleteTaskByCategoryId(id)
 	}
 }

@@ -2,13 +2,14 @@ import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { Subscription } from "rxjs"
 import { CategoryService } from "src/app/services/category.service"
-import { Category } from "src/app/types/category"
+import { Category } from "src/app/models/category"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { TaskService } from "src/app/services/task.service"
-import { Tasks } from "src/app/types/task"
+import { Tasks } from "src/app/models/task"
 import { UserService } from "src/app/services/user.service"
-import { User } from "src/app/types/user"
+import { User } from "src/app/models/user"
+import { NavbarComponent } from "src/app/components/navbar/navbar.component"
 
 @Component({
 	selector: "app-category",
@@ -111,6 +112,7 @@ export class CategoryComponent implements OnInit {
 				this.categoryService.deleteCategory(this.categoryId)
 				this.isSettingsDialogVisible = false
 				this.router.navigate(["/home"])
+				
 				this.message.add({
 					severity: "success",
 					summary: "Poof!",

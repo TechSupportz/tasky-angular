@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core"
 import { TaskService } from "src/app/services/task.service"
 import { UserService } from "src/app/services/user.service"
-import { Tasks } from "src/app/types/task"
-import { User } from "src/app/types/user"
+import { Tasks } from "src/app/models/task"
+import { User } from "src/app/models/user"
 
 @Component({
 	templateUrl: "./home.component.html",

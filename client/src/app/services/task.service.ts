@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
-import { SubTask, Tasks } from "../types/task"
+import { SubTask, Tasks } from "../models/task"
 import { taskList } from "../mock-data/mock-task"
 import { DatePipe } from "@angular/common"
 import { DateTime } from "luxon"
@@ -156,6 +156,15 @@ export class TaskService {
 	deleteTask(id: number): void {
 		const index = taskList.findIndex((t) => t.id == id)
 		taskList.splice(index, 1)
+	}
+
+	deleteTaskByCategoryId(categoryId: number): void {
+		taskList.forEach((task) => {
+			if (task.categoryId == categoryId) {
+				const index = taskList.findIndex((t) => t.id == task.id)
+				taskList.splice(index, 1)
+			}
+		})
 	}
 
 	deleteSubTask(taskId: number, subTaskId: number): void {

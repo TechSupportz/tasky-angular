@@ -6,13 +6,13 @@ import {
 	EventEmitter,
 	ChangeDetectorRef,
 } from "@angular/core"
-import { SubTask, Tasks } from "src/app/types/task"
+import { SubTask, Tasks } from "src/app/models/task"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { UserService } from "src/app/services/user.service"
 import { CategoryService } from "src/app/services/category.service"
-import { User } from "src/app/types/user"
+import { User } from "src/app/models/user"
 
 @Component({
 	selector: "app-task",

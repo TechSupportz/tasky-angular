@@ -1,4 +1,4 @@
-import { Tasks } from "../types/task"
+import { Tasks } from "../models/task"
 
 export const taskList: Tasks[] = [
 	{
