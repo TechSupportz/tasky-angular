@@ -12,6 +12,7 @@ import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { UserService } from "src/app/services/user.service"
 import { CategoryService } from "src/app/services/category.service"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-task",

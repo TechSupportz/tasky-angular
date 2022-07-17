@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core"
-import { ActivatedRoute } from "@angular/router"
+import { ActivatedRoute, Router } from "@angular/router"
 import { Category } from "src/app/types/category"
 import { Tasks } from "src/app/types/task"
 import { Subscription } from "rxjs"
@@ -7,6 +7,8 @@ import { CategoryService } from "src/app/services/category.service"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { UserService } from "src/app/services/user.service"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-group-category",
@@ -16,6 +18,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 export class GroupCategoryComponent implements OnInit {
 	categoryId: number
 	category?: Category
+	user: User
 	taskList: Tasks[]
 	addTaskForm: FormGroup
 	isAddTaskDialogVisible: boolean = false
@@ -24,11 +27,13 @@ export class GroupCategoryComponent implements OnInit {
 
 	constructor(
 		private route: ActivatedRoute,
+		private userService: UserService,
 		private categoryService: CategoryService,
 		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
 		private message: MessageService,
 		private fb: FormBuilder,
+		private router: Router,
 	) {}
 
 	ngOnInit(): void {
@@ -39,6 +44,17 @@ export class GroupCategoryComponent implements OnInit {
 			this.categoryService
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => (this.category = category))
+
+			this.userService.getCurrentUser().subscribe((user) => {
+				this.user = user
+				if (
+					!this.category?.members?.some(
+						(member) => member.userId === user.id,
+					)
+				) {
+					this.router.navigate(["/404"])
+				}
+			})
 
 			this.taskService
 				.getTaskByCategoryId(this.categoryId)
@@ -63,6 +79,7 @@ export class GroupCategoryComponent implements OnInit {
 		this.taskService
 			.addTask(
 				this.categoryId,
+				this.user.id,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,

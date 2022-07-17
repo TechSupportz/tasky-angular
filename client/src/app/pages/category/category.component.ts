@@ -124,6 +124,7 @@ export class CategoryComponent implements OnInit {
 		this.taskService
 			.addTask(
 				this.categoryId,
+				this.user.id,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,

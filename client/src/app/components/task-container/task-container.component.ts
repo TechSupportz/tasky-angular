@@ -3,7 +3,9 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { Router } from "@angular/router"
 import { ConfirmationService, MessageService } from "primeng/api"
 import { TaskService } from "src/app/services/task.service"
+import { UserService } from "src/app/services/user.service"
 import { Tasks } from "src/app/types/task"
+import { User } from "src/app/types/user"
 
 @Component({
 	selector: "app-task-container",
@@ -14,6 +16,7 @@ export class TaskContainerComponent implements OnInit {
 	@Input() isHomePage: boolean = false
 	@Input() task: Tasks
 
+	user: User
 	isAddSubTaskDialogVisible: boolean = false
 	isDeleted: boolean = false
 	isCompleted: boolean = false
@@ -22,6 +25,7 @@ export class TaskContainerComponent implements OnInit {
 
 	constructor(
 		private fb: FormBuilder,
+		private userService: UserService,
 		private taskService: TaskService,
 		private confirmationService: ConfirmationService,
 		private message: MessageService,
@@ -29,6 +33,10 @@ export class TaskContainerComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
+		this.userService
+			.getCurrentUser()
+			.subscribe((user) => (this.user = user))
+
 		this.addSubTaskForm = this.fb.group({
 			subTaskName: ["", Validators.required],
 			subTaskDueDate: ["", Validators.required],
@@ -48,6 +56,7 @@ export class TaskContainerComponent implements OnInit {
 		this.taskService
 			.addSubTask(
 				this.task.id,
+				this.user.id,
 				this.addSubTaskForm.value.subTaskName,
 				this.addSubTaskForm.value.subTaskDueDate,
 				this.addSubTaskForm.value.subTaskPriority,

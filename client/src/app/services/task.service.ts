@@ -40,7 +40,6 @@ export class TaskService {
 			} else {
 				return null
 			}
-			
 		})
 
 		return of(upcomingTaskList)
@@ -70,6 +69,7 @@ export class TaskService {
 
 	addTask(
 		categoryId: number,
+		creatorId: number,
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
@@ -77,7 +77,7 @@ export class TaskService {
 		const task: Tasks = {
 			id: taskList.length + 1,
 			categoryId: categoryId,
-			creatorId: 1,
+			creatorId: creatorId,
 			name: taskName,
 			dueDate: this.datePipe.transform(
 				taskDueDate,
@@ -95,6 +95,7 @@ export class TaskService {
 
 	addSubTask(
 		taskId: number,
+		creatorId: number,
 		subTaskName: string,
 		subTaskDueDate: string,
 		subTaskPriority: string,
@@ -102,7 +103,7 @@ export class TaskService {
 		const task = taskList.find((t) => t.id == taskId)
 		const subTask: SubTask = {
 			id: task!.subTask.length + 1,
-			creatorId: 1,
+			creatorId: creatorId,
 			name: subTaskName,
 			dueDate: this.datePipe.transform(
 				subTaskDueDate,
