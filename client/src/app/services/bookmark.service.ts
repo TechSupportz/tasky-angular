@@ -9,7 +9,16 @@ import { Bookmark } from "../models/bookmark"
 export class BookmarkService {
 	constructor() {}
 
-	getBookmarks(): Observable<Bookmark[]> {
-		return of(bookmarkList)
+	getBookmarksByUserId(userId: number): Observable<Bookmark[]> {
+		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
+	}
+
+	addBookmark(newBookmark: Bookmark): Observable<Bookmark[]> {
+		bookmarkList.push(newBookmark)
+		return of(
+			bookmarkList.filter(
+				(bookmark) => bookmark.userId === newBookmark.userId,
+			),
+		)
 	}
 }

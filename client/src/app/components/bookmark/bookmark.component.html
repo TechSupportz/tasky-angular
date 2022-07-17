@@ -1,8 +1,12 @@
-<div class="max-w-min">
-	<button pButton (click)="navigate()" class="p-button-rounded p-button-raised p-button-text mb-1">
-		<img
-			src="http://www.google.com/s2/favicons?domain={{bookmark.link}}"
-		/>
+<div class="flex flex-column justify-content-center align-items-center max-w-min">
+	<button
+		pButton
+		(click)="navigate()"
+		class="p-button-raised p-button-text p-1 pl-2 pt-2 max-w-min mb-1"
+	>
+		<p-image
+			src="http://www.google.com/s2/favicons?domain={{ bookmark.link }}"
+		></p-image>
 	</button>
-	<p class="text-center">{{bookmark.title}}</p>
+	<p class="text-center">{{ bookmark.title }}</p>
 </div>
