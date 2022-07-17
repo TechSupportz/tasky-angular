@@ -22,7 +22,7 @@ export class AppComponent {
 		router.events.subscribe((event: Event) => {
 			if (event instanceof NavigationStart) {
 				console.log(event.url)
-        this.isNavbarVisible = event.url !== "/" && event.url !== "/login"
+        this.isNavbarVisible = event.url !== "/" && event.url !== "/login" && event.url !== "/404"
 			}
 		})
 	}

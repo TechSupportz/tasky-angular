@@ -17,7 +17,7 @@
 		<p-button
 			icon="pi pi-plus"
 			styleClass="p-button-rounded"
-			[disabled]="user.type === UserType.FREE && categoryList.length >= 8"
+			[disabled]="isDisabled"
 			(onClick)="showAddDialog()"
 		></p-button>
 	</div>

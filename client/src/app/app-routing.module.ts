@@ -4,13 +4,16 @@ import { CategoryComponent } from "./pages/category/category.component"
 import { GroupCategoryComponent } from "./pages/group-category/group-category.component"
 import { HomeComponent } from "./pages/home/home.component"
 import { LoginComponent } from "./pages/login/login.component"
+import { NotFound404Component } from "./pages/not-found404/not-found404.component"
 
 const routes: Routes = [
 	{ path: "login", component: LoginComponent },
-	{ path: "", component: LoginComponent },
+	{ path: "", redirectTo: "/login", pathMatch: "full" },
 	{ path: "home", component: HomeComponent },
 	{ path: "category/:id", component: CategoryComponent },
 	{ path: "group/:id", component: GroupCategoryComponent },
+	{ path: "404", component: NotFound404Component },
+	{ path: "**", redirectTo: "/404", pathMatch: "full" },
 ]
 
 @NgModule({

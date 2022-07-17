@@ -39,16 +39,27 @@ export class CategoryComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
+		this.addTaskForm = this.fb.group({
+			taskName: ["", Validators.required],
+			taskDueDate: ["", Validators.required],
+			taskPriority: ["", Validators.required],
+		})
+
 		this.routeSubscription = this.route.params.subscribe((params) => {
 			console.log(params)
 			this.categoryId = params["id"]
 			this.categoryService
 				.getCategoryById(this.categoryId)
-				.subscribe((category) => (this.category = category))
+				.subscribe((category) => {
+					this.category = category
+				})
 
-			this.userService
-				.getCurrentUser()
-				.subscribe((user) => (this.user = user))
+			this.userService.getCurrentUser().subscribe((user) => {
+				this.user = user
+				if (this.user.id !== this.category?.creatorId) {
+					this.router.navigate(["/404"])
+				}
+			})
 
 			this.taskService
 				.getTaskByCategoryId(this.categoryId)
@@ -59,12 +70,6 @@ export class CategoryComponent implements OnInit {
 
 			this.categorySettingsForm = this.fb.group({
 				categoryName: [this.category?.name, Validators.required],
-			})
-
-			this.addTaskForm = this.fb.group({
-				taskName: ["", Validators.required],
-				taskDueDate: ["", Validators.required],
-				taskPriority: ["", Validators.required],
 			})
 		})
 	}
@@ -136,7 +141,7 @@ export class CategoryComponent implements OnInit {
 			})
 	}
 
-	ngOnDestroy() {
-		this.routeSubscription.unsubscribe()
-	}
+	// ngOnDestroy() {
+	// 	this.routeSubscription.unsubscribe()
+	// }
 }
