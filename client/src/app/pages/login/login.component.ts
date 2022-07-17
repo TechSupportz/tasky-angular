@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
 			.getUserById(this.selectedUser)
 			.subscribe((user) => this.userService.setCurrentUser(user))
 
+		localStorage.setItem("userId", this.selectedUser.toString())
 		this.router.navigate(["/home"])
 	}
 }

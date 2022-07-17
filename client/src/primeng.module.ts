@@ -19,6 +19,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ConfirmDialogModule } from "primeng/confirmdialog"
 import { InputSwitchModule } from "primeng/inputswitch"
+import { ImageModule } from "primeng/image"
 
 //full calendar
 import { FullCalendarModule } from "@fullcalendar/angular"
@@ -50,6 +51,7 @@ FullCalendarModule.registerPlugins([dayGridPlugin, interactionPlugin])
     ConfirmDialogModule,
     FullCalendarModule,
     InputSwitchModule,
+    ImageModule,
   ],
 })
 export class PrimengModule {}
