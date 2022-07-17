@@ -19,7 +19,8 @@ import { TaskContainerComponent } from "./components/task-container/task-contain
 import { CommonModule } from "@angular/common"
 import { CalendarComponent } from "./components/calendar/calendar.component"
 import { DatePipe } from "@angular/common"
-import { NotFound404Component } from "./pages/not-found404/not-found404.component"
+import { NotFound404Component } from "./pages/not-found404/not-found404.component";
+import { BookmarkComponent } from './components/bookmark/bookmark.component'
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import { NotFound404Component } from "./pages/not-found404/not-found404.componen
 		TaskContainerComponent,
 		CalendarComponent,
 		NotFound404Component,
+  BookmarkComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

@@ -1,5 +1,5 @@
 export interface Bookmark {
 	title: string
 	link: string
-	favicon: string
+	favicon?: string
 }

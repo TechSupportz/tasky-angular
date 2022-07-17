@@ -2,7 +2,9 @@
 	<div
 		class="h-full overflow-y-scroll col-8 shadow-4 border-round-lg py-3 px-4"
 	>
-		<p class="text-4xl font-semibold mb-5">Good Morning, {{ user.username }}</p>
+		<p class="text-4xl font-semibold mb-5">
+			Good Morning, {{ user.username }}
+		</p>
 		<p class="text-2xl font-medium">Upcoming Tasks</p>
 		<br />
 		<div
@@ -28,6 +30,11 @@
 		</div>
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
 			<p class="text-4xl font-semibold mb-5">Bookmarks</p>
+			<div class="grid">
+				<div *ngFor="let bookmark of bookmarkList" class="col-3">
+					<app-bookmark [bookmark]="bookmark"></app-bookmark>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

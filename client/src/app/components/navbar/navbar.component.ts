@@ -31,7 +31,6 @@ export class NavbarComponent implements OnInit {
 	) {
 		this.router.events.subscribe((e) => {
 			if (e instanceof NavigationEnd) {
-				console.log("hello")
 				this.ngOnInit()
 			}
 		})
@@ -39,23 +38,22 @@ export class NavbarComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.userService.getCurrentUser().subscribe((user) => {
-					if (user) {
-						this.categoryService
-							.getCategoryList(user.id)
-							.subscribe((categoryList) => {
-								this.categoryList = categoryList
-								this.user = user
-								console.log(categoryList)
-							})
+			if (user) {
+				this.categoryService
+					.getCategoryList(user.id)
+					.subscribe((categoryList) => {
+						this.categoryList = categoryList
+						this.user = user
+						console.log(categoryList)
+					})
 
-						this.isDisabled =
-							this.user.type === UserType.FREE &&
-							this.categoryList.length >= 8
-					} else {
-						this.router.navigate(["/login"])
-					}
-				})
-			
+				this.isDisabled =
+					this.user.type === UserType.FREE &&
+					this.categoryList.length >= 8
+			} else {
+				this.router.navigate(["/login"])
+			}
+		})
 
 		this.addCategoryForm = this.fb.group({
 			categoryName: ["", Validators.required],
