@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core"
 import { Category, CategoryType } from "../types/category"
 import { Observable, of } from "rxjs"
 import { categoryList } from "../mock-data/mock-category"
+import { User } from "../types/user"
 
 @Injectable({
 	providedIn: "root",
@@ -53,6 +54,16 @@ export class CategoryService {
 		})
 
 		return of(categoryList[categoryList.length - 1])
+	}
+
+	addMember(categoryId: number, user: User): void {
+		const category = categoryList.find((c) => c.id == categoryId)
+		if (category?.members) {
+			category.members?.push({
+				userId: user.id,
+				username: user.username,
+			})
+		}
 	}
 
 	editCategory(category: Category): Observable<Category> {

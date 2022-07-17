@@ -142,7 +142,7 @@ export class CategoryComponent implements OnInit {
 			})
 	}
 
-	// ngOnDestroy() {
-	// 	this.routeSubscription.unsubscribe()
-	// }
+	ngOnDestroy() {
+		this.routeSubscription.unsubscribe()
+	}
 }

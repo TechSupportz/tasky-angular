@@ -9,6 +9,7 @@ export interface Category {
 
 export interface CategoryMember{
 	userId: number
+	username: string
 }
 
 export enum CategoryType {

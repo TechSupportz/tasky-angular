@@ -10,7 +10,7 @@ import { User } from "src/app/types/user"
 })
 export class LoginComponent implements OnInit {
 	userList: User[]
-	selectedUser: number = 1
+	selectedUser: number
 
 	constructor(private userService: UserService, private router: Router) {}
 

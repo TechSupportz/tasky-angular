@@ -32,8 +32,8 @@
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
 			<p class="text-4xl font-semibold mb-5">Whiteboard</p>
 		</div>
-		<div class="flex flex-column w-full">
-			<div class="cursor-pointer">
+		<div class="w-full">
+			<div class="cursor-pointer" (click)="showSettingsDialog()">
 				<div
 					class="flex justify-content-between align-items-center col-12 shadow-4 border-round-lg py-3 px-4"
 				>
@@ -44,6 +44,98 @@
 		</div>
 	</div>
 </div>
+
+<form [formGroup]="categorySettingsForm" (ngSubmit)="onEdit()">
+	<p-dialog
+		header="Edit Category"
+		[(visible)]="isSettingsDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[dismissableMask]="true"
+	>
+		<div class="field">
+			<label for="categoryName" class="font-medium text-lg"
+				>Category Name</label
+			>
+			<input
+				class="w-full"
+				formControlName="categoryName"
+				id="categoryName"
+				type="text"
+				placeholder="Enter the new name of your category"
+				pInputText
+			/>
+		</div>
+		<div>
+			<div class="mb-2 flex justify-content-between align-items-center">
+				<p class="font-medium text-lg mb-2">Members</p>
+				<p-button
+					styleClass="p-button-text p-button-sm"
+					label="Add new"
+					(click)="showAddMemberDialog()"
+				></p-button>
+			</div>
+			<div *ngFor="let member of category!.members">
+				<div
+					class="px-1 flex justify-content-between align-items-center"
+				>
+					<p>{{ member.username }}</p>
+					<p-button
+						styleClass="p-button-rounded p-button-text p-button-sm p-button-danger"
+						icon="pi pi-times text-lg"
+						(click)="removeMember(member.userId)"
+					></p-button>
+				</div>
+				<p-divider></p-divider>
+			</div>
+		</div>
+		<ng-template pTemplate="footer">
+			<button
+				pButton
+				type="submit"
+				[disabled]="!categorySettingsForm.valid"
+			>
+				Confirm
+			</button>
+			<button
+				pButton
+				type="button"
+				class="p-button-danger"
+				(click)="deleteCategory()"
+			>
+				Delete
+			</button>
+		</ng-template>
+	</p-dialog>
+</form>
+
+<p-dialog
+	header="Add member"
+	[(visible)]="isAddMemberDialogVisible"
+	[modal]="true"
+	[draggable]="false"
+	[resizable]="false"
+>
+	<div>
+		<div class="field">
+			<label for="memberUsername" class="font-medium text-lg"
+				>Username
+			</label>
+			<input
+				pInputText
+				[(ngModel)]="newMemberUsername"
+				class="w-full"
+				id="memberUsername"
+				type="text"
+				placeholder="Enter the username of the member"
+			/>
+		</div>
+	</div>
+	<ng-template pTemplate="footer">
+		<button pButton (click)="addMember()">Confirm</button>
+	</ng-template>
+</p-dialog>
 
 <form [formGroup]="addTaskForm" (ngSubmit)="addTask()">
 	<p-dialog

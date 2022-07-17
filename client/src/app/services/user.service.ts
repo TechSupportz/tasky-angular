@@ -20,11 +20,16 @@ export class UserService {
 		return of(this.currentUser)
 	}
 
+	getUserById(id: number): Observable<User> {
+		return of(userList.find((user) => user.id == id)!)
+	}
+
+	getUserByUsername(username: string): Observable<User> {
+		return of(userList.find((user) => user.username == username)!)
+	}
+
 	setCurrentUser(user: User): void {
 		this.currentUser = user
 	}
 
-	getUserById(id: number): Observable<User> {
-		return of(userList.find((user) => user.id == id)!)
-	}
 }

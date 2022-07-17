@@ -17,9 +17,15 @@
 		</div>
 	</div>
 	<br />
-	<p class="font-semibold text-red-500 text-sm" >PLEASE NOTE THAT REFRESHING THE PAGE WILL RESET ALL CHANGES</p>
-	<br>
+	<p class="font-semibold text-red-500 text-sm">
+		PLEASE NOTE THAT REFRESHING THE PAGE WILL RESET ALL CHANGES
+	</p>
+	<br />
 	<div>
-		<p-button (click)="goToHome()">Go to the Home page</p-button>
+		<p-button
+			[disabled]="selectedUser === null || selectedUser === undefined"
+			(click)="goToHome()"
+			>Go to the Home page</p-button
+		>
 	</div>
 </div>

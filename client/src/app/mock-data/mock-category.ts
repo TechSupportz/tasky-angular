@@ -21,15 +21,17 @@ export const categoryList: Category[] = [
 	},
 	{
 		id: 4,
-		creatorId: 1,
+		creatorId: 2,
 		name: "INNOVA",
 		type: CategoryType.GRP,
 		members: [
 			{
-				userId: 1,
+				userId: 2,
+				username: "Marc",
 			},
 			{
-				userId: 2,
+				userId: 3,
+				username: "Jake",
 			},
 		],
 	},

@@ -19,4 +19,10 @@ export const userList: User[] = [
 		email: "JakeLockley@gmail.com",
 		type: UserType.PRO_PLUS,
 	},
+	{
+		id: 4,
+		username: "Khonshu",
+		email: "Moon@gmail.com",
+		type: UserType.PRO_PLUS,
+	},
 ]
