@@ -61,7 +61,7 @@ export class GroupCategoryComponent implements OnInit {
 				if (
 					!this.category?.members?.some(
 						(member) => member.userId === user.id,
-					)
+					) 
 				) {
 					this.router.navigate(["/404"])
 				} else {

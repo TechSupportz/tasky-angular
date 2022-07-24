@@ -44,15 +44,31 @@ export class CategoryService {
 
 	addCategory(
 		creatorId: number,
+		creatorUsername: string,
 		categoryName: string,
 		categoryType: CategoryType,
 	): Observable<Category> {
-		categoryList.push({
-			id: categoryList.length + 1,
-			creatorId: creatorId,
-			name: categoryName,
-			type: categoryType,
-		})
+		if (categoryType == CategoryType.INDIV) {
+			categoryList.push({
+				id: categoryList.length + 1,
+				creatorId: creatorId,
+				name: categoryName,
+				type: categoryType,
+			})
+		} else {
+			categoryList.push({
+				id: categoryList.length + 1,
+				creatorId: creatorId,
+				name: categoryName,
+				type: categoryType,
+				members: [
+					{
+						userId: creatorId,
+						username: creatorUsername,
+					},
+				],
+			})
+		}
 
 		return of(categoryList[categoryList.length - 1])
 	}
