@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
 		this.userService.getCurrentUser().subscribe((user) => {
 			if (user) {
 				this.categoryService
-					.getCategoryList(user.id)
+					.getCategoryList(user._id)
 					.subscribe((categoryList) => {
 						this.categoryList = categoryList
 						this.user = user
@@ -83,7 +83,7 @@ export class NavbarComponent implements OnInit {
 
 		this.categoryService
 			.addCategory(
-				this.user.id,
+				this.user._id,
 				this.user.username,
 				this.addCategoryForm.value.categoryName,
 				categoryType,

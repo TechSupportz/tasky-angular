@@ -28,7 +28,7 @@ export class AppComponent {
 			userService.getCurrentUser().subscribe((user) => {
 				if (!user) {
 					userService
-						.getUserById(parseInt(localStorage.getItem("userId")!))
+						.getUserById(localStorage.getItem("userId")!)
 						.subscribe((user) =>
 							this.userService.setCurrentUser(user),
 						)

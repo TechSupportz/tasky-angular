@@ -22,7 +22,7 @@ import { User } from "src/app/models/user"
 export class TaskComponent implements OnInit {
 	@Input() task: Tasks | SubTask
 	@Input() isSubTask: boolean
-	@Input() parentId: number // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
+	@Input() parentId: string // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
 	@Input() isHomePage: boolean = false
 
 	@Output() isDeleted = new EventEmitter<boolean>()
@@ -73,7 +73,7 @@ export class TaskComponent implements OnInit {
 		if (this.isSubTask) {
 			this.taskService.setCompleteSubTaskState(
 				this.parentId,
-				this.task.id,
+				this.task._id,
 				isCompleted,
 			)
 		} else {
@@ -88,7 +88,7 @@ export class TaskComponent implements OnInit {
 			this.taskService
 				.editSubTask(
 					this.parentId,
-					this.task.id,
+					this.task._id,
 					this.editTaskForm.value.taskName,
 					this.editTaskForm.value.taskDueDate,
 					this.editTaskForm.value.taskPriority,
@@ -128,7 +128,7 @@ export class TaskComponent implements OnInit {
 				message:
 					"Are you sure that you want to delete this subtask? This is NOT reversible",
 				accept: () => {
-					this.taskService.deleteSubTask(this.parentId, this.task.id)
+					this.taskService.deleteSubTask(this.parentId, this.task._id)
 					this.editTaskForm.reset()
 					this.isEditTaskDialogVisible = false
 					this.message.add({

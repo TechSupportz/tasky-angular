@@ -17,7 +17,7 @@ import { NavbarComponent } from "src/app/components/navbar/navbar.component"
 	styleUrls: ["./category.component.css"],
 })
 export class CategoryComponent implements OnInit {
-	categoryId: number
+	categoryId: string
 	category?: Category
 	user: User
 	taskList: Tasks[]
@@ -57,7 +57,7 @@ export class CategoryComponent implements OnInit {
 
 			this.userService.getCurrentUser().subscribe((user) => {
 				this.user = user
-				if (this.user.id !== this.category?.creatorId) {
+				if (this.user._id !== this.category?.creatorId) {
 					this.router.navigate(["/404"])
 				}
 			})
@@ -86,13 +86,13 @@ export class CategoryComponent implements OnInit {
 	onEdit() {
 		this.categoryService
 			.editCategory({
-				id: this.categoryId,
-				creatorId: this.user.id,
+				_id: this.categoryId,
+				creatorId: this.user._id,
 				name: this.categorySettingsForm.value.categoryName,
 				type: this.category?.type!,
 			})
 			.subscribe((category) => {
-				this.categoryId = category.id
+				this.categoryId = category._id
 				this.category = category
 				this.isSettingsDialogVisible = false
 				this.message.add({
@@ -112,7 +112,7 @@ export class CategoryComponent implements OnInit {
 				this.categoryService.deleteCategory(this.categoryId)
 				this.isSettingsDialogVisible = false
 				this.router.navigate(["/home"])
-				
+
 				this.message.add({
 					severity: "success",
 					summary: "Poof!",
@@ -126,7 +126,7 @@ export class CategoryComponent implements OnInit {
 		this.taskService
 			.addTask(
 				this.categoryId,
-				this.user.id,
+				this.user._id,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,

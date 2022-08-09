@@ -11,11 +11,11 @@ import { DateTime } from "luxon"
 export class TaskService {
 	constructor(private datePipe: DatePipe) {}
 
-	getTaskList(userId: number): Observable<Tasks[]> {
+	getTaskList(userId: string): Observable<Tasks[]> {
 		return of(taskList.filter((task) => task.creatorId == userId))
 	}
 
-	getUpcomingTasks(userId: number): Observable<Tasks[]> {
+	getUpcomingTasks(userId: string): Observable<Tasks[]> {
 		const currentDate = DateTime.now()
 
 		const taskListCopy: Tasks[] = JSON.parse(
@@ -45,37 +45,37 @@ export class TaskService {
 		return of(upcomingTaskList)
 	}
 
-	getTaskByCategoryId(categoryId: number): Observable<Tasks[]> {
+	getTaskByCategoryId(categoryId: string): Observable<Tasks[]> {
 		const filteredTaskList = of(
 			taskList.filter((task) => task.categoryId == categoryId),
 		)
 		return filteredTaskList
 	}
 
-	setCompleteTaskState(taskId: number, isCompleted: boolean): void {
-		const task = taskList.find((t) => t.id == taskId)
+	setCompleteTaskState(taskId: string, isCompleted: boolean): void {
+		const task = taskList.find((t) => t._id == taskId)
 		task!.isCompleted = isCompleted
 	}
 
 	setCompleteSubTaskState(
-		taskId: number,
-		subTaskId: number,
+		taskId: string,
+		subTaskId: string,
 		isCompleted: boolean,
 	): void {
-		const task = taskList.find((t) => t.id == taskId)
-		const subTask = task!.subTask.find((t) => t.id == subTaskId)
+		const task = taskList.find((t) => t._id == taskId)
+		const subTask = task!.subTask.find((t) => t._id == subTaskId)
 		subTask!.isCompleted = isCompleted
 	}
 
 	addTask(
-		categoryId: number,
-		creatorId: number,
+		categoryId: string,
+		creatorId: string,
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
 	): Observable<Tasks> {
 		const task: Tasks = {
-			id: taskList.length + 1,
+			_id: "task" + (taskList.length + 1),
 			categoryId: categoryId,
 			creatorId: creatorId,
 			name: taskName,
@@ -94,15 +94,15 @@ export class TaskService {
 	}
 
 	addSubTask(
-		taskId: number,
-		creatorId: number,
+		taskId: string,
+		creatorId: string,
 		subTaskName: string,
 		subTaskDueDate: string,
 		subTaskPriority: string,
 	): Observable<SubTask> {
-		const task = taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t._id == taskId)
 		const subTask: SubTask = {
-			id: task!.subTask.length + 1,
+			_id: "subTask" + (task!.subTask.length + 1),
 			creatorId: creatorId,
 			name: subTaskName,
 			dueDate: this.datePipe.transform(
@@ -118,12 +118,12 @@ export class TaskService {
 	}
 
 	editTask(
-		taskId: number,
+		taskId: string,
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
 	): Observable<Tasks> {
-		const task = taskList.find((t) => t.id == taskId)
+		const task = taskList.find((t) => t._id == taskId)
 		task!.name = taskName
 		task!.dueDate = this.datePipe.transform(
 			taskDueDate,
@@ -131,18 +131,18 @@ export class TaskService {
 		)!
 		task!.priority = taskPriority
 
-		return of(taskList.find((t) => t.id == taskId)!)
+		return of(taskList.find((t) => t._id == taskId)!)
 	}
 
 	editSubTask(
-		taskId: number,
-		subTaskId: number,
+		taskId: string,
+		subTaskId: string,
 		subTaskName: string,
 		subTaskDueDate: string,
 		subTaskPriority: string,
 	): Observable<SubTask> {
-		const task = taskList.find((t) => t.id == taskId)
-		const subTask = task!.subTask.find((t) => t.id == subTaskId)
+		const task = taskList.find((t) => t._id == taskId)
+		const subTask = task!.subTask.find((t) => t._id == subTaskId)
 		subTask!.name = subTaskName
 		subTask!.dueDate = this.datePipe.transform(
 			subTaskDueDate,
@@ -150,26 +150,26 @@ export class TaskService {
 		)!
 		subTask!.priority = subTaskPriority
 
-		return of(task!.subTask.find((t) => t.id == subTaskId)!)
+		return of(task!.subTask.find((t) => t._id == subTaskId)!)
 	}
 
-	deleteTask(id: number): void {
-		const index = taskList.findIndex((t) => t.id == id)
+	deleteTask(id: string): void {
+		const index = taskList.findIndex((t) => t._id == id)
 		taskList.splice(index, 1)
 	}
 
-	deleteTaskByCategoryId(categoryId: number): void {
+	deleteTaskByCategoryId(categoryId: string): void {
 		taskList.forEach((task) => {
 			if (task.categoryId == categoryId) {
-				const index = taskList.findIndex((t) => t.id == task.id)
+				const index = taskList.findIndex((t) => t._id == task._id)
 				taskList.splice(index, 1)
 			}
 		})
 	}
 
-	deleteSubTask(taskId: number, subTaskId: number): void {
-		const task = taskList.find((t) => t.id == taskId)
-		const index = task!.subTask.findIndex((t) => t.id == subTaskId)
+	deleteSubTask(taskId: string, subTaskId: string): void {
+		const task = taskList.find((t) => t._id == taskId)
+		const index = task!.subTask.findIndex((t) => t._id == subTaskId)
 		task!.subTask.splice(index, 1)
 	}
 }

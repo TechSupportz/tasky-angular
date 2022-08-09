@@ -9,17 +9,17 @@ import { Bookmark } from "../models/bookmark"
 export class BookmarkService {
 	constructor() {}
 
-	getBookmarksByUserId(userId: number): Observable<Bookmark[]> {
+	getBookmarksByUserId(userId: string): Observable<Bookmark[]> {
 		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
 	}
 
 	addBookmark(
-		userId: number,
+		userId: string,
 		title: string,
 		link: string,
 	): Observable<Bookmark[]> {
 		const newBookmark: Bookmark = {
-			id: bookmarkList.length + 1,
+			_id: Math.random().toString(36).substr(2, 9),
 			userId: userId,
 			title: title,
 			link: link,
@@ -32,9 +32,9 @@ export class BookmarkService {
 		)
 	}
 
-	deleteBookmark(bookmarkId: number, userId: number): Observable<Bookmark[]> {
+	deleteBookmark(bookmarkId: string, userId: string): Observable<Bookmark[]> {
 		bookmarkList.splice(
-			bookmarkList.findIndex((bookmark) => bookmark.id === bookmarkId),
+			bookmarkList.findIndex((bookmark) => bookmark._id === bookmarkId),
 			1,
 		)
 		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))

@@ -11,7 +11,7 @@ import { TaskService } from "./task.service"
 export class CategoryService {
 	constructor(private taskService: TaskService) {}
 
-	getCategoryList(userId: number): Observable<Category[]> {
+	getCategoryList(userId: string): Observable<Category[]> {
 		return of(
 			categoryList.filter((category) => {
 				if (category.type == CategoryType.GRP) {
@@ -19,7 +19,7 @@ export class CategoryService {
 						(member) => member.userId === userId,
 					)
 				} else {
-					console.log(category.id)
+					console.log(category._id)
 					if (category.creatorId == userId) {
 						return category
 					} else {
@@ -30,34 +30,36 @@ export class CategoryService {
 		)
 	}
 
-	getCategoryById(id: number): Observable<Category> {
-		const category = of(categoryList.find((category) => category.id == id)!)
+	getCategoryById(id: string): Observable<Category> {
+		const category = of(
+			categoryList.find((category) => category._id == id)!,
+		)
 		return category
 	}
 
-	isGroupCategory(categoryId: number): boolean {
+	isGroupCategory(categoryId: string): boolean {
 		const category = categoryList.find(
-			(category) => category.id == categoryId,
+			(category) => category._id == categoryId,
 		)
 		return category?.type == CategoryType.GRP
 	}
 
 	addCategory(
-		creatorId: number,
+		creatorId: string,
 		creatorUsername: string,
 		categoryName: string,
 		categoryType: CategoryType,
 	): Observable<Category> {
 		if (categoryType == CategoryType.INDIV) {
 			categoryList.push({
-				id: categoryList.length + 1,
+				_id: Math.random().toString(36).substr(2, 9),
 				creatorId: creatorId,
 				name: categoryName,
 				type: categoryType,
 			})
 		} else {
 			categoryList.push({
-				id: categoryList.length + 1,
+				_id: Math.random().toString(36).substr(2, 9),
 				creatorId: creatorId,
 				name: categoryName,
 				type: categoryType,
@@ -73,18 +75,18 @@ export class CategoryService {
 		return of(categoryList[categoryList.length - 1])
 	}
 
-	addMember(categoryId: number, user: User): void {
-		const category = categoryList.find((c) => c.id == categoryId)
+	addMember(categoryId: string, user: User): void {
+		const category = categoryList.find((c) => c._id == categoryId)
 		if (category?.members) {
 			category.members?.push({
-				userId: user.id,
+				userId: user._id,
 				username: user.username,
 			})
 		}
 	}
 
-	removeMember(categoryId: number, userId: number): void {
-		const category = categoryList.find((c) => c.id == categoryId)
+	removeMember(categoryId: string, userId: string): void {
+		const category = categoryList.find((c) => c._id == categoryId)
 		if (category?.members) {
 			const index = category.members.findIndex(
 				(member) => member.userId == userId,
@@ -94,7 +96,7 @@ export class CategoryService {
 	}
 
 	editCategory(category: Category): Observable<Category> {
-		const index = categoryList.findIndex((c) => c.id == category.id)
+		const index = categoryList.findIndex((c) => c._id == category._id)
 		categoryList[index] = category
 
 		return of(categoryList[index])
@@ -104,8 +106,8 @@ export class CategoryService {
 	public readonly notifyDeleteCategory$: Observable<number> =
 		new Subject<number>()
 
-	deleteCategory(id: number): void {
-		const index = categoryList.findIndex((c) => c.id == id)
+	deleteCategory(id: string): void {
+		const index = categoryList.findIndex((c) => c._id == id)
 		categoryList.splice(index, 1)
 		this.taskService.deleteTaskByCategoryId(id)
 	}

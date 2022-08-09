@@ -1,31 +1,43 @@
 <div
 	class="h-screen flex flex-column justify-content-center align-items-center"
 >
-	<div>
-		<h1 class="font-bold text-5xl">Welcome to Tasky</h1>
-	</div>
-	<p class="font-medium text-xl">Choose an account to test with</p>
-	<br />
-	<div>
-		<div *ngFor="let user of userList" class="field-radiobutton">
-			<p-radioButton
-				name="accountGroup"
-				value="{{ user.id }}"
-				label="{{ user.username }} | {{ user.type }} Tier"
-				[(ngModel)]="selectedUser"
-			></p-radioButton>
+	<div
+		class="shadow-3 px-5 py-5 flex flex-column border-round-lg justify-content-center align-items-center"
+	>
+		<div>
+			<h1 class="font-bold text-5xl">Welcome to Tasky</h1>
 		</div>
-	</div>
-	<br />
-	<p class="font-semibold text-red-500 text-sm">
-		PLEASE NOTE THAT REFRESHING THE PAGE WILL RESET ALL CHANGES
-	</p>
-	<br />
-	<div>
-		<p-button
-			[disabled]="selectedUser === null || selectedUser === undefined"
-			(click)="goToHome()"
-			>Go to the Home page</p-button
+		<p class="font-medium text-xl">Enter your account details and login!</p>
+		<br />
+		<form
+			[formGroup]="loginForm"
+			(ngSubmit)="authenticateUser()"
+			class="flex flex-column border-round-lg justify-content-center align-items-center"
 		>
+			<div class="field">
+				<span class="p-input-icon-right">
+					<i class="pi pi-user"></i>
+					<input
+						id="username"
+						type="text"
+						pInputText
+						placeholder="Username"
+						formControlName="username"
+					/>
+				</span>
+			</div>
+			<div class="field">
+				<p-password
+					[feedback]="false"
+					[toggleMask]="true"
+					placeholder="Password"
+					styleClass="p-password p-component p-inputwrapper p-input-icon-right"
+					formControlName="password"
+				></p-password>
+			</div>
+			<button pButton type="submit" [disabled]="!loginForm.valid">
+				Login
+			</button>
+		</form>
 	</div>
 </div>

@@ -19,7 +19,7 @@ import { User } from "src/app/models/user"
 })
 export class CalendarComponent implements OnChanges {
 	@Input() isCategory: boolean = false
-	@Input() categoryId?: number
+	@Input() categoryId?: string
 
 	user: User
 	calendarOptions: CalendarOptions = {
@@ -45,7 +45,7 @@ export class CalendarComponent implements OnChanges {
 					this.generateEventList(tasks)
 				})
 		} else {
-			this.taskService.getTaskList(this.user.id).subscribe((tasks) => {
+			this.taskService.getTaskList(this.user._id).subscribe((tasks) => {
 				this.generateEventList(tasks)
 			})
 		}
@@ -82,6 +82,6 @@ export class CalendarComponent implements OnChanges {
 
 	eventClick(info: any): void {
 		info.jsEvent.preventDefault()
-		this.router.navigate(['/category/1'])
+		this.router.navigate(["/category/1"])
 	}
 }

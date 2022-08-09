@@ -39,11 +39,11 @@ export class HomeComponent implements OnInit {
 			.subscribe((user) => (this.user = user))
 
 		this.taskService
-			.getUpcomingTasks(this.user.id)
+			.getUpcomingTasks(this.user._id)
 			.subscribe((tasks) => (this.taskList = tasks))
 
 		this.bookmarkService
-			.getBookmarksByUserId(this.user.id)
+			.getBookmarksByUserId(this.user._id)
 			.subscribe((bookmarks) => (this.bookmarkList = bookmarks))
 	}
 
@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
 	addBookmark() {
 		this.bookmarkService
 			.addBookmark(
-				this.user.id,
+				this.user._id,
 				this.addBookmarkForm.value.bookmarkTitle,
 				this.addBookmarkForm.value.bookmarkLink,
 			)
@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
 			message: "Are you sure you want to delete this bookmark?",
 			accept: () => {
 				this.bookmarkService
-					.deleteBookmark(bookmark.id, bookmark.userId)
+					.deleteBookmark(bookmark._id, bookmark.userId)
 					.subscribe((newBookmarkList) => {
 						this.bookmarkList = newBookmarkList
 						this.message.add({

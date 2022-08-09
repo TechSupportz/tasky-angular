@@ -85,7 +85,7 @@
 					<p-button
 						styleClass="p-button-rounded p-button-text p-button-sm p-button-danger"
 						icon="pi pi-times text-lg"
-						[disabled]="member.userId === user.id"
+						[disabled]="member.userId === user._id"
 						(click)="removeMember(member)"
 					></p-button>
 				</div>

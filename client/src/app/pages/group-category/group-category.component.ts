@@ -16,7 +16,7 @@ import { User, UserType } from "src/app/models/user"
 	styleUrls: ["./group-category.component.css"],
 })
 export class GroupCategoryComponent implements OnInit {
-	categoryId: number
+	categoryId: string
 	category: Category
 	user: User
 	members: CategoryMember[]
@@ -60,13 +60,13 @@ export class GroupCategoryComponent implements OnInit {
 				this.user = user
 				if (
 					!this.category?.members?.some(
-						(member) => member.userId === user.id,
-					) 
+						(member) => member.userId === user._id,
+					)
 				) {
 					this.router.navigate(["/404"])
 				} else {
 					this.members = this.category?.members.filter(
-						(member) => member.userId !== user.id,
+						(member) => member.userId !== user._id,
 					)
 				}
 			})
@@ -85,7 +85,7 @@ export class GroupCategoryComponent implements OnInit {
 	}
 
 	showSettingsDialog() {
-		if (this.user.id === this.category?.creatorId) {
+		if (this.user._id === this.category?.creatorId) {
 			this.isSettingsDialogVisible = true
 		} else {
 			this.message.add({
@@ -107,13 +107,13 @@ export class GroupCategoryComponent implements OnInit {
 	onEdit() {
 		this.categoryService
 			.editCategory({
-				id: this.categoryId,
-				creatorId: this.user.id,
+				_id: this.categoryId,
+				creatorId: this.user._id,
 				name: this.categorySettingsForm.value.categoryName,
 				type: this.category?.type!,
 			})
 			.subscribe((category) => {
-				this.categoryId = category.id
+				this.categoryId = category._id
 				this.category = category
 				this.isSettingsDialogVisible = false
 				this.message.add({
@@ -132,7 +132,7 @@ export class GroupCategoryComponent implements OnInit {
 		)
 
 		if (newMember) {
-			if (newMember.id === this.user.id) {
+			if (newMember._id === this.user._id) {
 				this.message.add({
 					severity: "error",
 					summary: "Thats... you?",
@@ -140,7 +140,7 @@ export class GroupCategoryComponent implements OnInit {
 				})
 			} else if (
 				this.category.members?.some(
-					(member) => member.userId === newMember.id,
+					(member) => member.userId === newMember._id,
 				)
 			) {
 				this.message.add({
@@ -174,7 +174,7 @@ export class GroupCategoryComponent implements OnInit {
 	}
 
 	removeMember(member: CategoryMember) {
-		if (member.userId === this.user.id) {
+		if (member.userId === this.user._id) {
 			this.message.add({
 				severity: "error",
 				summary: "You can't delete yourself",
@@ -223,7 +223,7 @@ export class GroupCategoryComponent implements OnInit {
 		this.taskService
 			.addTask(
 				this.categoryId,
-				this.user.id,
+				this.user._id,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,

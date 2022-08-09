@@ -55,8 +55,8 @@ export class TaskContainerComponent implements OnInit {
 	addSubTask(): void {
 		this.taskService
 			.addSubTask(
-				this.task.id,
-				this.user.id,
+				this.task._id,
+				this.user._id,
 				this.addSubTaskForm.value.subTaskName,
 				this.addSubTaskForm.value.subTaskDueDate,
 				this.addSubTaskForm.value.subTaskPriority,
@@ -79,7 +79,7 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to delete this task? This is NOT reversible",
 			accept: () => {
-				this.taskService.deleteTask(this.task.id)
+				this.taskService.deleteTask(this.task._id)
 				this.isDeleted = true
 				this.message.add({
 					severity: "success",
@@ -104,7 +104,7 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to undo task completion and restore the task?",
 			accept: () => {
-				this.taskService.setCompleteTaskState(this.task.id, false)
+				this.taskService.setCompleteTaskState(this.task._id, false)
 				this.isCompleted = false
 				this.message.add({
 					severity: "success",
