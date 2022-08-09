@@ -15,7 +15,12 @@ function getUserById(req, res) {
             } else if (user === null) {
                 res.status(404).send("User not found")
             } else {
-                res.status(200).send(user)
+                res.status(200).send({
+                    _id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    type: user.type,
+                })
             }
         },
     )
@@ -82,7 +87,29 @@ async function createUser(req, res) {
     }
 }
 
+async function authenticateUser(req, res) {
+    const username = req.body.username
+    const password = req.body.password
+    const user = await db.collection("users").findOne({ username: username })
+    if (user) {
+        const isPasswordValid = await argon2.verify(user.password, password)
+        if (isPasswordValid) {
+            res.status(200).send({
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                type: user.type,
+            })
+        } else {
+            res.status(401).send("Invalid password")
+        }
+    } else {
+        res.status(404).send("User not found")
+    }
+}
+
 module.exports = {
     getUserById,
     createUser,
+    authenticateUser,
 }
