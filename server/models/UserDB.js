@@ -7,6 +7,10 @@ class UserDB {
         db.collection("users").findOne({ _id: new ObjectID(userID) }, callback)
     }
 
+    checkIfUserExists(user, callback) {
+        db.collection("users").findOne({ username: user.username })
+    }
+
     createUser(user, callback) {
         db.collection("users").insertOne(
             {
