@@ -38,7 +38,7 @@ export class AppComponent {
 			if (event instanceof NavigationStart) {
 				console.log(event.url)
 				this.isNavbarVisible =
-					event.url !== "/" && event.url !== "/login"
+					event.url !== "/" && event.url !== "/login" && event.url !== "/register"
 			}
 		})
 	}

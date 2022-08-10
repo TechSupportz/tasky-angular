@@ -21,7 +21,9 @@ import { CalendarComponent } from "./components/calendar/calendar.component"
 import { DatePipe } from "@angular/common"
 import { NotFound404Component } from "./pages/not-found404/not-found404.component"
 import { BookmarkComponent } from "./components/bookmark/bookmark.component"
-import { HttpClientModule } from "@angular/common/http"
+import { HttpClientModule } from "@angular/common/http";
+import { RegisterComponent } from './pages/register/register.component'
+import { NgxPayPalModule } from "ngx-paypal"
 
 @NgModule({
 	declarations: [
@@ -36,6 +38,7 @@ import { HttpClientModule } from "@angular/common/http"
 		CalendarComponent,
 		NotFound404Component,
 		BookmarkComponent,
+  RegisterComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,
@@ -47,6 +50,7 @@ import { HttpClientModule } from "@angular/common/http"
 		ReactiveFormsModule,
 		CommonModule,
 		FormsModule,
+		NgxPayPalModule,
 	],
 	providers: [ConfirmationService, MessageService, DatePipe],
 	bootstrap: [AppComponent],

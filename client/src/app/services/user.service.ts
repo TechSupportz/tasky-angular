@@ -25,6 +25,10 @@ export class UserService {
 		})
 	}
 
+	registerUser(user: User): Observable<any> {
+		return this.http.post<User>(`${APIConfig.BASE_URL}/user/register`, user)
+	}
+
 	getCurrentUser(): Observable<User> {
 		return of(this.currentUser)
 	}
