@@ -64,20 +64,24 @@
 				Register
 			</button>
 		</form>
+		<br />
+		<p class="text-sm p-1 text-primary cursor-pointer" routerLink="/login">
+			Already have an account? Login now!
+		</p>
 	</div>
-</div>
 
-<p-dialog
-	header="Payment"
-	[(visible)]="isPaymentDialogVisible"
-	[modal]="true"
-	[draggable]="false"
-	[resizable]="false"
->
-	<p>Please make payment to upgrade account type</p>
-	<br />
-	<p class="font-bold">Total: {{ totalAmount | currency }}</p>
-	<ng-template pTemplate="footer">
-		<ngx-paypal [config]="payPalConfig"></ngx-paypal>
-	</ng-template>
-</p-dialog>
+	<p-dialog
+		header="Payment"
+		[(visible)]="isPaymentDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+	>
+		<p>Please make payment to upgrade account type</p>
+		<br />
+		<p class="font-bold">Total: {{ totalAmount | currency }}</p>
+		<ng-template pTemplate="footer">
+			<ngx-paypal [config]="payPalConfig"></ngx-paypal>
+		</ng-template>
+	</p-dialog>
+</div>

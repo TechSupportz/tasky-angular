@@ -23,7 +23,8 @@ import { NotFound404Component } from "./pages/not-found404/not-found404.componen
 import { BookmarkComponent } from "./components/bookmark/bookmark.component"
 import { HttpClientModule } from "@angular/common/http";
 import { RegisterComponent } from './pages/register/register.component'
-import { NgxPayPalModule } from "ngx-paypal"
+import { NgxPayPalModule } from "ngx-paypal";
+import { ProfileComponent } from './pages/profile/profile.component'
 
 @NgModule({
 	declarations: [
@@ -39,6 +40,7 @@ import { NgxPayPalModule } from "ngx-paypal"
 		NotFound404Component,
 		BookmarkComponent,
   RegisterComponent,
+  ProfileComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,

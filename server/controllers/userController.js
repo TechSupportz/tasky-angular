@@ -164,7 +164,9 @@ async function updatePassword(req, res) {
                         { returnOriginal: false },
                     )
                 if (updatedUser.value) {
-                    res.status(200).send("Password updated successfully")
+                    res.status(200).send({
+                        newPassword: req.body.newPassword,
+                    })
                 } else {
                     res.status(404).send("User not found")
                 }

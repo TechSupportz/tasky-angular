@@ -29,12 +29,26 @@ export class UserService {
 		return this.http.post<User>(`${APIConfig.BASE_URL}/user/register`, user)
 	}
 
+	updateUser(user: User): Observable<any> {
+		return this.http.put<User>(
+			`${APIConfig.BASE_URL}/user/${this.currentUser._id}/update`,
+			{ username: user.username, email: user.email, type: user.type },
+		)
+	}
+
+	updatePassword(oldPassword: string, newPassword: string): Observable<any> {
+		return this.http.put<any>(
+			`${APIConfig.BASE_URL}/user/${this.currentUser._id}/update/password`,
+			{ oldPassword: oldPassword, newPassword: newPassword },
+		)
+	}
+
 	getCurrentUser(): Observable<User> {
 		return of(this.currentUser)
 	}
 
 	getUserById(id: string): Observable<User> {
-		return of(userList.find((user) => user._id == id)!)
+		return this.http.get<User>(`${APIConfig.BASE_URL}/user/${id}`)
 	}
 
 	getUserByUsername(username: string): Observable<User> {

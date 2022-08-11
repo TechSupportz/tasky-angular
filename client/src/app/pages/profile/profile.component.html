@@ -1,0 +1,132 @@
+<div
+	class="h-screen flex flex-column justify-content-center align-items-center"
+>
+	<div>
+		<h1 class="font-bold text-5xl">Hello {{ currentUser.username }}</h1>
+	</div>
+	<p class="font-medium text-xl">Want to change your details?</p>
+	<br />
+	<div class="flex flex-row gap-6 justify-content-center align-items-stretch">
+		<div
+			class="shadow-3 p-5 flex flex-column border-round-lg justify-content-center align-items-center"
+		>
+			<h1 class="font-medium text-4xl">Account</h1>
+			<br />
+			<form
+				[formGroup]="profileForm"
+				(ngSubmit)="onProfileBtnClick()"
+				class="flex flex-column border-round-lg justify-content-center align-items-center"
+			>
+				<div class="field">
+					<span class="p-input-icon-right">
+						<i class="pi pi-at"></i>
+						<input
+							id="email"
+							type="text"
+							pInputText
+							placeholder="Email"
+							formControlName="email"
+						/>
+					</span>
+				</div>
+				<div class="field">
+					<span class="p-input-icon-right">
+						<i class="pi pi-user"></i>
+						<input
+							id="username"
+							type="text"
+							pInputText
+							placeholder="Username"
+							formControlName="username"
+						/>
+					</span>
+				</div>
+				<div class="field w-full flex flex-column">
+					<label for="type">Account Type</label>
+					<p-dropdown
+						id="type"
+						[options]="accountTypes"
+						optionLabel="name"
+						optionValue="code"
+						formControlName="type"
+					>
+					</p-dropdown>
+				</div>
+				<button
+					pButton
+					type="submit"
+					[disabled]="!profileForm.valid"
+					label="Update my details"
+				></button>
+			</form>
+		</div>
+		<div
+			class="shadow-3 px-5 py-5 flex flex-column border-round-lg justify-content-start align-items-center"
+		>
+			<h1 class="font-medium text-4xl">Password</h1>
+			<br />
+			<form
+				[formGroup]="passwordForm"
+				(ngSubmit)="onPasswordBtnClick()"
+				class="h-full flex flex-column border-round-lg justify-content-between align-items-center"
+			>
+				<div>
+					<div class="field">
+						<p-password
+							[feedback]="false"
+							[toggleMask]="true"
+							placeholder="Current password"
+							styleClass="p-password p-component p-inputwrapper p-input-icon-right"
+							formControlName="oldPassword"
+						></p-password>
+					</div>
+					<div class="field">
+						<p-password
+							[feedback]="false"
+							[toggleMask]="true"
+							placeholder="New password"
+							styleClass="p-password p-component p-inputwrapper p-input-icon-right"
+							formControlName="newPassword"
+						></p-password>
+					</div>
+				</div>
+				<button
+					pButton
+					type="submit"
+					[disabled]="!profileForm.valid"
+					label="Update my password"
+				></button>
+			</form>
+		</div>
+	</div>
+	<br />
+	<div class="flex flex-column gap-3 w-3">
+		<button
+			pButton
+			class="p-button-secondary"
+			(click)="logout()"
+			label="Logout"
+		></button>
+		<button
+			pButton
+			class="p-button-danger"
+			(click)="logout()"
+			label="Delete Account"
+		></button>
+	</div>
+</div>
+
+<p-dialog
+	header="Payment"
+	[(visible)]="isPaymentDialogVisible"
+	[modal]="true"
+	[draggable]="false"
+	[resizable]="false"
+>
+	<p>Please make payment to upgrade account type</p>
+	<br />
+	<p class="font-bold">Total: {{ totalAmount | currency }}</p>
+	<ng-template pTemplate="footer">
+		<ngx-paypal [config]="payPalConfig"></ngx-paypal>
+	</ng-template>
+</p-dialog>
