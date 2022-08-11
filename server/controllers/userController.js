@@ -1,8 +1,7 @@
 const User = require("../models/User")
-const UserDB = require("../models/UserDB")
 const argon2 = require("argon2")
-const userDB = new UserDB()
 const db = require("../dbConnections")
+const { ObjectID } = require("bson")
 
 function getUserById(req, res) {
     const userId = req.params.id
@@ -114,10 +113,75 @@ async function authenticateUser(req, res) {
     }
 }
 
+async function updateUser(req, res) {
+    const userId = req.params.id
+    const user = req.body
+    try {
+        const updatedUser = await db
+            .collection("users")
+            .findOneAndUpdate(
+                { _id: new ObjectID(userId) },
+                { $set: { ...user } },
+                { returnOriginal: false },
+            )
+        if (updatedUser.value) {
+            res.status(200).send({
+                _id: updatedUser.value._id,
+                username: updatedUser.value.username,
+                email: updatedUser.value.email,
+                type: updatedUser.value.type,
+            })
+        } else {
+            res.status(404).send("User not found")
+        }
+    } catch (err) {
+        res.status(500).send(err)
+    }
+}
 
+async function updatePassword(req, res) {
+    const userId = req.params.id
+    const oldPassword = req.body.oldPassword
+    const newPassword = req.body.newPassword
+
+    try {
+        const user = await db
+            .collection("users")
+            .findOne({ _id: new ObjectID(userId) })
+
+        if (user) {
+            const isPasswordValid = await argon2.verify(
+                user.password,
+                oldPassword,
+            )
+            if (isPasswordValid) {
+                const hash = await argon2.hash(newPassword)
+                const updatedUser = await db
+                    .collection("users")
+                    .findOneAndUpdate(
+                        { _id: new ObjectID(userId) },
+                        { $set: { password: hash } },
+                        { returnOriginal: false },
+                    )
+                if (updatedUser.value) {
+                    res.status(200).send("Password updated successfully")
+                } else {
+                    res.status(404).send("User not found")
+                }
+            } else {
+                res.status(401).send("Invalid password")
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).send(err)
+    }
+}
 
 module.exports = {
     getUserById,
     createUser,
     authenticateUser,
+    updateUser,
+    updatePassword,
 }
