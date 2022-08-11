@@ -50,9 +50,7 @@ export class NavbarComponent implements OnInit {
 				this.isDisabled =
 					this.user.type === UserType.FREE &&
 					this.categoryList.length >= 8
-			} else {
-				this.router.navigate(["/login"])
-			}
+			} 
 		})
 
 		this.addCategoryForm = this.fb.group({

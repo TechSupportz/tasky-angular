@@ -18,6 +18,7 @@ app.route("/user/login").post(userController.authenticateUser)
 app.route("/user/:id").get(userController.getUserById)
 app.route("/user/:id/update").put(userController.updateUser)
 app.route("/user/:id/update/password").put(userController.updatePassword)
+app.route("/user/:id/delete").delete(userController.deleteUser)
 
 const port = 3001
 app.listen(port, () =>

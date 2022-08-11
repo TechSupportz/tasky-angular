@@ -43,7 +43,9 @@ export class LoginComponent implements OnInit {
 					detail: `Hello ${response.username}`,
 				})
 				this.userService.setCurrentUser(response)
-				this.router.navigate(["/home"])
+				this.router.navigate(["/home"]).then(() => {
+					window.location.reload()
+				})
 			},
 			(error: HttpErrorResponse) => {
 				console.log(error.error)

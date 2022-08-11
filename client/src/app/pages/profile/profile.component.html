@@ -93,7 +93,7 @@
 				<button
 					pButton
 					type="submit"
-					[disabled]="!profileForm.valid"
+					[disabled]="!passwordForm.valid"
 					label="Update my password"
 				></button>
 			</form>
@@ -110,7 +110,7 @@
 		<button
 			pButton
 			class="p-button-danger"
-			(click)="logout()"
+			(click)="deleteAccount()"
 			label="Delete Account"
 		></button>
 	</div>

@@ -111,6 +111,23 @@ export class ProfileComponent implements OnInit {
 		}
 	}
 
+	updateUser() {
+		this.userService
+			.updateUser(this.profileForm.value)
+			.subscribe((response: User) => {
+				this.userService.setCurrentUser(response)
+				this.currentUser = response
+				this.message.add({
+					severity: "success",
+					summary: "Profile Updated",
+					detail: "Your profile has been updated",
+				})
+				this.router.navigate(["/home"]).then(() => {
+					window.location.reload()
+				})
+			})
+	}
+
 	determinePayment(payment: string) {
 		switch (payment) {
 			case "FREE":
@@ -125,12 +142,44 @@ export class ProfileComponent implements OnInit {
 	}
 
 	onProfileBtnClick() {
+		const currentAmount = this.determinePayment(this.currentUser.type)
 		this.totalAmount = this.determinePayment(this.profileForm.value.type)
 
-		if (this.totalAmount === 0) {
-			this.updateUser()
+		if (
+			this.profileForm.value.email === "" ||
+			this.profileForm.value.username === ""
+		) {
+			this.message.add({
+				severity: "info",
+				summary: "Did you forget something?",
+				detail: "Ensure all fields are filled",
+			})
+			return
+		}
+
+		if (
+			this.currentUser.email !== this.profileForm.value.email ||
+			this.currentUser.username !== this.profileForm.value.username
+		) {
+			if (this.totalAmount === 0 && currentAmount === 0) {
+				this.updateUser()
+			} else if (currentAmount === this.totalAmount) {
+				this.updateUser()
+			} else if (currentAmount > this.totalAmount) {
+				this.message.add({
+					severity: "error",
+					summary: "Account Update Failed",
+					detail: "You cannot downgrade your account",
+				})
+			} else {
+				this.isPaymentDialogVisible = true
+			}
 		} else {
-			this.isPaymentDialogVisible = true
+			this.message.add({
+				severity: "info",
+				summary: "I see no difference",
+				detail: "You have not made any changes to your profile. Hence, no update is required",
+			})
 		}
 	}
 
@@ -139,6 +188,18 @@ export class ProfileComponent implements OnInit {
 			old: this.passwordForm.value.oldPassword,
 			new: this.passwordForm.value.newPassword,
 		})
+
+		if (
+			this.passwordForm.value.oldPassword === "" ||
+			this.passwordForm.value.newPassword === ""
+		) {
+			this.message.add({
+				severity: "info",
+				summary: "Did you forget something?",
+				detail: "Ensure all fields are filled",
+			})
+			return
+		}
 
 		if (
 			this.passwordForm.value.oldPassword ===
@@ -164,7 +225,6 @@ export class ProfileComponent implements OnInit {
 						})
 						this.passwordForm.reset()
 						this.router.navigate(["/"]) // replace this with a logout function
-
 					},
 					(error: HttpErrorResponse) => {
 						console.log(error.error)
@@ -180,14 +240,39 @@ export class ProfileComponent implements OnInit {
 
 	logout() {
 		this.confirmationService.confirm({
+			header: "Logout Confirmation",
 			message: "Are you sure you want to logout?",
 			accept: () => {
-				console.log("bruh")
+				this.userService.logout()
 			},
 		})
 	}
 
-	updateUser() {
-		console.log("balls")
+	deleteAccount() {
+		this.confirmationService.confirm({
+			header: "Delete Account Confirmation",
+			message:
+				"Are you sure you want to delete your account? THIS IS IRREVERSIBLE",
+			accept: () => {
+				this.userService.deleteAccount().subscribe(
+					(response) => {
+						this.message.add({
+							severity: "success",
+							summary: "Account Deletion Successful",
+							detail: "Your account has been deleted",
+						})
+						this.userService.logout()
+					},
+					(error: HttpErrorResponse) => {
+						console.log(error.error)
+						this.message.add({
+							severity: "error",
+							summary: "Account Deletion Failed",
+							detail: error.error,
+						})
+					},
+				)
+			},
+		})
 	}
 }

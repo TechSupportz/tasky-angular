@@ -180,10 +180,34 @@ async function updatePassword(req, res) {
     }
 }
 
+function deleteUser(req, res) {
+    const userId = req.params.id
+
+    try {
+        db.collection("users").findOneAndDelete(
+            { _id: new ObjectID(userId) },
+            (err, user) => {
+                if (user) {
+                    res.status(200).send({
+                        username: user.username,
+                    })
+                } else if (err) {
+                    res.status(500).send(err)
+                } else {
+                    res.status(404).send("User not found")
+                }
+            },
+        )
+    } catch (err) {
+        res.status(500).send(err)
+    }
+}
+
 module.exports = {
     getUserById,
     createUser,
     authenticateUser,
     updateUser,
     updatePassword,
+    deleteUser
 }
