@@ -18,6 +18,12 @@ export class UserService {
 	getIsLoggedIn() {
 		return this.isLoggedIn
 	}
+
+	getUserType(): UserType {
+		return this.currentUser!.type
+	}
+
+	
 	// ONLY HERE FOR TESTING PURPOSES,TO BE REMOVED IN FINAL VERSION
 	getAllUsers(): User[] {
 		return userList

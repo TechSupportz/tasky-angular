@@ -28,8 +28,6 @@ export class LoginComponent implements OnInit {
 			username: ["", Validators.required],
 			password: ["", Validators.required],
 		})
-
-		this.userList = this.userService.getAllUsers()
 	}
 
 	authenticateUser() {
