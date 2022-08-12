@@ -23,6 +23,7 @@ app.route("/user/:id/delete").delete(userController.deleteUser)
 app.route("/category/user/:id").get(categoryController.getCategoriesByUserId)
 app.route("/category/:id").get(categoryController.getCategoryById)
 app.route("/category/add").post(categoryController.addCategory)
+app.route("/category/:id/delete").delete(categoryController.deleteCategory)
 
 const port = 3001
 app.listen(port, () =>

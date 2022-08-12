@@ -101,8 +101,25 @@ function addCategory(req, res) {
     }
 }
 
+function deleteCategory(req, res) {
+    const categoryId = req.params.id
+    console.log(categoryId)
+
+    db.collection("categories").deleteOne(
+        { _id: new ObjectID(categoryId) },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send(result)
+            }
+        },
+    )
+}
+
 module.exports = {
     getCategoriesByUserId,
     getCategoryById,
     addCategory,
+    deleteCategory,
 }
