@@ -8,9 +8,11 @@ class Category {
     }
 }
 
-class CategoryMember {
-    constructor(username, userId) {
-        this.username = username
-        this.userId = userId
-    }
-}
+// class CategoryMember {
+//     constructor(username, userId) {
+//         this.username = username
+//         this.userId = userId
+//     }
+// }
+
+module.exports = Category
