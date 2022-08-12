@@ -15,8 +15,7 @@ function getCategoriesByUserId(req, res) {
         .toArray((err, categories) => {
             if (err) {
                 res.status(500).send(err)
-            } else if (categories.length === 0) {
-                res.status(404).send("No categories found")
+            
             } else {
                 res.status(200).send(categories)
             }

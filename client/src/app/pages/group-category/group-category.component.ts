@@ -54,33 +54,38 @@ export class GroupCategoryComponent implements OnInit {
 
 			this.categoryService
 				.getCategoryById(this.categoryId)
-				.subscribe((category) => (this.category = category))
+				.subscribe((category) => {
+					this.category = category
+					this.userService.getCurrentUser().subscribe((user) => {
+						this.user = user
+						if (
+							!this.category?.members?.some(
+								(member) => member.userId === user._id,
+							) &&
+							this.category?.creatorId !== user._id
+						) {
+							this.router.navigate(["/404"])
+						} else {
+							this.members = this.category?.members!.filter(
+								(member) => member.userId !== user._id,
+							)
+						}
+					})
 
-			this.userService.getCurrentUser().subscribe((user) => {
-				this.user = user
-				if (
-					!this.category?.members?.some(
-						(member) => member.userId === user._id,
-					)
-				) {
-					this.router.navigate(["/404"])
-				} else {
-					this.members = this.category?.members.filter(
-						(member) => member.userId !== user._id,
-					)
-				}
-			})
+					this.taskService
+						.getTaskByCategoryId(this.categoryId)
+						.subscribe((tasks) => {
+							this.taskList = tasks
+							console.log(tasks)
+						})
 
-			this.taskService
-				.getTaskByCategoryId(this.categoryId)
-				.subscribe((tasks) => {
-					this.taskList = tasks
-					console.log(tasks)
+					this.categorySettingsForm = this.fb.group({
+						categoryName: [
+							this.category?.name,
+							Validators.required,
+						],
+					})
 				})
-
-			this.categorySettingsForm = this.fb.group({
-				categoryName: [this.category?.name, Validators.required],
-			})
 		})
 	}
 
@@ -241,7 +246,7 @@ export class GroupCategoryComponent implements OnInit {
 			})
 	}
 
-	ngOnDestroy() {
-		this.routeSubscription.unsubscribe()
-	}
+	// ngOnDestroy() {
+	// 	this.routeSubscription.unsubscribe()
+	// }
 }

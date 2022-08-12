@@ -2,7 +2,12 @@ import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { userList } from "../mock-data/mock-user"
 import { User, UserType } from "../models/user"
-import { HttpClient, HttpEvent } from "@angular/common/http"
+import {
+	HttpClient,
+	HttpErrorResponse,
+	HttpEvent,
+	HttpResponse,
+} from "@angular/common/http"
 import { APIConfig } from "./apiConfig"
 import { Router } from "@angular/router"
 
@@ -23,7 +28,6 @@ export class UserService {
 		return this.currentUser!.type
 	}
 
-	
 	// ONLY HERE FOR TESTING PURPOSES,TO BE REMOVED IN FINAL VERSION
 	getAllUsers(): User[] {
 		return userList
@@ -36,7 +40,19 @@ export class UserService {
 		})
 	}
 
-	registerUser(user: User): Observable<any> {
+	checkIfUserExists(username: string, email: string): Observable<any> {
+		return this.http.post<any>(`${APIConfig.BASE_URL}/user/check`, {
+			username: username,
+			email: email,
+		})
+	}
+
+	registerUser(user: {
+		username: string
+		email: string
+		password: string
+		type: string
+	}): Observable<any> {
 		return this.http.post<User>(`${APIConfig.BASE_URL}/user/register`, user)
 	}
 
@@ -68,7 +84,9 @@ export class UserService {
 		if (this.isLoggedIn) {
 			return of(this.currentUser)
 		} else {
-			return this.http.get<User>(`${APIConfig.BASE_URL}/user/${localStorage.getItem("userId")}`)
+			return this.http.get<User>(
+				`${APIConfig.BASE_URL}/user/${localStorage.getItem("userId")}`,
+			)
 		}
 	}
 
@@ -82,8 +100,9 @@ export class UserService {
 	}
 
 	deleteAccount(): Observable<any> {
-		return this.http.delete<any>(`${APIConfig.BASE_URL}/user/${this.currentUser!._id}/delete`)
-		
+		return this.http.delete<any>(
+			`${APIConfig.BASE_URL}/user/${this.currentUser!._id}/delete`,
+		)
 	}
 
 	logout(): void {

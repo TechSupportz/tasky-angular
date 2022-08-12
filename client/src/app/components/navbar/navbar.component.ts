@@ -39,18 +39,18 @@ export class NavbarComponent implements OnInit {
 	ngOnInit(): void {
 		this.userService.getCurrentUser().subscribe((user) => {
 			if (user) {
+				this.user = user
 				this.categoryService
-					.getCategoryList(user._id)
+					.getCategoryByUserId(user._id)
 					.subscribe((categoryList) => {
 						this.categoryList = categoryList
-						this.user = user
 						console.log(categoryList)
 					})
 
 				this.isDisabled =
 					this.user.type === UserType.FREE &&
 					this.categoryList.length >= 8
-			} 
+			}
 		})
 
 		this.addCategoryForm = this.fb.group({

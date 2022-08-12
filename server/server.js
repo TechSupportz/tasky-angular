@@ -11,6 +11,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.route("/user/check").post(userController.checkIfUserExists)
 app.route("/user/register").post(userController.createUser)
 app.route("/user/login").post(userController.authenticateUser)
 

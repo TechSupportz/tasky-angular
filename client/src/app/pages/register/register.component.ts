@@ -113,18 +113,50 @@ export class RegisterComponent implements OnInit {
 		}
 	}
 
-	onRegisterBtnClick() {
+	async onRegisterBtnClick() {
 		this.totalAmount = this.determinePayment(this.registerForm.value.type)
 
 		if (this.totalAmount === 0) {
 			this.registerUser()
 		} else {
-			this.isPaymentDialogVisible = true
+			this.userService
+				.checkIfUserExists(
+					this.registerForm.value.username,
+					this.registerForm.value.email.toLowerCase(),
+				)
+				.subscribe((res) => {
+					console.log(res)
+					const isUser = res === {}
+					console.log(isUser)
+
+					if (isUser === true) {
+						this.message.add({
+							severity: "error",
+							summary: "Registration Failed",
+							detail: "An account with this username or email already exists",
+						})
+					} else if (isUser === false) {
+						this.isPaymentDialogVisible = true
+					} else {
+						this.message.add({
+							severity: "error",
+							summary: "Registration Failed",
+							detail: "Something went wrong",
+						})
+					}
+				})
 		}
 	}
 
 	registerUser() {
-		this.userService.registerUser(this.registerForm.value).subscribe(
+		const newUser = {
+			username: this.registerForm.value.username,
+			email: this.registerForm.value.email.toLowerCase(),
+			password: this.registerForm.value.password,
+			type: this.registerForm.value.type,
+		}
+
+		this.userService.registerUser(newUser).subscribe(
 			(response: User) => {
 				this.message.add({
 					severity: "success",

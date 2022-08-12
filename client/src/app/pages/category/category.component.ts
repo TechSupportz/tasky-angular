@@ -53,25 +53,27 @@ export class CategoryComponent implements OnInit {
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => {
 					this.category = category
+					this.userService.getCurrentUser().subscribe((user) => {
+						this.user = user
+						if (this.user._id !== this.category?.creatorId) {
+							this.router.navigate(["/404"])
+						}
+					})
+
+					this.taskService
+						.getTaskByCategoryId(this.categoryId)
+						.subscribe((tasks) => {
+							this.taskList = tasks
+							console.log(tasks)
+						})
+
+					this.categorySettingsForm = this.fb.group({
+						categoryName: [
+							this.category?.name,
+							Validators.required,
+						],
+					})
 				})
-
-			this.userService.getCurrentUser().subscribe((user) => {
-				this.user = user
-				if (this.user._id !== this.category?.creatorId) {
-					this.router.navigate(["/404"])
-				}
-			})
-
-			this.taskService
-				.getTaskByCategoryId(this.categoryId)
-				.subscribe((tasks) => {
-					this.taskList = tasks
-					console.log(tasks)
-				})
-
-			this.categorySettingsForm = this.fb.group({
-				categoryName: [this.category?.name, Validators.required],
-			})
 		})
 	}
 
@@ -142,9 +144,5 @@ export class CategoryComponent implements OnInit {
 					detail: "More stuff to do now ;-;",
 				})
 			})
-	}
-
-	ngOnDestroy() {
-		this.routeSubscription.unsubscribe()
 	}
 }

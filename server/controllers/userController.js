@@ -25,7 +25,8 @@ function getUserById(req, res) {
     )
 }
 
-async function checkIfUserExists(username, email) {
+// to check if user exists in the database FOR INTERNAL USE ONLY
+async function _checkIfUserExists(username, email) {
     try {
         const user = await db
             .collection("users")
@@ -36,18 +37,32 @@ async function checkIfUserExists(username, email) {
             return false
         }
     } catch (err) {
-        return false
+        return true
+    }
+}
+
+// to check if user exists in the database through the api
+async function checkIfUserExists(req, res) {
+    const username = req.body.username
+    const email = req.body.email.toLowerCase()
+
+    const isExistingUser = await _checkIfUserExists(username, email)
+
+    if (isExistingUser) {
+        res.status(409).send("User already exists")
+    } else {
+        res.status(200).send({})
     }
 }
 
 async function createUser(req, res) {
-    const isExistingUser = await checkIfUserExists(
+    const isExistingUser = await _checkIfUserExists(
         req.body.username,
         req.body.email,
     )
 
     if (isExistingUser) {
-        res.status(400).send("User already exists")
+        res.status(409).send("User already exists")
     } else {
         try {
             const hash = await argon2.hash(req.body.password)
@@ -55,7 +70,7 @@ async function createUser(req, res) {
             const user = new User(
                 null,
                 req.body.username,
-                req.body.email,
+                req.body.email.toLowerCase(),
                 hash,
                 req.body.type,
             )
@@ -205,9 +220,10 @@ function deleteUser(req, res) {
 
 module.exports = {
     getUserById,
+    checkIfUserExists,
     createUser,
     authenticateUser,
     updateUser,
     updatePassword,
-    deleteUser
+    deleteUser,
 }

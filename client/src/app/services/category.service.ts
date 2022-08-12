@@ -4,37 +4,23 @@ import { Observable, of, Subject } from "rxjs"
 import { categoryList } from "../mock-data/mock-category"
 import { User } from "../models/user"
 import { TaskService } from "./task.service"
+import { HttpClient } from "@angular/common/http"
+import { APIConfig } from "./apiConfig"
 
 @Injectable({
 	providedIn: "root",
 })
 export class CategoryService {
-	constructor(private taskService: TaskService) {}
+	constructor(private taskService: TaskService, private http: HttpClient) {}
 
-	getCategoryList(userId: string): Observable<Category[]> {
-		return of(
-			categoryList.filter((category) => {
-				if (category.type == CategoryType.GRP) {
-					return category.members?.find(
-						(member) => member.userId === userId,
-					)
-				} else {
-					console.log(category._id)
-					if (category.creatorId == userId) {
-						return category
-					} else {
-						return null
-					}
-				}
-			}),
+	getCategoryByUserId(userId: string): Observable<Category[]> {
+		return this.http.get<Category[]>(
+			`${APIConfig.BASE_URL}/category/user/${userId}`,
 		)
 	}
 
 	getCategoryById(id: string): Observable<Category> {
-		const category = of(
-			categoryList.find((category) => category._id == id)!,
-		)
-		return category
+		return this.http.get<Category>(`${APIConfig.BASE_URL}/category/${id}`)
 	}
 
 	isGroupCategory(categoryId: string): boolean {
