@@ -36,29 +36,11 @@ export class CategoryService {
 		categoryName: string,
 		categoryType: CategoryType,
 	): Observable<Category> {
-		if (categoryType == CategoryType.INDIV) {
-			categoryList.push({
-				_id: Math.random().toString(36).substr(2, 9),
-				creatorId: creatorId,
-				name: categoryName,
-				type: categoryType,
-			})
-		} else {
-			categoryList.push({
-				_id: Math.random().toString(36).substr(2, 9),
-				creatorId: creatorId,
-				name: categoryName,
-				type: categoryType,
-				members: [
-					{
-						userId: creatorId,
-						username: creatorUsername,
-					},
-				],
-			})
-		}
-
-		return of(categoryList[categoryList.length - 1])
+		return this.http.post<Category>(`${APIConfig.BASE_URL}/category/add`, {
+			creatorId: creatorId,
+			name: categoryName,
+			type: categoryType,
+		})
 	}
 
 	addMember(categoryId: string, user: User): void {
