@@ -53,6 +53,6 @@ app.route("/bookmark/:id/add").post(bookmarkController.addBookmark)
 app.route("/bookmark/:id/delete").delete(bookmarkController.deleteBookmark)
 
 const port = 3001
-app.listen(port, () =>
+app.listen(process.env.PORT || port, () =>
     console.log(`Web server running @ http://localhost:${port}`),
 )
