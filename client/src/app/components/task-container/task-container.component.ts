@@ -55,22 +55,32 @@ export class TaskContainerComponent implements OnInit {
 	addSubTask(): void {
 		this.taskService
 			.addSubTask(
-				this.task.id,
-				this.user.id,
+				this.task._id,
+				this.user._id,
 				this.addSubTaskForm.value.subTaskName,
 				this.addSubTaskForm.value.subTaskDueDate,
 				this.addSubTaskForm.value.subTaskPriority,
 			)
-			.subscribe(() => {
-				// this.task.subTask.push(subTask)
-				this.isAddSubTaskDialogVisible = false
-				this.addSubTaskForm.reset()
-				this.message.add({
-					severity: "success",
-					summary: "Task added!",
-					detail: "More stuff to do now ;-;",
-				})
-			})
+			.subscribe(
+				(res) => {
+					this.task.subTask.push(res)
+					this.isAddSubTaskDialogVisible = false
+					this.addSubTaskForm.reset()
+					this.message.add({
+						severity: "success",
+						summary: "Task added!",
+						detail: "More stuff to do now ;-;",
+					})
+				},
+				(err) => {
+					console.log(err)
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Something went wrong",
+					})
+				},
+			)
 	}
 
 	deleteTask() {
@@ -79,13 +89,23 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to delete this task? This is NOT reversible",
 			accept: () => {
-				this.taskService.deleteTask(this.task.id)
-				this.isDeleted = true
-				this.message.add({
-					severity: "success",
-					summary: "Into the trash it goes!",
-					detail: "Task deleted successfully",
-				})
+				this.taskService.deleteTask(this.task._id).subscribe(
+					(res) => {
+						this.isDeleted = true
+						this.message.add({
+							severity: "success",
+							summary: "Into the trash it goes!",
+							detail: "Task deleted successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Something went wrong",
+						})
+					},
+				)
 			},
 		})
 	}
@@ -104,13 +124,25 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to undo task completion and restore the task?",
 			accept: () => {
-				this.taskService.setCompleteTaskState(this.task.id, false)
-				this.isCompleted = false
-				this.message.add({
-					severity: "success",
-					summary: "ITS ALIVE!",
-					detail: "Task restored successfully",
-				})
+				this.taskService
+					.setCompleteTaskState(this.task._id, false)
+					.subscribe(
+						(res) => {
+							this.isCompleted = false
+							this.message.add({
+								severity: "success",
+								summary: "ITS ALIVE!",
+								detail: "Task restored successfully",
+							})
+						},
+						(err) => {
+							this.message.add({
+								severity: "error",
+								summary: "Error",
+								detail: "Something went wrong",
+							})
+						},
+					)
 			},
 		})
 	}

@@ -1,0 +1,87 @@
+<div
+	class="h-screen flex flex-column justify-content-center align-items-center"
+>
+	<div
+		class="shadow-3 px-5 py-5 flex flex-column border-round-lg justify-content-center align-items-center"
+	>
+		<div>
+			<h1 class="font-bold text-5xl">Welcome to Tasky</h1>
+		</div>
+		<p class="font-medium text-xl">
+			Register now and keep your tasks on track!
+		</p>
+		<br />
+		<form
+			[formGroup]="registerForm"
+			(ngSubmit)="onRegisterBtnClick()"
+			class="flex flex-column border-round-lg justify-content-center align-items-center"
+		>
+			<div class="field">
+				<span class="p-input-icon-right">
+					<i class="pi pi-at"></i>
+					<input
+						id="email"
+						type="text"
+						pInputText
+						placeholder="Email"
+						formControlName="email"
+					/>
+				</span>
+			</div>
+			<div class="field">
+				<span class="p-input-icon-right">
+					<i class="pi pi-user"></i>
+					<input
+						id="username"
+						type="text"
+						pInputText
+						placeholder="Username"
+						formControlName="username"
+					/>
+				</span>
+			</div>
+			<div class="field">
+				<p-password
+					[feedback]="false"
+					[toggleMask]="true"
+					placeholder="Password"
+					styleClass="p-password p-component p-inputwrapper p-input-icon-right"
+					formControlName="password"
+				></p-password>
+			</div>
+			<div class="field w-full flex flex-column">
+				<label for="type">Account Type</label>
+				<p-dropdown
+					id="type"
+					[options]="accountTypes"
+					optionLabel="name"
+					optionValue="code"
+					formControlName="type"
+				>
+				</p-dropdown>
+			</div>
+			<button pButton type="submit" [disabled]="!registerForm.valid">
+				Register
+			</button>
+		</form>
+		<br />
+		<p class="text-sm p-1 text-primary cursor-pointer" routerLink="/login">
+			Already have an account? Login now!
+		</p>
+	</div>
+
+	<p-dialog
+		header="Payment"
+		[(visible)]="isPaymentDialogVisible"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+	>
+		<p>Please make payment to upgrade account type</p>
+		<br />
+		<p class="font-bold">Total: {{ totalAmount | currency }}</p>
+		<ng-template pTemplate="footer">
+			<ngx-paypal [config]="payPalConfig"></ngx-paypal>
+		</ng-template>
+	</p-dialog>
+</div>

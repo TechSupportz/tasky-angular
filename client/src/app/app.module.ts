@@ -19,8 +19,12 @@ import { TaskContainerComponent } from "./components/task-container/task-contain
 import { CommonModule } from "@angular/common"
 import { CalendarComponent } from "./components/calendar/calendar.component"
 import { DatePipe } from "@angular/common"
-import { NotFound404Component } from "./pages/not-found404/not-found404.component";
-import { BookmarkComponent } from './components/bookmark/bookmark.component'
+import { NotFound404Component } from "./pages/not-found404/not-found404.component"
+import { BookmarkComponent } from "./components/bookmark/bookmark.component"
+import { HttpClientModule } from "@angular/common/http";
+import { RegisterComponent } from './pages/register/register.component'
+import { NgxPayPalModule } from "ngx-paypal";
+import { ProfileComponent } from './pages/profile/profile.component'
 
 @NgModule({
 	declarations: [
@@ -34,10 +38,13 @@ import { BookmarkComponent } from './components/bookmark/bookmark.component'
 		TaskContainerComponent,
 		CalendarComponent,
 		NotFound404Component,
-  BookmarkComponent,
+		BookmarkComponent,
+  RegisterComponent,
+  ProfileComponent,
 	],
 	imports: [
 		BrowserAnimationsModule,
+		HttpClientModule,
 		BrowserModule,
 		AppRoutingModule,
 		FlexLayoutModule,
@@ -45,6 +52,7 @@ import { BookmarkComponent } from './components/bookmark/bookmark.component'
 		ReactiveFormsModule,
 		CommonModule,
 		FormsModule,
+		NgxPayPalModule,
 	],
 	providers: [ConfirmationService, MessageService, DatePipe],
 	bootstrap: [AppComponent],

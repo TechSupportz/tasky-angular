@@ -7,21 +7,23 @@
 		</p>
 		<p class="text-2xl font-medium">Upcoming Tasks</p>
 		<br />
-		<div
-			*ngIf="taskList.length === 0"
-			class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
-		>
-			<p class="font-medium mb-2">
-				<em>FINALLY</em>, some peace and quiet
-			</p>
-			<p class="text-xs">enjoy it while it lasts ;-;</p>
-		</div>
-		<div class="flex flex-column gap-3 p-1">
-			<app-task-container
-				*ngFor="let task of taskList"
-				[isHomePage]="true"
-				[task]="task"
-			></app-task-container>
+		<div *ngIf="taskList">
+			<div
+				*ngIf="taskList.length === 0"
+				class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
+			>
+				<p class="font-medium mb-2">
+					<em>FINALLY</em>, some peace and quiet
+				</p>
+				<p class="text-xs">enjoy it while it lasts ;-;</p>
+			</div>
+			<div class="flex flex-column gap-3 p-1">
+				<app-task-container
+					*ngFor="let task of taskList"
+					[isHomePage]="true"
+					[task]="task"
+				></app-task-container>
+			</div>
 		</div>
 	</div>
 	<div class="grid col-4 gap-4">
@@ -30,19 +32,25 @@
 		</div>
 		<div class="col-12 shadow-4 border-round-lg py-3 px-4">
 			<p class="text-4xl font-semibold mb-5">Bookmarks</p>
+			<div *ngIf="bookmarkList">
 			<div class="grid align-items-center">
-				<div (contextmenu)="deleteConfirm(bookmark, $event)" *ngFor="let bookmark of bookmarkList" class="col-3">
-					<app-bookmark [bookmark]="bookmark"></app-bookmark>
-				</div>
-				<div *ngIf="bookmarkList.length < 8" class="max-w-min">
-					<button
-						pButton
-						(click)="showAddBookmarkDialog()"
-						class="p-button-rounded p-button-raised p-button-text p-1 pl-2 pt-1 max-w-min mb-1"
+					<div
+						(contextmenu)="deleteConfirm(bookmark, $event)"
+						*ngFor="let bookmark of bookmarkList"
+						class="col-3"
 					>
-						<i class="pi pi-plus p-1"></i>
-					</button>
-					<p class="text-center">Add</p>
+						<app-bookmark [bookmark]="bookmark"></app-bookmark>
+					</div>
+					<div *ngIf="bookmarkList.length < 8" class="max-w-min">
+						<button
+							pButton
+							(click)="showAddBookmarkDialog()"
+							class="p-button-rounded p-button-raised p-button-text p-1 pl-2 pt-1 max-w-min mb-1"
+						>
+							<i class="pi pi-plus p-1"></i>
+						</button>
+						<p class="text-center">Add</p>
+					</div>
 				</div>
 			</div>
 		</div>

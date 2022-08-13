@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -24,6 +24,7 @@
     "@fullcalendar/daygrid": "^5.11.0",
     "@fullcalendar/interaction": "^5.11.0",
     "luxon": "^3.0.1",
+    "ngx-paypal": "^9.0.0",
     "primeflex": "^3.2.1",
     "primeicons": "^5.0.0",
     "primeng": "^13.4.1",

@@ -1,14 +1,14 @@
 export interface Category {
-	id: number
+	_id: string
 	icon?: string
-	creatorId: number
+	creatorId: string
 	name: string
 	type: CategoryType
 	members?: CategoryMember[]
 }
 
-export interface CategoryMember{
-	userId: number
+export interface CategoryMember {
+	userId: string
 	username: string
 }
 

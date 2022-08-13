@@ -1,4 +1,4 @@
-<div (contextmenu)="showEditTaskDialog($event)">
+<div *ngIf="!(isSubTask && isSubTaskDeleted)" (contextmenu)="showEditTaskDialog($event)">
 	<div class="field-checkbox w-full">
 		<p-checkbox
 			id="taskName"

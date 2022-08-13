@@ -11,6 +11,7 @@ import { TaskService } from "src/app/services/task.service"
 import { UserService } from "src/app/services/user.service"
 import { Tasks } from "src/app/models/task"
 import { User } from "src/app/models/user"
+import { MessageService } from "primeng/api"
 
 @Component({
 	selector: "app-calendar",
@@ -19,7 +20,7 @@ import { User } from "src/app/models/user"
 })
 export class CalendarComponent implements OnChanges {
 	@Input() isCategory: boolean = false
-	@Input() categoryId?: number
+	@Input() categoryId?: string
 
 	user: User
 	calendarOptions: CalendarOptions = {
@@ -31,6 +32,7 @@ export class CalendarComponent implements OnChanges {
 		private userService: UserService,
 		private taskService: TaskService,
 		private router: Router,
+		private message: MessageService
 	) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -39,14 +41,31 @@ export class CalendarComponent implements OnChanges {
 			.subscribe((user) => (this.user = user))
 
 		if (changes.categoryId) {
-			this.taskService
-				.getTaskByCategoryId(this.categoryId!)
-				.subscribe((tasks) => {
-					this.generateEventList(tasks)
-				})
+			this.taskService.getTaskByCategoryId(this.categoryId!).subscribe(
+				(res: Tasks[]) => {
+					this.generateEventList(res)
+				},
+				(err) => {
+					console.log(err)
+					this.generateEventList([])
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Something went wrong",
+					})
+				},
+			)
 		} else {
-			this.taskService.getTaskList(this.user.id).subscribe((tasks) => {
-				this.generateEventList(tasks)
+			this.taskService.getTaskList(this.user._id).subscribe((res: Tasks[]) => {
+				this.generateEventList(res)
+			}, (err) => {
+				console.log(err)
+				this.generateEventList([])
+				this.message.add({
+					severity: "error",
+					summary: "Error",
+					detail: "Something went wrong",
+				})
 			})
 		}
 	}
@@ -82,6 +101,6 @@ export class CalendarComponent implements OnChanges {
 
 	eventClick(info: any): void {
 		info.jsEvent.preventDefault()
-		this.router.navigate(['/category/1'])
+		this.router.navigate(["/category/1"])
 	}
 }

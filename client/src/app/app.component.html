@@ -1,9 +1,18 @@
-<div class="h-screen w-screen flex flex-row">
-	<app-navbar *ngIf="isNavbarVisible" ></app-navbar>
-	<div class="h-full w-full">
-		<router-outlet></router-outlet>
-	</div>
+<div
+	class="h-screen w-screen flex justify-content-center align-items-center"
+	*ngIf="isLoading; else app"
+>
+	<p-progressSpinner strokeWidth="5" animationDuration="0.75s" ></p-progressSpinner>
 </div>
+
+<ng-template #app>
+	<div class="h-screen w-screen flex flex-row">
+		<app-navbar *ngIf="isNavbarVisible"></app-navbar>
+		<div class="h-full w-full">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</ng-template>
 
 <p-toast position="bottom-right"></p-toast>
 

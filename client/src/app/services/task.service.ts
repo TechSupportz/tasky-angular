@@ -1,175 +1,169 @@
 import { Injectable } from "@angular/core"
-import { Observable, of } from "rxjs"
+import { Observable, of, Subject } from "rxjs"
 import { SubTask, Tasks } from "../models/task"
 import { taskList } from "../mock-data/mock-task"
 import { DatePipe } from "@angular/common"
 import { DateTime } from "luxon"
+import { HttpClient } from "@angular/common/http"
+import { APIConfig } from "./apiConfig"
 
 @Injectable({
 	providedIn: "root",
 })
 export class TaskService {
-	constructor(private datePipe: DatePipe) {}
+	constructor(private datePipe: DatePipe, private http: HttpClient) {}
 
-	getTaskList(userId: number): Observable<Tasks[]> {
-		return of(taskList.filter((task) => task.creatorId == userId))
+	getTaskList(userId: string): Observable<any> {
+		return this.http.get(`${APIConfig.BASE_URL}/task/user/${userId}`)
 	}
 
-	getUpcomingTasks(userId: number): Observable<Tasks[]> {
+	getUpcomingTasks(userId: string): Observable<Tasks[]> {
 		const currentDate = DateTime.now()
+		let subject = new Subject<Tasks[]>()
 
-		const taskListCopy: Tasks[] = JSON.parse(
-			JSON.stringify(taskList.filter((task) => task.creatorId == userId)),
-		) // creates a deep copy of the taskList (https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
+		this.http.get(`${APIConfig.BASE_URL}/task/user/${userId}`).subscribe(
+			(res) => {
+				const tasks: Tasks[] = res as Tasks[]
+				console.log(res)
+				tasks.forEach((task) => {
+					task.subTask = task.subTask.filter((subTask) => {
+						const subTaskDate = DateTime.fromISO(subTask.dueDate)
+						const diff = subTaskDate.diff(currentDate, "days")
+						return diff.days <= 14
+					})
+				})
 
-		taskListCopy.forEach((task) => {
-			task.subTask = task.subTask.filter((subTask) => {
-				const subTaskDate = DateTime.fromISO(subTask.dueDate)
-				const diff = subTaskDate.diff(currentDate, "days")
-				return diff.days <= 14
-			})
-		})
+				const upcomingTaskList = tasks.filter((task) => {
+					const taskDate = DateTime.fromISO(task.dueDate)
+					const diff = taskDate.diff(currentDate, "days")
+					if (diff.days <= 14) {
+						return task
+					} else if (diff.days > 14 && task.subTask.length > 0) {
+						return task
+					} else {
+						return null
+					}
+				})
 
-		const upcomingTaskList = taskListCopy.filter((task) => {
-			const taskDate = DateTime.fromISO(task.dueDate)
-			const diff = taskDate.diff(currentDate, "days")
-			if (diff.days <= 14) {
-				return task
-			} else if (diff.days > 14 && task.subTask.length > 0) {
-				return task
-			} else {
-				return null
-			}
-		})
-
-		return of(upcomingTaskList)
-	}
-
-	getTaskByCategoryId(categoryId: number): Observable<Tasks[]> {
-		const filteredTaskList = of(
-			taskList.filter((task) => task.categoryId == categoryId),
+				subject.next(upcomingTaskList)
+			},
+			(err) => {
+				console.log(err)
+				subject.next([])
+			},
 		)
-		return filteredTaskList
+
+		return subject.asObservable()
 	}
 
-	setCompleteTaskState(taskId: number, isCompleted: boolean): void {
-		const task = taskList.find((t) => t.id == taskId)
-		task!.isCompleted = isCompleted
+	getTaskByCategoryId(categoryId: string): Observable<any> {
+		return this.http.get(
+			`${APIConfig.BASE_URL}/task/category/${categoryId}`,
+		)
+	}
+
+	setCompleteTaskState(
+		taskId: string,
+		isCompleted: boolean,
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/complete`, {
+			isCompleted: isCompleted,
+		})
 	}
 
 	setCompleteSubTaskState(
-		taskId: number,
-		subTaskId: number,
+		taskId: string,
+		subTaskId: string,
 		isCompleted: boolean,
-	): void {
-		const task = taskList.find((t) => t.id == taskId)
-		const subTask = task!.subTask.find((t) => t.id == subTaskId)
-		subTask!.isCompleted = isCompleted
+	): Observable<any> {
+		return this.http.put(
+			`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/complete`,
+			{
+				isCompleted: isCompleted,
+			},
+		)
 	}
 
 	addTask(
-		categoryId: number,
-		creatorId: number,
+		categoryId: string,
+		creatorId: string,
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
-	): Observable<Tasks> {
-		const task: Tasks = {
-			id: taskList.length + 1,
+	): Observable<any> {
+		return this.http.post(`${APIConfig.BASE_URL}/task/add`, {
 			categoryId: categoryId,
 			creatorId: creatorId,
 			name: taskName,
 			dueDate: this.datePipe.transform(
 				taskDueDate,
 				"yyyy-MM-ddTHH:mm:ss",
-			)!,
+			),
 			priority: taskPriority,
-			isCompleted: false,
-			subTask: [],
-		}
-
-		taskList.push(task)
-
-		return of(task)
-	}
-
-	addSubTask(
-		taskId: number,
-		creatorId: number,
-		subTaskName: string,
-		subTaskDueDate: string,
-		subTaskPriority: string,
-	): Observable<SubTask> {
-		const task = taskList.find((t) => t.id == taskId)
-		const subTask: SubTask = {
-			id: task!.subTask.length + 1,
-			creatorId: creatorId,
-			name: subTaskName,
-			dueDate: this.datePipe.transform(
-				subTaskDueDate,
-				"yyyy-MM-ddTHH:mm:ss",
-			)!,
-			priority: subTaskPriority,
-			isCompleted: false,
-		}
-		task!.subTask.push(subTask)
-
-		return of(subTask)
-	}
-
-	editTask(
-		taskId: number,
-		taskName: string,
-		taskDueDate: string,
-		taskPriority: string,
-	): Observable<Tasks> {
-		const task = taskList.find((t) => t.id == taskId)
-		task!.name = taskName
-		task!.dueDate = this.datePipe.transform(
-			taskDueDate,
-			"yyyy-MM-ddTHH:mm:ss",
-		)!
-		task!.priority = taskPriority
-
-		return of(taskList.find((t) => t.id == taskId)!)
-	}
-
-	editSubTask(
-		taskId: number,
-		subTaskId: number,
-		subTaskName: string,
-		subTaskDueDate: string,
-		subTaskPriority: string,
-	): Observable<SubTask> {
-		const task = taskList.find((t) => t.id == taskId)
-		const subTask = task!.subTask.find((t) => t.id == subTaskId)
-		subTask!.name = subTaskName
-		subTask!.dueDate = this.datePipe.transform(
-			subTaskDueDate,
-			"yyyy-MM-ddTHH:mm:ss",
-		)!
-		subTask!.priority = subTaskPriority
-
-		return of(task!.subTask.find((t) => t.id == subTaskId)!)
-	}
-
-	deleteTask(id: number): void {
-		const index = taskList.findIndex((t) => t.id == id)
-		taskList.splice(index, 1)
-	}
-
-	deleteTaskByCategoryId(categoryId: number): void {
-		taskList.forEach((task) => {
-			if (task.categoryId == categoryId) {
-				const index = taskList.findIndex((t) => t.id == task.id)
-				taskList.splice(index, 1)
-			}
 		})
 	}
 
-	deleteSubTask(taskId: number, subTaskId: number): void {
-		const task = taskList.find((t) => t.id == taskId)
-		const index = task!.subTask.findIndex((t) => t.id == subTaskId)
-		task!.subTask.splice(index, 1)
+	addSubTask(
+		taskId: string,
+		creatorId: string,
+		subTaskName: string,
+		subTaskDueDate: string,
+		subTaskPriority: string,
+	): Observable<any> {
+		const task = taskList.find((t) => t._id == taskId)
+
+		return this.http.post(
+			`${APIConfig.BASE_URL}/task/${taskId}/subTask/add`,
+			{
+				creatorId: creatorId,
+				name: subTaskName,
+				dueDate: this.datePipe.transform(
+					subTaskDueDate,
+					"yyyy-MM-ddTHH:mm:ss",
+				),
+				priority: subTaskPriority,
+			},
+		)
+	}
+
+	editTask(
+		taskId: string,
+		taskName: string,
+		taskDueDate: string,
+		taskPriority: string,
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/update`, {
+			name: taskName,
+			dueDate: this.datePipe.transform(
+				taskDueDate,
+				"yyyy-MM-ddTHH:mm:ss",
+			),
+			priority: taskPriority,
+		})
+	}
+
+	editSubTask(
+		taskId: string,
+		subTaskId: string,
+		subTaskName: string,
+		subTaskDueDate: string,
+		subTaskPriority: string,
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/update`, {
+			name: subTaskName,
+			dueDate: this.datePipe.transform(
+				subTaskDueDate,	
+				"yyyy-MM-ddTHH:mm:ss",
+			),
+			priority: subTaskPriority,
+		})
+	}
+
+	deleteTask(id: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/task/${id}/delete`)
+	}
+
+	deleteSubTask(taskId: string, subTaskId: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/delete`)
 	}
 }
