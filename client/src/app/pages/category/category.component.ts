@@ -149,16 +149,25 @@ export class CategoryComponent implements OnInit {
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,
 			)
-			.subscribe((task) => {
-				console.log(task.dueDate)
-				this.taskList.push(task)
-				this.isAddTaskDialogVisible = false
-				this.addTaskForm.reset()
-				this.message.add({
-					severity: "success",
-					summary: "Task added!",
-					detail: "More stuff to do now ;-;",
-				})
-			})
+			.subscribe(
+				(task) => {
+					console.log(task.dueDate)
+					this.taskList.push(task)
+					this.isAddTaskDialogVisible = false
+					this.addTaskForm.reset()
+					this.message.add({
+						severity: "success",
+						summary: "Task added!",
+						detail: "More stuff to do now ;-;",
+					})
+				},
+				(err) => {
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Oops Something went wrong",
+					})
+				},
+			)
 	}
 }

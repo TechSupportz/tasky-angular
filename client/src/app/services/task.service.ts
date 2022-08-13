@@ -57,10 +57,15 @@ export class TaskService {
 	}
 
 	getTaskByCategoryId(categoryId: string): Observable<any> {
-		return this.http.get(`${APIConfig.BASE_URL}/task/category/${categoryId}`)
+		return this.http.get(
+			`${APIConfig.BASE_URL}/task/category/${categoryId}`,
+		)
 	}
 
-	setCompleteTaskState(taskId: string, isCompleted: boolean): Observable<any> {
+	setCompleteTaskState(
+		taskId: string,
+		isCompleted: boolean,
+	): Observable<any> {
 		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/complete`, {
 			isCompleted: isCompleted,
 		})
@@ -71,9 +76,12 @@ export class TaskService {
 		subTaskId: string,
 		isCompleted: boolean,
 	): Observable<any> {
-		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/complete`, {
-			isCompleted: isCompleted,
-		})
+		return this.http.put(
+			`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/complete`,
+			{
+				isCompleted: isCompleted,
+			},
+		)
 	}
 
 	addTask(
@@ -82,24 +90,17 @@ export class TaskService {
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
-	): Observable<Tasks> {
-		const task: Tasks = {
-			_id: "task" + (taskList.length + 1),
+	): Observable<any> {
+		return this.http.post(`${APIConfig.BASE_URL}/task/add`, {
 			categoryId: categoryId,
 			creatorId: creatorId,
 			name: taskName,
 			dueDate: this.datePipe.transform(
 				taskDueDate,
 				"yyyy-MM-ddTHH:mm:ss",
-			)!,
+			),
 			priority: taskPriority,
-			isCompleted: false,
-			subTask: [],
-		}
-
-		taskList.push(task)
-
-		return of(task)
+		})
 	}
 
 	addSubTask(
@@ -108,22 +109,21 @@ export class TaskService {
 		subTaskName: string,
 		subTaskDueDate: string,
 		subTaskPriority: string,
-	): Observable<SubTask> {
+	): Observable<any> {
 		const task = taskList.find((t) => t._id == taskId)
-		const subTask: SubTask = {
-			_id: "subTask" + (task!.subTask.length + 1),
-			creatorId: creatorId,
-			name: subTaskName,
-			dueDate: this.datePipe.transform(
-				subTaskDueDate,
-				"yyyy-MM-ddTHH:mm:ss",
-			)!,
-			priority: subTaskPriority,
-			isCompleted: false,
-		}
-		task!.subTask.push(subTask)
 
-		return of(subTask)
+		return this.http.post(
+			`${APIConfig.BASE_URL}/task/${taskId}/subTask/add`,
+			{
+				creatorId: creatorId,
+				name: subTaskName,
+				dueDate: this.datePipe.transform(
+					subTaskDueDate,
+					"yyyy-MM-ddTHH:mm:ss",
+				),
+				priority: subTaskPriority,
+			},
+		)
 	}
 
 	editTask(
@@ -131,16 +131,15 @@ export class TaskService {
 		taskName: string,
 		taskDueDate: string,
 		taskPriority: string,
-	): Observable<Tasks> {
-		const task = taskList.find((t) => t._id == taskId)
-		task!.name = taskName
-		task!.dueDate = this.datePipe.transform(
-			taskDueDate,
-			"yyyy-MM-ddTHH:mm:ss",
-		)!
-		task!.priority = taskPriority
-
-		return of(taskList.find((t) => t._id == taskId)!)
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/update`, {
+			name: taskName,
+			dueDate: this.datePipe.transform(
+				taskDueDate,
+				"yyyy-MM-ddTHH:mm:ss",
+			),
+			priority: taskPriority,
+		})
 	}
 
 	editSubTask(
@@ -149,17 +148,15 @@ export class TaskService {
 		subTaskName: string,
 		subTaskDueDate: string,
 		subTaskPriority: string,
-	): Observable<SubTask> {
-		const task = taskList.find((t) => t._id == taskId)
-		const subTask = task!.subTask.find((t) => t._id == subTaskId)
-		subTask!.name = subTaskName
-		subTask!.dueDate = this.datePipe.transform(
-			subTaskDueDate,
-			"yyyy-MM-ddTHH:mm:ss",
-		)!
-		subTask!.priority = subTaskPriority
-
-		return of(task!.subTask.find((t) => t._id == subTaskId)!)
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/update`, {
+			name: subTaskName,
+			dueDate: this.datePipe.transform(
+				subTaskDueDate,	
+				"yyyy-MM-ddTHH:mm:ss",
+			),
+			priority: subTaskPriority,
+		})
 	}
 
 	deleteTask(id: string): void {

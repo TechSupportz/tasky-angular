@@ -79,7 +79,11 @@ export class TaskComponent implements OnInit {
 				)
 				.subscribe(
 					(res) => {
-						console.log(`sub-task ${isCompleted ? "completed" : "un-completed"}`)
+						console.log(
+							`sub-task ${
+								isCompleted ? "completed" : "un-completed"
+							}`,
+						)
 					},
 					(err) => {
 						this.message.add({
@@ -120,14 +124,26 @@ export class TaskComponent implements OnInit {
 					this.editTaskForm.value.taskDueDate,
 					this.editTaskForm.value.taskPriority,
 				)
-				.subscribe(() => {
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Success",
-						detail: "Task edited successfully",
-					})
-				})
+				.subscribe(
+					(res) => {
+						this.task.name = res.name
+						this.task.dueDate = res.dueDate
+						this.task.priority = res.priority
+						this.isEditTaskDialogVisible = false
+						this.message.add({
+							severity: "success",
+							summary: "Success",
+							detail: "Sub-Task edited successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error editing sub-task",
+						})
+					},
+				)
 		} else {
 			this.taskService
 				.editTask(
@@ -136,14 +152,26 @@ export class TaskComponent implements OnInit {
 					this.editTaskForm.value.taskDueDate,
 					this.editTaskForm.value.taskPriority,
 				)
-				.subscribe(() => {
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Success",
-						detail: "Task edited successfully",
-					})
-				})
+				.subscribe(
+					(res) => {
+						this.task.name = res.name
+						this.task.dueDate = res.dueDate
+						this.task.priority = res.priority
+						this.isEditTaskDialogVisible = false
+						this.message.add({
+							severity: "success",
+							summary: "Success",
+							detail: "Task edited successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error editing task",
+						})
+					},
+				)
 		}
 	}
 

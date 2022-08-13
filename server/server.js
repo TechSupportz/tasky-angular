@@ -33,6 +33,10 @@ app.route("/task/user/:id").get(taskController.getTasksByUserId)
 app.route("/task/category/:id").get(taskController.getTasksByCategoryId)
 app.route("/task/:id/complete").put(taskController.setTaskCompleteState)
 app.route("/task/:id/subTask/:subTaskId/complete").put(taskController.setSubTaskCompleteState)
+app.route("/task/add").post(taskController.addTask)
+app.route("/task/:id/subTask/add").post(taskController.addSubTask)
+app.route("/task/:id/update").put(taskController.updateTask)
+app.route("/task/:id/subTask/:subTaskId/update").put(taskController.updateSubTask)
 
 
 const port = 3001

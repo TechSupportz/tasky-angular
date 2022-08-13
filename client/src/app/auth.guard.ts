@@ -6,6 +6,7 @@ import {
 	RouterStateSnapshot,
 	UrlTree,
 } from "@angular/router"
+import { MessageService } from "primeng/api"
 import { Observable } from "rxjs"
 import { UserService } from "./services/user.service"
 
@@ -13,7 +14,11 @@ import { UserService } from "./services/user.service"
 	providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
-	constructor(private userService: UserService, private router: Router) {}
+	constructor(
+		private userService: UserService,
+		private router: Router,
+		private message: MessageService,
+	) {}
 
 	canActivate(
 		route: ActivatedRouteSnapshot,
@@ -23,12 +28,22 @@ export class AuthGuard implements CanActivate {
 		| Promise<boolean | UrlTree>
 		| boolean
 		| UrlTree {
-		// const permission = route.data["permission"]
+		const permission = route.data["permission"]
 
-		if (this.userService.getIsLoggedIn()) {
+		if (
+			this.userService.getIsLoggedIn() &&
+			permission.only.includes(this.userService.getUserType())
+		) {
 			return true
 		} else {
-			this.router.navigate(["/login"])
+			this.message.add({
+				severity: "error",
+				summary: "You do not have permission to access this page",
+				detail: "Please upgrade your account to Pro or Pro+ via the profile page to access this page",
+				closable: false,
+				life: 5000,
+			})
+			this.router.navigate(["/404"])
 			return false
 		}
 	}
