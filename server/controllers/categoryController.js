@@ -1,4 +1,3 @@
-const Category = require("../models/Category")
 const db = require("../dbConnections")
 const { ObjectID } = require("bson")
 

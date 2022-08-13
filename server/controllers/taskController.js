@@ -1,5 +1,3 @@
-const Task = require("../models/Task")
-const SubTask = require("../models/SubTask")
 const db = require("../dbConnections")
 const { ObjectID } = require("bson")
 
@@ -86,9 +84,12 @@ function addTask(req, res) {
     const priority = req.body.priority
 
     // console.table({ categoryId, creatorId, name, dueDate, priority })
+    const taskId = new ObjectID()
+
 
     db.collection("tasks").insertOne(
         {
+            _id: taskId,
             categoryId: new ObjectID(categoryId),
             creatorId: new ObjectID(creatorId),
             name: name,

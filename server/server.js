@@ -25,21 +25,32 @@ app.route("/category/user/:id").get(categoryController.getCategoriesByUserId)
 app.route("/category/:id").get(categoryController.getCategoryById)
 app.route("/category/add").post(categoryController.addCategory)
 app.route("/category/:id/addMember").put(categoryController.addMemberToCategory)
-app.route("/category/:id/removeMember/:userId").delete(categoryController.removeMemberFromCategory)
+app.route("/category/:id/removeMember/:userId").delete(
+    categoryController.removeMemberFromCategory,
+)
 app.route("/category/:id/update").put(categoryController.updateCategory)
 app.route("/category/:id/delete").delete(categoryController.deleteCategory)
 
-app.route("/task/user/:id").get(taskController.getTasksByUserId) 
+app.route("/task/user/:id").get(taskController.getTasksByUserId)
 app.route("/task/category/:id").get(taskController.getTasksByCategoryId)
 app.route("/task/:id/complete").put(taskController.setTaskCompleteState)
-app.route("/task/:id/subTask/:subTaskId/complete").put(taskController.setSubTaskCompleteState)
+app.route("/task/:id/subTask/:subTaskId/complete").put(
+    taskController.setSubTaskCompleteState,
+)
 app.route("/task/add").post(taskController.addTask)
 app.route("/task/:id/subTask/add").post(taskController.addSubTask)
 app.route("/task/:id/update").put(taskController.updateTask)
-app.route("/task/:id/subTask/:subTaskId/update").put(taskController.updateSubTask)
+app.route("/task/:id/subTask/:subTaskId/update").put(
+    taskController.updateSubTask,
+)
 app.route("/task/:id/delete").delete(taskController.deleteTask)
-app.route("/task/:id/subTask/:subTaskId/delete").delete(taskController.deleteSubTask)
+app.route("/task/:id/subTask/:subTaskId/delete").delete(
+    taskController.deleteSubTask,
+)
 
+app.route("/bookmark/:id").get(bookmarkController.getBookmarksByUserId)
+app.route("/bookmark/:id/add").post(bookmarkController.addBookmark)
+app.route("/bookmark/:id/delete").delete(bookmarkController.deleteBookmark)
 
 const port = 3001
 app.listen(port, () =>
