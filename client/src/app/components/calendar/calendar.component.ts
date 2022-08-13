@@ -41,11 +41,20 @@ export class CalendarComponent implements OnChanges {
 			.subscribe((user) => (this.user = user))
 
 		if (changes.categoryId) {
-			this.taskService
-				.getTaskByCategoryId(this.categoryId!)
-				.subscribe((tasks) => {
-					this.generateEventList(tasks)
-				})
+			this.taskService.getTaskByCategoryId(this.categoryId!).subscribe(
+				(res: Tasks[]) => {
+					this.generateEventList(res)
+				},
+				(err) => {
+					console.log(err)
+					this.generateEventList([])
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Something went wrong",
+					})
+				},
+			)
 		} else {
 			this.taskService.getTaskList(this.user._id).subscribe((res: Tasks[]) => {
 				this.generateEventList(res)

@@ -1,6 +1,8 @@
 <div class="grid min-h-full max-w-full gap-3 p-5">
 	<div class="col-8 shadow-4 border-round-lg py-3 px-4">
-		<p *ngIf="category" class="text-4xl font-semibold mb-5">{{ category.name }}</p>
+		<p *ngIf="category" class="text-4xl font-semibold mb-5">
+			{{ category.name }}
+		</p>
 		<div class="flex justify-content-between align-items-center">
 			<p class="text-2xl font-medium">Tasks</p>
 			<p-button
@@ -10,21 +12,23 @@
 			></p-button>
 		</div>
 		<br />
-		<div
-			*ngIf="taskList.length === 0"
-			class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
-		>
-			<p class="font-medium mb-2">
-				<em>FINALLY</em>, some peace and quiet
-			</p>
-			<p class="text-xs">enjoy it while it lasts ;-;</p>
-		</div>
+		<div *ngIf="taskList">
+			<div
+				*ngIf="taskList.length === 0"
+				class="flex flex-column align-items-center justify-content-center w-full shadow-1 border-round-lg p-3"
+			>
+				<p class="font-medium mb-2">
+					<em>FINALLY</em>, some peace and quiet
+				</p>
+				<p class="text-xs">enjoy it while it lasts ;-;</p>
+			</div>
 
-		<div class="flex flex-column gap-3 p-1">
-			<app-task-container
-				*ngFor="let task of taskList"
-				[task]="task"
-			></app-task-container>
+			<div class="flex flex-column gap-3 p-1">
+				<app-task-container
+					*ngFor="let task of taskList"
+					[task]="task"
+				></app-task-container>
+			</div>
 		</div>
 	</div>
 	<div class="grid col-4 gap-4">
@@ -45,7 +49,7 @@
 	</div>
 </div>
 
-<form [formGroup]="categorySettingsForm" (ngSubmit)="onEdit()">
+<form *ngIf="category" [formGroup]="categorySettingsForm" (ngSubmit)="onEdit()">
 	<p-dialog
 		header="Edit Category"
 		[(visible)]="isSettingsDialogVisible"

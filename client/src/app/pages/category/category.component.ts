@@ -53,6 +53,12 @@ export class CategoryComponent implements OnInit {
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => {
 					this.category = category
+					this.categorySettingsForm = this.fb.group({
+						categoryName: [
+							this.category?.name,
+							Validators.required,
+						],
+					})
 					this.userService.getCurrentUser().subscribe((user) => {
 						this.user = user
 						if (this.user._id !== this.category?.creatorId) {
@@ -62,17 +68,21 @@ export class CategoryComponent implements OnInit {
 
 					this.taskService
 						.getTaskByCategoryId(this.categoryId)
-						.subscribe((tasks) => {
-							this.taskList = tasks
-							console.log(tasks)
-						})
-
-					this.categorySettingsForm = this.fb.group({
-						categoryName: [
-							this.category?.name,
-							Validators.required,
-						],
-					})
+						.subscribe(
+							(res: Tasks[]) => {
+								this.taskList = res
+								console.log(this.taskList)
+							},
+							(err) => {
+								console.log(err)
+								this.taskList = []
+								this.message.add({
+									severity: "error",
+									summary: "Error",
+									detail: "Something went wrong",
+								})
+							},
+						)
 				})
 		})
 	}

@@ -56,11 +56,8 @@ export class TaskService {
 		return subject.asObservable()
 	}
 
-	getTaskByCategoryId(categoryId: string): Observable<Tasks[]> {
-		const filteredTaskList = of(
-			taskList.filter((task) => task.categoryId == categoryId),
-		)
-		return filteredTaskList
+	getTaskByCategoryId(categoryId: string): Observable<any> {
+		return this.http.get(`${APIConfig.BASE_URL}/task/category/${categoryId}`)
 	}
 
 	setCompleteTaskState(taskId: string, isCompleted: boolean): void {
