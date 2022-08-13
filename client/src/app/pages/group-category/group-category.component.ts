@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { Category, CategoryMember } from "src/app/models/category"
 import { Tasks } from "src/app/models/task"
-import { Subscription } from "rxjs"
+import { interval, Subscription } from "rxjs"
 import { CategoryService } from "src/app/services/category.service"
 import { TaskService } from "src/app/services/task.service"
 import { ConfirmationService, MessageService } from "primeng/api"
@@ -28,6 +28,7 @@ export class GroupCategoryComponent implements OnInit {
 	categorySettingsForm: FormGroup
 	addTaskForm: FormGroup
 	priorityOptions: string[] = ["High", "Medium", "Low"]
+	timer: Subscription
 	private routeSubscription: Subscription
 
 	constructor(
@@ -39,7 +40,9 @@ export class GroupCategoryComponent implements OnInit {
 		private message: MessageService,
 		private fb: FormBuilder,
 		private router: Router,
-	) {}
+	) {
+		this.startTimer()
+	}
 
 	ngOnInit(): void {
 		this.addTaskForm = this.fb.group({
@@ -48,6 +51,17 @@ export class GroupCategoryComponent implements OnInit {
 			taskPriority: ["", Validators.required],
 		})
 
+		this.fetchGroupData()
+	}
+
+	startTimer() {
+		this.timer = interval(5000).subscribe(() => {
+			console.log("refreshing")
+			this.fetchGroupData()
+		})
+	}
+
+	fetchGroupData() {
 		this.routeSubscription = this.route.params.subscribe((params) => {
 			console.log(params)
 			this.categoryId = params["id"]
@@ -103,10 +117,12 @@ export class GroupCategoryComponent implements OnInit {
 	}
 
 	showAddMemberDialog() {
+		this.timer.unsubscribe()
 		this.isAddMemberDialogVisible = true
 	}
 
 	showAddTaskDialog() {
+		this.timer.unsubscribe()
 		this.isAddTaskDialogVisible = true
 	}
 
@@ -119,6 +135,7 @@ export class GroupCategoryComponent implements OnInit {
 			.subscribe((res) => {
 				this.category!.name = res.name
 				this.isSettingsDialogVisible = false
+				this.startTimer()
 				this.message.add({
 					severity: "success",
 					summary: "Updated!",
@@ -169,6 +186,7 @@ export class GroupCategoryComponent implements OnInit {
 								this.isAddMemberDialogVisible = false
 								this.isSettingsDialogVisible = false
 								this.newMemberUsername = ""
+								this.startTimer
 								this.message.add({
 									severity: "success",
 									summary: `${newMember.username} has joined the game`,
@@ -181,6 +199,7 @@ export class GroupCategoryComponent implements OnInit {
 							},
 							(err) => {
 								console.error(err)
+								this.startTimer
 								this.message.add({
 									severity: "error",
 									summary: "Something went wrong",
@@ -293,7 +312,8 @@ export class GroupCategoryComponent implements OnInit {
 			})
 	}
 
-	// ngOnDestroy() {
-	// 	this.routeSubscription.unsubscribe()
-	// }
+	ngOnDestroy() {
+		this.timer.unsubscribe()
+		console.log("timer cancelled")
+	}
 }
