@@ -6,7 +6,7 @@ function getBookmarksByUserId(req, res) {
 
     db.collection("bookmarks")
         .find({
-            creatorId: new ObjectID(userId),
+            userId: new ObjectID(userId),
         })
         .toArray((err, bookmarks) => {
             if (err) {
@@ -34,7 +34,12 @@ function addBookmark(req, res) {
             if (err) {
                 res.status(500).send(err)
             } else {
-                res.status(200).send(result)
+                res.status(200).send({
+                    _id: result.insertedId,
+                    userId: userId,
+                    title: title,
+                    url: url,
+                })
             }
         },
     )
@@ -49,7 +54,11 @@ function deleteBookmark(req, res) {
             if (err) {
                 res.status(500).send(err)
             } else {
-                res.status(200).send(result)
+                res.status(200).send(
+					{
+						_id: bookmarkId,
+					}
+				)
             }
         },
     )

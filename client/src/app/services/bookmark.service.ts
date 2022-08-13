@@ -1,42 +1,35 @@
+import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { bookmarkList } from "../mock-data/mock-bookmark"
 import { Bookmark } from "../models/bookmark"
+import { APIConfig } from "./apiConfig"
 
 @Injectable({
 	providedIn: "root",
 })
 export class BookmarkService {
-	constructor() {}
+	constructor(private http: HttpClient) {}
 
 	getBookmarksByUserId(userId: string): Observable<Bookmark[]> {
-		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
+		return this.http.get<Bookmark[]>(`${APIConfig.BASE_URL}/bookmark/${userId}`)
 	}
 
 	addBookmark(
 		userId: string,
 		title: string,
-		link: string,
-	): Observable<Bookmark[]> {
-		const newBookmark: Bookmark = {
-			_id: Math.random().toString(36).substr(2, 9),
-			userId: userId,
-			title: title,
-			link: link,
-		}
-		bookmarkList.push(newBookmark)
-		return of(
-			bookmarkList.filter(
-				(bookmark) => bookmark.userId === newBookmark.userId,
-			),
+		url: string,
+	): Observable<Bookmark> {
+		return this.http.post<Bookmark>(
+			`${APIConfig.BASE_URL}/bookmark/${userId}/add`,
+			{
+				title,
+				url,
+			},
 		)
 	}
 
-	deleteBookmark(bookmarkId: string, userId: string): Observable<Bookmark[]> {
-		bookmarkList.splice(
-			bookmarkList.findIndex((bookmark) => bookmark._id === bookmarkId),
-			1,
-		)
-		return of(bookmarkList.filter((bookmark) => bookmark.userId === userId))
+	deleteBookmark(bookmarkId: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/bookmark/${bookmarkId}/delete`)
 	}
 }

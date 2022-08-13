@@ -57,8 +57,8 @@ export class HomeComponent implements OnInit {
 				this.addBookmarkForm.value.bookmarkTitle,
 				this.addBookmarkForm.value.bookmarkLink,
 			)
-			.subscribe((newBookmarkList) => {
-				this.bookmarkList = newBookmarkList
+			.subscribe((res) => {
+				this.bookmarkList.push(res)
 				this.isAddBookmarkDialogVisible = false
 				this.message.add({
 					severity: "success",
@@ -74,9 +74,12 @@ export class HomeComponent implements OnInit {
 			message: "Are you sure you want to delete this bookmark?",
 			accept: () => {
 				this.bookmarkService
-					.deleteBookmark(bookmark._id, bookmark.userId)
-					.subscribe((newBookmarkList) => {
-						this.bookmarkList = newBookmarkList
+					.deleteBookmark(bookmark._id)
+					.subscribe((res) => {
+						console.log(res)
+						this.bookmarkList = this.bookmarkList.filter(
+							(bookmark) => bookmark._id !== res._id,
+						)
 						this.message.add({
 							severity: "success",
 							summary: "Poof!",
