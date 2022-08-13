@@ -71,15 +71,42 @@ export class TaskComponent implements OnInit {
 
 	onCompleteStateChange(isCompleted: boolean) {
 		if (this.isSubTask) {
-			this.taskService.setCompleteSubTaskState(
-				this.parentId,
-				this.task._id,
-				isCompleted,
-			)
+			this.taskService
+				.setCompleteSubTaskState(
+					this.parentId,
+					this.task._id,
+					isCompleted,
+				)
+				.subscribe(
+					(res) => {
+						console.log(`sub-task ${isCompleted ? "completed" : "un-completed"}`)
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error completing sub-task",
+						})
+					},
+				)
 		} else {
-			this.taskService.setCompleteTaskState(this.parentId, isCompleted)
 			this.cd.detectChanges() // prevents error NG0100 (https://angular.io/errors/NG0100)
-			this.isCompleted.emit(this.isTaskCompleted)
+			this.taskService
+				.setCompleteTaskState(this.parentId, isCompleted)
+				.subscribe(
+					(res) => {
+						this.cd.detectChanges() // prevents error NG0100 (https://angular.io/errors/NG0100)
+						this.isCompleted.emit(this.isTaskCompleted)
+					},
+					(err) => {
+						console.log(err)
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error completing task",
+						})
+					},
+				)
 		}
 	}
 

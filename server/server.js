@@ -30,7 +30,10 @@ app.route("/category/:id/update").put(categoryController.updateCategory)
 app.route("/category/:id/delete").delete(categoryController.deleteCategory)
 
 app.route("/task/user/:id").get(taskController.getTasksByUserId) 
-app.route("/task/category/:id").get(taskController.getTasksByCategoryId)   
+app.route("/task/category/:id").get(taskController.getTasksByCategoryId)
+app.route("/task/:id/complete").put(taskController.setTaskCompleteState)
+app.route("/task/:id/subTask/:subTaskId/complete").put(taskController.setSubTaskCompleteState)
+
 
 const port = 3001
 app.listen(port, () =>

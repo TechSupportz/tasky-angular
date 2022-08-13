@@ -104,12 +104,20 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to undo task completion and restore the task?",
 			accept: () => {
-				this.taskService.setCompleteTaskState(this.task._id, false)
-				this.isCompleted = false
-				this.message.add({
-					severity: "success",
-					summary: "ITS ALIVE!",
-					detail: "Task restored successfully",
+				this.taskService.setCompleteTaskState(this.task._id, false).subscribe((res) => {
+					this.isCompleted = false
+					this.message.add({
+						severity: "success",
+						summary: "ITS ALIVE!",
+						detail: "Task restored successfully",
+					})
+
+				}, (err) => {
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Something went wrong",
+					})
 				})
 			},
 		})

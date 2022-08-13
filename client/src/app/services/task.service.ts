@@ -60,19 +60,20 @@ export class TaskService {
 		return this.http.get(`${APIConfig.BASE_URL}/task/category/${categoryId}`)
 	}
 
-	setCompleteTaskState(taskId: string, isCompleted: boolean): void {
-		const task = taskList.find((t) => t._id == taskId)
-		task!.isCompleted = isCompleted
+	setCompleteTaskState(taskId: string, isCompleted: boolean): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/complete`, {
+			isCompleted: isCompleted,
+		})
 	}
 
 	setCompleteSubTaskState(
 		taskId: string,
 		subTaskId: string,
 		isCompleted: boolean,
-	): void {
-		const task = taskList.find((t) => t._id == taskId)
-		const subTask = task!.subTask.find((t) => t._id == subTaskId)
-		subTask!.isCompleted = isCompleted
+	): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/complete`, {
+			isCompleted: isCompleted,
+		})
 	}
 
 	addTask(
