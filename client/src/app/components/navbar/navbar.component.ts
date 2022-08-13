@@ -39,19 +39,17 @@ export class NavbarComponent implements OnInit {
 	ngOnInit(): void {
 		this.userService.getCurrentUser().subscribe((user) => {
 			if (user) {
+				this.user = user
 				this.categoryService
-					.getCategoryList(user.id)
+					.getCategoryByUserId(user._id)
 					.subscribe((categoryList) => {
 						this.categoryList = categoryList
-						this.user = user
 						console.log(categoryList)
 					})
 
 				this.isDisabled =
 					this.user.type === UserType.FREE &&
 					this.categoryList.length >= 8
-			} else {
-				this.router.navigate(["/login"])
 			}
 		})
 
@@ -83,8 +81,7 @@ export class NavbarComponent implements OnInit {
 
 		this.categoryService
 			.addCategory(
-				this.user.id,
-				this.user.username,
+				this.user._id,
 				this.addCategoryForm.value.categoryName,
 				categoryType,
 			)

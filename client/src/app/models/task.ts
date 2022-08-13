@@ -1,7 +1,7 @@
 export interface Tasks {
-	id: number
-	categoryId: number
-	creatorId: number
+	_id: string
+	categoryId: string
+	creatorId: string
 	name: string
 	dueDate: string
 	priority: string
@@ -10,8 +10,8 @@ export interface Tasks {
 }
 
 export interface SubTask {
-	id: number
-	creatorId: number
+	_id: string
+	creatorId: string
 	name: string
 	dueDate: string
 	priority: string

@@ -22,7 +22,7 @@ import { User } from "src/app/models/user"
 export class TaskComponent implements OnInit {
 	@Input() task: Tasks | SubTask
 	@Input() isSubTask: boolean
-	@Input() parentId: number // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
+	@Input() parentId: string // if task is a sub-task this will be the id of the parent task, otherwise it will be the id of the task itself
 	@Input() isHomePage: boolean = false
 
 	@Output() isDeleted = new EventEmitter<boolean>()
@@ -34,6 +34,7 @@ export class TaskComponent implements OnInit {
 	isEditTaskDialogVisible: boolean = false
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	editTaskForm: FormGroup
+	isSubTaskDeleted: boolean = false
 
 	constructor(
 		private taskService: TaskService,
@@ -50,6 +51,8 @@ export class TaskComponent implements OnInit {
 			taskDueDate: [this.task.dueDate, Validators.required],
 			taskPriority: [this.task.priority, Validators.required],
 		})
+
+		console.log(this.task)
 
 		this.isTaskCompleted = this.task.isCompleted
 
@@ -71,15 +74,46 @@ export class TaskComponent implements OnInit {
 
 	onCompleteStateChange(isCompleted: boolean) {
 		if (this.isSubTask) {
-			this.taskService.setCompleteSubTaskState(
-				this.parentId,
-				this.task.id,
-				isCompleted,
-			)
+			this.taskService
+				.setCompleteSubTaskState(
+					this.parentId,
+					this.task._id,
+					isCompleted,
+				)
+				.subscribe(
+					(res) => {
+						console.log(
+							`sub-task ${
+								isCompleted ? "completed" : "un-completed"
+							}`,
+						)
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error completing sub-task",
+						})
+					},
+				)
 		} else {
-			this.taskService.setCompleteTaskState(this.parentId, isCompleted)
 			this.cd.detectChanges() // prevents error NG0100 (https://angular.io/errors/NG0100)
-			this.isCompleted.emit(this.isTaskCompleted)
+			this.taskService
+				.setCompleteTaskState(this.parentId, isCompleted)
+				.subscribe(
+					(res) => {
+						this.cd.detectChanges() // prevents error NG0100 (https://angular.io/errors/NG0100)
+						this.isCompleted.emit(this.isTaskCompleted)
+					},
+					(err) => {
+						console.log(err)
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error completing task",
+						})
+					},
+				)
 		}
 	}
 
@@ -88,19 +122,31 @@ export class TaskComponent implements OnInit {
 			this.taskService
 				.editSubTask(
 					this.parentId,
-					this.task.id,
+					this.task._id,
 					this.editTaskForm.value.taskName,
 					this.editTaskForm.value.taskDueDate,
 					this.editTaskForm.value.taskPriority,
 				)
-				.subscribe(() => {
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Success",
-						detail: "Task edited successfully",
-					})
-				})
+				.subscribe(
+					(res) => {
+						this.task.name = res.name
+						this.task.dueDate = res.dueDate
+						this.task.priority = res.priority
+						this.isEditTaskDialogVisible = false
+						this.message.add({
+							severity: "success",
+							summary: "Success",
+							detail: "Sub-Task edited successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error editing sub-task",
+						})
+					},
+				)
 		} else {
 			this.taskService
 				.editTask(
@@ -109,32 +155,52 @@ export class TaskComponent implements OnInit {
 					this.editTaskForm.value.taskDueDate,
 					this.editTaskForm.value.taskPriority,
 				)
-				.subscribe(() => {
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Success",
-						detail: "Task edited successfully",
-					})
-				})
+				.subscribe(
+					(res) => {
+						this.task.name = res.name
+						this.task.dueDate = res.dueDate
+						this.task.priority = res.priority
+						this.isEditTaskDialogVisible = false
+						this.message.add({
+							severity: "success",
+							summary: "Success",
+							detail: "Task edited successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error editing task",
+						})
+					},
+				)
 		}
 	}
 
 	deleteTask() {
 		if (this.isSubTask) {
-			console.log("what?")
 			this.confirmationService.confirm({
 				header: "Delete Subtask",
 				message:
 					"Are you sure that you want to delete this subtask? This is NOT reversible",
 				accept: () => {
-					this.taskService.deleteSubTask(this.parentId, this.task.id)
-					this.editTaskForm.reset()
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Out of sight, out of mind... right?",
-						detail: "Subtask deleted successfully",
+					console.log(this.task._id)
+					this.taskService.deleteSubTask(this.parentId, this.task._id).subscribe((res) => {
+						this.editTaskForm.reset()
+						this.isEditTaskDialogVisible = false
+						this.isSubTaskDeleted = true
+						this.message.add({
+							severity: "success",
+							summary: "Out of sight, out of mind... right?",
+							detail: "Subtask deleted successfully",
+						})
+					}, (err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error deleting subtask",
+						})
 					})
 				},
 			})
@@ -144,17 +210,27 @@ export class TaskComponent implements OnInit {
 				message:
 					"Are you sure that you want to delete this task? THIS WILL DELETE ALL SUBTASKS!",
 				accept: () => {
-					this.taskService.deleteTask(this.parentId)
-					this.editTaskForm.reset()
-					this.isEditTaskDialogVisible = false
-					setTimeout(() => {
-						this.isDeleted.emit(true)
-					}, 150)
-					this.message.add({
-						severity: "success",
-						summary: "Out of sight, out of mind... right?",
-						detail: "Task deleted successfully",
-					})
+					this.taskService.deleteTask(this.parentId).subscribe(
+						(res) => {
+							this.editTaskForm.reset()
+							this.isEditTaskDialogVisible = false
+							setTimeout(() => {
+								this.isDeleted.emit(true)
+							}, 150)
+							this.message.add({
+								severity: "success",
+								summary: "Out of sight, out of mind... right?",
+								detail: "Task deleted successfully",
+							})
+						},
+						(err) => {
+							this.message.add({
+								severity: "error",
+								summary: "Error",
+								detail: "Error deleting task",
+							})
+						},
+					)
 				},
 			})
 		}

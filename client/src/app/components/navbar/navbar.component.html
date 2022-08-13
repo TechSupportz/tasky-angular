@@ -12,7 +12,7 @@
 			styleClass="p-button-rounded"
 			routerLink="/{{
 				category.type === CategoryType.INDIV ? 'category' : 'group'
-			}}/{{ category.id }}"
+			}}/{{ category._id }}"
 		></p-button>
 		<p-button
 			icon="pi pi-plus"
@@ -22,12 +22,12 @@
 		></p-button>
 	</div>
 	<p-button
-		pTooltip="Logout"
+		pTooltip="User"
 		tooltipPosition="top"
-		icon="pi pi-sign-out"
+		icon="pi pi-user"
 		class="align-content-end"
 		styleClass="p-button-rounded"
-		routerLink="/login"
+		routerLink="/profile"
 	></p-button>
 </div>
 

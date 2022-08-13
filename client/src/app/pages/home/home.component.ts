@@ -34,17 +34,16 @@ export class HomeComponent implements OnInit {
 			bookmarkLink: ["", Validators.required],
 		})
 
-		this.userService
-			.getCurrentUser()
-			.subscribe((user) => (this.user = user))
+		this.userService.getCurrentUser().subscribe((user) => {
+			this.user = user
+			this.taskService
+				.getUpcomingTasks(this.user._id)
+				.subscribe((tasks) => (this.taskList = tasks))
 
-		this.taskService
-			.getUpcomingTasks(this.user.id)
-			.subscribe((tasks) => (this.taskList = tasks))
-
-		this.bookmarkService
-			.getBookmarksByUserId(this.user.id)
-			.subscribe((bookmarks) => (this.bookmarkList = bookmarks))
+			this.bookmarkService
+				.getBookmarksByUserId(this.user._id)
+				.subscribe((bookmarks) => (this.bookmarkList = bookmarks))
+		})
 	}
 
 	showAddBookmarkDialog() {
@@ -54,12 +53,12 @@ export class HomeComponent implements OnInit {
 	addBookmark() {
 		this.bookmarkService
 			.addBookmark(
-				this.user.id,
+				this.user._id,
 				this.addBookmarkForm.value.bookmarkTitle,
 				this.addBookmarkForm.value.bookmarkLink,
 			)
-			.subscribe((newBookmarkList) => {
-				this.bookmarkList = newBookmarkList
+			.subscribe((res) => {
+				this.bookmarkList.push(res)
 				this.isAddBookmarkDialogVisible = false
 				this.message.add({
 					severity: "success",
@@ -75,9 +74,12 @@ export class HomeComponent implements OnInit {
 			message: "Are you sure you want to delete this bookmark?",
 			accept: () => {
 				this.bookmarkService
-					.deleteBookmark(bookmark.id, bookmark.userId)
-					.subscribe((newBookmarkList) => {
-						this.bookmarkList = newBookmarkList
+					.deleteBookmark(bookmark._id)
+					.subscribe((res) => {
+						console.log(res)
+						this.bookmarkList = this.bookmarkList.filter(
+							(bookmark) => bookmark._id !== res._id,
+						)
 						this.message.add({
 							severity: "success",
 							summary: "Poof!",

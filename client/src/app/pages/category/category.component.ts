@@ -17,7 +17,7 @@ import { NavbarComponent } from "src/app/components/navbar/navbar.component"
 	styleUrls: ["./category.component.css"],
 })
 export class CategoryComponent implements OnInit {
-	categoryId: number
+	categoryId: string
 	category?: Category
 	user: User
 	taskList: Tasks[]
@@ -53,25 +53,37 @@ export class CategoryComponent implements OnInit {
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => {
 					this.category = category
+					this.categorySettingsForm = this.fb.group({
+						categoryName: [
+							this.category?.name,
+							Validators.required,
+						],
+					})
+					this.userService.getCurrentUser().subscribe((user) => {
+						this.user = user
+						if (this.user._id !== this.category?.creatorId) {
+							this.router.navigate(["/404"])
+						}
+					})
+
+					this.taskService
+						.getTaskByCategoryId(this.categoryId)
+						.subscribe(
+							(res: Tasks[]) => {
+								this.taskList = res
+								console.log(this.taskList)
+							},
+							(err) => {
+								console.log(err)
+								this.taskList = []
+								this.message.add({
+									severity: "error",
+									summary: "Error",
+									detail: "Something went wrong",
+								})
+							},
+						)
 				})
-
-			this.userService.getCurrentUser().subscribe((user) => {
-				this.user = user
-				if (this.user.id !== this.category?.creatorId) {
-					this.router.navigate(["/404"])
-				}
-			})
-
-			this.taskService
-				.getTaskByCategoryId(this.categoryId)
-				.subscribe((tasks) => {
-					this.taskList = tasks
-					console.log(tasks)
-				})
-
-			this.categorySettingsForm = this.fb.group({
-				categoryName: [this.category?.name, Validators.required],
-			})
 		})
 	}
 
@@ -85,15 +97,12 @@ export class CategoryComponent implements OnInit {
 
 	onEdit() {
 		this.categoryService
-			.editCategory({
-				id: this.categoryId,
-				creatorId: this.user.id,
-				name: this.categorySettingsForm.value.categoryName,
-				type: this.category?.type!,
-			})
-			.subscribe((category) => {
-				this.categoryId = category.id
-				this.category = category
+			.updateCategory(
+				this.categoryId,
+				this.categorySettingsForm.value.categoryName,
+			)
+			.subscribe((res) => {
+				this.category!.name = res.name
 				this.isSettingsDialogVisible = false
 				this.message.add({
 					severity: "success",
@@ -107,17 +116,26 @@ export class CategoryComponent implements OnInit {
 		this.confirmationService.confirm({
 			header: "Delete category",
 			message:
-				"Are you sure you want to delete this category? This is NOT reversible",
+				"Are you sure you want to delete this category? ALL TASKS WILL BE PERMANENTLY DELETED. This is NOT reversible",
 			accept: () => {
-				this.categoryService.deleteCategory(this.categoryId)
-				this.isSettingsDialogVisible = false
-				this.router.navigate(["/home"])
-				
-				this.message.add({
-					severity: "success",
-					summary: "Poof!",
-					detail: "Category deleted successfully",
-				})
+				this.categoryService.deleteCategory(this.categoryId).subscribe(
+					(response) => {
+						this.isSettingsDialogVisible = false
+						this.router.navigate(["/home"])
+						this.message.add({
+							severity: "success",
+							summary: "YEET!",
+							detail: "Category has been deleted",
+						})
+					},
+					(error) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Oops Something went wrong",
+						})
+					},
+				)
 			},
 		})
 	}
@@ -126,25 +144,30 @@ export class CategoryComponent implements OnInit {
 		this.taskService
 			.addTask(
 				this.categoryId,
-				this.user.id,
+				this.user._id,
 				this.addTaskForm.value.taskName,
 				this.addTaskForm.value.taskDueDate,
 				this.addTaskForm.value.taskPriority,
 			)
-			.subscribe((task) => {
-				console.log(task.dueDate)
-				this.taskList.push(task)
-				this.isAddTaskDialogVisible = false
-				this.addTaskForm.reset()
-				this.message.add({
-					severity: "success",
-					summary: "Task added!",
-					detail: "More stuff to do now ;-;",
-				})
-			})
-	}
-
-	ngOnDestroy() {
-		this.routeSubscription.unsubscribe()
+			.subscribe(
+				(task) => {
+					console.log(task.dueDate)
+					this.taskList.push(task)
+					this.isAddTaskDialogVisible = false
+					this.addTaskForm.reset()
+					this.message.add({
+						severity: "success",
+						summary: "Task added!",
+						detail: "More stuff to do now ;-;",
+					})
+				},
+				(err) => {
+					this.message.add({
+						severity: "error",
+						summary: "Error",
+						detail: "Oops Something went wrong",
+					})
+				},
+			)
 	}
 }

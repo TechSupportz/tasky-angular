@@ -4,7 +4,7 @@
 			(isDeleted)="setIsDelete($event)"
 			(isCompleted)="setIsCompleted($event)"
 			[task]="task"
-			[parentId]="task.id"
+			[parentId]="task._id"
 			[isSubTask]="false"
 			[isHomePage]="isHomePage"
 		></app-task>
@@ -41,7 +41,7 @@
 			<app-task
 				*ngFor="let subTask of task.subTask"
 				[task]="subTask"
-				[parentId]="task.id"
+				[parentId]="task._id"
 				[isSubTask]="true"
 				[isHomePage]="isHomePage"
 			></app-task>
