@@ -1,48 +1,59 @@
 import { Injectable } from "@angular/core"
-import { Observable, of } from "rxjs"
+import { Observable, of, Subject } from "rxjs"
 import { SubTask, Tasks } from "../models/task"
 import { taskList } from "../mock-data/mock-task"
 import { DatePipe } from "@angular/common"
 import { DateTime } from "luxon"
+import { HttpClient } from "@angular/common/http"
+import { APIConfig } from "./apiConfig"
 
 @Injectable({
 	providedIn: "root",
 })
 export class TaskService {
-	constructor(private datePipe: DatePipe) {}
+	constructor(private datePipe: DatePipe, private http: HttpClient) {}
 
-	getTaskList(userId: string): Observable<Tasks[]> {
-		return of(taskList.filter((task) => task.creatorId == userId))
+	getTaskList(userId: string): Observable<any> {
+		return this.http.get(`${APIConfig.BASE_URL}/task/user/${userId}`)
 	}
 
 	getUpcomingTasks(userId: string): Observable<Tasks[]> {
 		const currentDate = DateTime.now()
+		let subject = new Subject<Tasks[]>()
 
-		const taskListCopy: Tasks[] = JSON.parse(
-			JSON.stringify(taskList.filter((task) => task.creatorId == userId)),
-		) // creates a deep copy of the taskList (https://developer.mozilla.org/en-US/docs/Glossary/Deep_copy)
+		this.http.get(`${APIConfig.BASE_URL}/task/user/${userId}`).subscribe(
+			(res) => {
+				const tasks: Tasks[] = res as Tasks[]
+				console.log(res)
+				tasks.forEach((task) => {
+					task.subTask = task.subTask.filter((subTask) => {
+						const subTaskDate = DateTime.fromISO(subTask.dueDate)
+						const diff = subTaskDate.diff(currentDate, "days")
+						return diff.days <= 14
+					})
+				})
 
-		taskListCopy.forEach((task) => {
-			task.subTask = task.subTask.filter((subTask) => {
-				const subTaskDate = DateTime.fromISO(subTask.dueDate)
-				const diff = subTaskDate.diff(currentDate, "days")
-				return diff.days <= 14
-			})
-		})
+				const upcomingTaskList = tasks.filter((task) => {
+					const taskDate = DateTime.fromISO(task.dueDate)
+					const diff = taskDate.diff(currentDate, "days")
+					if (diff.days <= 14) {
+						return task
+					} else if (diff.days > 14 && task.subTask.length > 0) {
+						return task
+					} else {
+						return null
+					}
+				})
 
-		const upcomingTaskList = taskListCopy.filter((task) => {
-			const taskDate = DateTime.fromISO(task.dueDate)
-			const diff = taskDate.diff(currentDate, "days")
-			if (diff.days <= 14) {
-				return task
-			} else if (diff.days > 14 && task.subTask.length > 0) {
-				return task
-			} else {
-				return null
-			}
-		})
+				subject.next(upcomingTaskList)
+			},
+			(err) => {
+				console.log(err)
+				subject.next([])
+			},
+		)
 
-		return of(upcomingTaskList)
+		return subject.asObservable()
 	}
 
 	getTaskByCategoryId(categoryId: string): Observable<Tasks[]> {

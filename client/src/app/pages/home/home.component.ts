@@ -34,17 +34,16 @@ export class HomeComponent implements OnInit {
 			bookmarkLink: ["", Validators.required],
 		})
 
-		this.userService
-			.getCurrentUser()
-			.subscribe((user) => (this.user = user))
+		this.userService.getCurrentUser().subscribe((user) => {
+			this.user = user
+			this.taskService
+				.getUpcomingTasks(this.user._id)
+				.subscribe((tasks) => (this.taskList = tasks))
 
-		this.taskService
-			.getUpcomingTasks(this.user._id)
-			.subscribe((tasks) => (this.taskList = tasks))
-
-		this.bookmarkService
-			.getBookmarksByUserId(this.user._id)
-			.subscribe((bookmarks) => (this.bookmarkList = bookmarks))
+			this.bookmarkService
+				.getBookmarksByUserId(this.user._id)
+				.subscribe((bookmarks) => (this.bookmarkList = bookmarks))
+		})
 	}
 
 	showAddBookmarkDialog() {

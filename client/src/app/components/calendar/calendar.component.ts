@@ -11,6 +11,7 @@ import { TaskService } from "src/app/services/task.service"
 import { UserService } from "src/app/services/user.service"
 import { Tasks } from "src/app/models/task"
 import { User } from "src/app/models/user"
+import { MessageService } from "primeng/api"
 
 @Component({
 	selector: "app-calendar",
@@ -31,6 +32,7 @@ export class CalendarComponent implements OnChanges {
 		private userService: UserService,
 		private taskService: TaskService,
 		private router: Router,
+		private message: MessageService
 	) {}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -45,8 +47,16 @@ export class CalendarComponent implements OnChanges {
 					this.generateEventList(tasks)
 				})
 		} else {
-			this.taskService.getTaskList(this.user._id).subscribe((tasks) => {
-				this.generateEventList(tasks)
+			this.taskService.getTaskList(this.user._id).subscribe((res: Tasks[]) => {
+				this.generateEventList(res)
+			}, (err) => {
+				console.log(err)
+				this.generateEventList([])
+				this.message.add({
+					severity: "error",
+					summary: "Error",
+					detail: "Something went wrong",
+				})
 			})
 		}
 	}

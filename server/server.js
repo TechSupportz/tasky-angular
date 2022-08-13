@@ -29,6 +29,9 @@ app.route("/category/:id/removeMember/:userId").delete(categoryController.remove
 app.route("/category/:id/update").put(categoryController.updateCategory)
 app.route("/category/:id/delete").delete(categoryController.deleteCategory)
 
+app.route("/task/user/:id").get(taskController.getTasksByUserId) 
+app.route("/task/category/:id").get(taskController.getTasksByCategoryId)   
+
 const port = 3001
 app.listen(port, () =>
     console.log(`Web server running @ http://localhost:${port}`),
