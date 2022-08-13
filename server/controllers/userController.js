@@ -3,6 +3,24 @@ const argon2 = require("argon2")
 const db = require("../dbConnections")
 const { ObjectID } = require("bson")
 
+function getAllUsers(req, res) {
+    db.collection("users")
+        .find({})
+        .project({
+            _id: 1,
+            username: 1,
+            type: 1,
+        })
+        .toArray((err, users) => {
+            if (err) {
+                console.log(err)
+                res.status(500).send(err)
+            } else {
+                res.status(200).send(users)
+            }
+        })
+}
+
 function getUserById(req, res) {
     const userId = req.params.id
 
@@ -219,6 +237,7 @@ function deleteUser(req, res) {
 }
 
 module.exports = {
+    getAllUsers,
     getUserById,
     checkIfUserExists,
     createUser,

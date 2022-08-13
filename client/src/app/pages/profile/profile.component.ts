@@ -159,7 +159,7 @@ export class ProfileComponent implements OnInit {
 
 		if (
 			this.currentUser.email !== this.profileForm.value.email ||
-			this.currentUser.username !== this.profileForm.value.username
+			this.currentUser.username !== this.profileForm.value.username || currentAmount !== this.totalAmount
 		) {
 			if (this.totalAmount === 0 && currentAmount === 0) {
 				this.updateUser()

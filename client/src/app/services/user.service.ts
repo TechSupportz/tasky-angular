@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core"
 import { Observable, of } from "rxjs"
 import { userList } from "../mock-data/mock-user"
-import { User, UserType } from "../models/user"
+import { User, UserBrief, UserType } from "../models/user"
 import {
 	HttpClient,
 	HttpErrorResponse,
@@ -28,9 +28,9 @@ export class UserService {
 		return this.currentUser!.type
 	}
 
-	// ONLY HERE FOR TESTING PURPOSES,TO BE REMOVED IN FINAL VERSION
-	getAllUsers(): User[] {
-		return userList
+	// Fix this then do category
+	getAllUsers(): Observable<UserBrief[]> {
+		return this.http.get<UserBrief[]>(`${APIConfig.BASE_URL}/user/all`)
 	}
 
 	authenticateUser(username: string, password: string): Observable<any> {

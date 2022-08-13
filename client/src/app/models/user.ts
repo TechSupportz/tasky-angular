@@ -6,6 +6,12 @@ export interface User {
 	type: UserType
 }
 
+export interface UserBrief {
+	_id: string
+	username: string
+	type: UserType
+}
+
 export enum UserType {
 	FREE = "FREE",
 	PRO = "PRO",

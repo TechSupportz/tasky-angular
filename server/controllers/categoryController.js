@@ -101,6 +101,92 @@ function addCategory(req, res) {
     }
 }
 
+function updateCategory(req, res) {
+    const categoryId = req.params.id
+    const newName = req.body.name
+
+    db.collection("categories").updateOne(
+        { _id: new ObjectID(categoryId) },
+        { $set: { name: newName } },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send({ name: newName })
+            }
+        },
+    )
+}
+
+function addMemberToCategory(req, res) {
+    const categoryId = req.params.id
+    const userId = req.body.userId
+    const username = req.body.username
+
+    db.collection("categories").findOne(
+        {
+            $and: [
+                {
+                    $or: [
+                        { creatorId: new ObjectID(userId) },
+                        {
+                            members: {
+                                $elemMatch: { userId: new ObjectID(userId) },
+                            },
+                        },
+                    ],
+                },
+                { type: "GRP" },
+            ],
+        },
+        (err, category) => {
+            if (err) {
+                res.status(500).send(err)
+            } else if (!category || category._id !== new ObjectID(categoryId)) {
+                db.collection("categories").updateOne(
+                    { _id: new ObjectID(categoryId) },
+                    {
+                        $push: {
+                            members: {
+                                userId: new ObjectID(userId),
+                                username: username,
+                            },
+                        },
+                    },
+                    (err, result) => {
+                        if (err) {
+                            res.status(500).send(err)
+                        } else {
+                            res.status(200).send(result)
+                        }
+                    },
+                )
+            } else {
+                res.status(409).send(
+                    "User is already a member of this category",
+                )
+            }
+        },
+    )
+}
+
+function removeMemberFromCategory(req, res) {
+    const categoryId = req.params.id
+    const userId = req.params.userId
+
+    db.collection("categories").updateOne(
+        { _id: new ObjectID(categoryId) },
+        { $pull: { members: { userId: new ObjectID(userId) } } },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send(result)
+            }
+        },
+    )
+}
+
 function deleteCategory(req, res) {
     const categoryId = req.params.id
     console.log(categoryId)
@@ -115,11 +201,16 @@ function deleteCategory(req, res) {
             }
         },
     )
+
+    // delete all tasks in that category also
 }
 
 module.exports = {
     getCategoriesByUserId,
     getCategoryById,
+    updateCategory,
     addCategory,
+    addMemberToCategory,
+    removeMemberFromCategory,
     deleteCategory,
 }

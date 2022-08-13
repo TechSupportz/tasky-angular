@@ -32,7 +32,6 @@ export class CategoryService {
 
 	addCategory(
 		creatorId: string,
-		creatorUsername: string,
 		categoryName: string,
 		categoryType: CategoryType,
 	): Observable<Category> {
@@ -43,40 +42,33 @@ export class CategoryService {
 		})
 	}
 
-	addMember(categoryId: string, user: User): void {
-		const category = categoryList.find((c) => c._id == categoryId)
-		if (category?.members) {
-			category.members?.push({
-				userId: user._id,
-				username: user.username,
-			})
-		}
+	addMember(categoryId: string, userId: string, username: string): Observable<any> {
+		return this.http.put(
+			`${APIConfig.BASE_URL}/category/${categoryId}/addMember`,
+			{
+				userId: userId,
+				username:username,
+			},
+		)
 	}
 
-	removeMember(categoryId: string, userId: string): void {
-		const category = categoryList.find((c) => c._id == categoryId)
-		if (category?.members) {
-			const index = category.members.findIndex(
-				(member) => member.userId == userId,
-			)
-			category.members.splice(index, 1)
-		}
+	removeMember(categoryId: string, userId: string): Observable<any> {
+		return this.http.delete(
+			`${APIConfig.BASE_URL}/category/${categoryId}/removeMember/${userId}`,
+		)
 	}
 
-	editCategory(category: Category): Observable<Category> {
-		const index = categoryList.findIndex((c) => c._id == category._id)
-		categoryList[index] = category
-
-		return of(categoryList[index])
+	updateCategory(id: string, newName: string): Observable<any> {
+		return this.http.put(`${APIConfig.BASE_URL}/category/${id}/update`, {
+			name: newName,
+		})
 	}
 
 	private deletedIndex: Subject<number> = new Subject<number>()
 	public readonly notifyDeleteCategory$: Observable<number> =
 		new Subject<number>()
 
-	deleteCategory(id: string): void {
-		const index = categoryList.findIndex((c) => c._id == id)
-		categoryList.splice(index, 1)
-		this.taskService.deleteTaskByCategoryId(id)
+	deleteCategory(id: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/category/${id}/delete`)
 	}
 }

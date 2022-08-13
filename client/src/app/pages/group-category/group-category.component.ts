@@ -56,6 +56,7 @@ export class GroupCategoryComponent implements OnInit {
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => {
 					this.category = category
+					this.members = category.members!
 					this.userService.getCurrentUser().subscribe((user) => {
 						this.user = user
 						if (
@@ -111,15 +112,12 @@ export class GroupCategoryComponent implements OnInit {
 
 	onEdit() {
 		this.categoryService
-			.editCategory({
-				_id: this.categoryId,
-				creatorId: this.user._id,
-				name: this.categorySettingsForm.value.categoryName,
-				type: this.category?.type!,
-			})
-			.subscribe((category) => {
-				this.categoryId = category._id
-				this.category = category
+			.updateCategory(
+				this.categoryId,
+				this.categorySettingsForm.value.categoryName,
+			)
+			.subscribe((res) => {
+				this.category!.name = res.name
 				this.isSettingsDialogVisible = false
 				this.message.add({
 					severity: "success",
@@ -130,52 +128,75 @@ export class GroupCategoryComponent implements OnInit {
 	}
 
 	addMember() {
-		const allUsers = this.userService.getAllUsers()
+		this.userService.getAllUsers().subscribe((users) => {
+			const newMember = users.find(
+				(user) => user.username === this.newMemberUsername,
+			)
 
-		const newMember = allUsers.find(
-			(user) => user.username === this.newMemberUsername,
-		)
-
-		if (newMember) {
-			if (newMember._id === this.user._id) {
-				this.message.add({
-					severity: "error",
-					summary: "Thats... you?",
-					detail: "You can't add yourself AGAIN to the category",
-				})
-			} else if (
-				this.category.members?.some(
-					(member) => member.userId === newMember._id,
-				)
-			) {
-				this.message.add({
-					severity: "error",
-					summary: "Already a member",
-					detail: "This user is already a member of this category",
-				})
-			} else if (newMember.type === UserType.FREE) {
-				this.message.add({
-					severity: "error",
-					summary: "Man's broke",
-					detail: "Only Pro and Pro+ users can be added to group categories",
-				})
+			if (newMember) {
+				if (newMember._id === this.user._id) {
+					this.message.add({
+						severity: "error",
+						summary: "Thats... you?",
+						detail: "You can't add yourself AGAIN to the category",
+					})
+				} else if (
+					this.category.members?.some(
+						(member) => member.userId === newMember._id,
+					)
+				) {
+					this.message.add({
+						severity: "error",
+						summary: "Already a member",
+						detail: "This user is already a member of this category",
+					})
+				} else if (newMember.type === UserType.FREE) {
+					this.message.add({
+						severity: "error",
+						summary: "Man's broke",
+						detail: "Only Pro and Pro+ users can be added to group categories",
+					})
+				} else {
+					this.categoryService
+						.addMember(
+							this.categoryId,
+							newMember._id,
+							newMember.username,
+						)
+						.subscribe(
+							(res) => {
+								console.log(res)
+								this.isAddMemberDialogVisible = false
+								this.isSettingsDialogVisible = false
+								this.newMemberUsername = ""
+								this.message.add({
+									severity: "success",
+									summary: `${newMember.username} has joined the game`,
+									detail: "User has been added to this category",
+								})
+								this.members.push({
+									userId: newMember._id,
+									username: newMember.username,
+								})
+							},
+							(err) => {
+								console.error(err)
+								this.message.add({
+									severity: "error",
+									summary: "Something went wrong",
+									detail: `Unable to add ${newMember.username} to the category`,
+								})
+							},
+						)
+				}
 			} else {
-				this.categoryService.addMember(this.categoryId, newMember)
-				this.isAddMemberDialogVisible = false
-				this.isSettingsDialogVisible = false
 				this.message.add({
-					severity: "success",
-					summary: `${newMember.username} has joined the game`,
-					detail: "User has been added to this category",
+					severity: "error",
+					summary: "Who?",
+					detail: "No user found with that username",
 				})
 			}
-		} else {
-			this.message.add({
-				severity: "error",
-				summary: "Who?",
-				detail: "No user found with that username",
-			})
-		}
+		})
 	}
 
 	removeMember(member: CategoryMember) {
@@ -190,17 +211,32 @@ export class GroupCategoryComponent implements OnInit {
 				header: "Remove member",
 				message: `Are you sure you want to remove ${member.username} from this category?`,
 				accept: () => {
-					this.categoryService.removeMember(
-						this.categoryId,
-						member.userId,
-					)
-					this.message.add({
-						severity: "success",
-						summary: "YEET!",
-						detail: "User has been removed from this category",
-					})
-					this.isAddMemberDialogVisible = false
-					this.isSettingsDialogVisible = false
+					this.categoryService
+						.removeMember(this.categoryId, member.userId)
+						.subscribe(
+							(res) => {
+								console.log(res)
+								this.isAddMemberDialogVisible = false
+								this.isSettingsDialogVisible = false
+								this.members = this.members.filter(
+									(m) => m.userId !== member.userId,
+								)
+								console.log(this.members)
+								this.message.add({
+									severity: "success",
+									summary: "YEET!",
+									detail: `${member.username} has been removed from this category`,
+								})
+							},
+							(err) => {
+								console.error(err)
+								this.message.add({
+									severity: "error",
+									summary: "Something went wrong",
+									detail: `${member.username} could not be removed from this category`,
+								})
+							},
+						)
 				},
 			})
 		}
@@ -212,14 +248,24 @@ export class GroupCategoryComponent implements OnInit {
 			message:
 				"Are you sure you want to delete this category? This is NOT reversible",
 			accept: () => {
-				this.categoryService.deleteCategory(this.categoryId)
-				this.isSettingsDialogVisible = false
-				this.router.navigate(["/home"])
-				this.message.add({
-					severity: "success",
-					summary: "Poof!",
-					detail: "Category deleted successfully",
-				})
+				this.categoryService.deleteCategory(this.categoryId).subscribe(
+					(response) => {
+						this.isSettingsDialogVisible = false
+						this.router.navigate(["/home"])
+						this.message.add({
+							severity: "success",
+							summary: "YEET!",
+							detail: "Category has been deleted",
+						})
+					},
+					(error) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Oops Something went wrong",
+						})
+					},
+				)
 			},
 		})
 	}

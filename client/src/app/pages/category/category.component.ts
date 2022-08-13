@@ -87,15 +87,12 @@ export class CategoryComponent implements OnInit {
 
 	onEdit() {
 		this.categoryService
-			.editCategory({
-				_id: this.categoryId,
-				creatorId: this.user._id,
-				name: this.categorySettingsForm.value.categoryName,
-				type: this.category?.type!,
-			})
-			.subscribe((category) => {
-				this.categoryId = category._id
-				this.category = category
+			.updateCategory(
+				this.categoryId,
+				this.categorySettingsForm.value.categoryName,
+			)
+			.subscribe((res) => {
+				this.category!.name = res.name
 				this.isSettingsDialogVisible = false
 				this.message.add({
 					severity: "success",
@@ -111,15 +108,24 @@ export class CategoryComponent implements OnInit {
 			message:
 				"Are you sure you want to delete this category? This is NOT reversible",
 			accept: () => {
-				this.categoryService.deleteCategory(this.categoryId)
-				this.isSettingsDialogVisible = false
-				this.router.navigate(["/home"])
-
-				this.message.add({
-					severity: "success",
-					summary: "Poof!",
-					detail: "Category deleted successfully",
-				})
+				this.categoryService.deleteCategory(this.categoryId).subscribe(
+					(response) => {
+						this.isSettingsDialogVisible = false
+						this.router.navigate(["/home"])
+						this.message.add({
+							severity: "success",
+							summary: "YEET!",
+							detail: "Category has been deleted",
+						})
+					},
+					(error) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Oops Something went wrong",
+						})
+					},
+				)
 			},
 		})
 	}

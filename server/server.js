@@ -15,6 +15,7 @@ app.route("/user/register").post(userController.createUser)
 app.route("/user/login").post(userController.authenticateUser)
 app.route("/user/check").post(userController.checkIfUserExists)
 
+app.route("/user/all").get(userController.getAllUsers)
 app.route("/user/:id").get(userController.getUserById)
 app.route("/user/:id/update").put(userController.updateUser)
 app.route("/user/:id/update/password").put(userController.updatePassword)
@@ -23,6 +24,9 @@ app.route("/user/:id/delete").delete(userController.deleteUser)
 app.route("/category/user/:id").get(categoryController.getCategoriesByUserId)
 app.route("/category/:id").get(categoryController.getCategoryById)
 app.route("/category/add").post(categoryController.addCategory)
+app.route("/category/:id/addMember").put(categoryController.addMemberToCategory)
+app.route("/category/:id/removeMember/:userId").delete(categoryController.removeMemberFromCategory)
+app.route("/category/:id/update").put(categoryController.updateCategory)
 app.route("/category/:id/delete").delete(categoryController.deleteCategory)
 
 const port = 3001

@@ -82,7 +82,6 @@ export class NavbarComponent implements OnInit {
 		this.categoryService
 			.addCategory(
 				this.user._id,
-				this.user.username,
 				this.addCategoryForm.value.categoryName,
 				categoryType,
 			)
