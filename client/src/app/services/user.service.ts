@@ -23,7 +23,7 @@ export class UserService {
 	getIsLoggedIn() {
 		if (localStorage.getItem("userId")) {
 			this.isLoggedIn = true
-			
+
 			return true
 		} else if (!this.isLoggedIn) {
 			return false
@@ -31,8 +31,8 @@ export class UserService {
 		return this.isLoggedIn
 	}
 
-	getUserType(): UserType {
-		return this.currentUser!.type
+	getUserFromLocalStorage(): Observable<User> {
+		return this.getUserById(localStorage.getItem("userId")!)
 	}
 
 	// Fix this then do category

@@ -1,3 +1,4 @@
+import { CurrencyPipe } from "@angular/common"
 import { Injectable } from "@angular/core"
 import {
 	ActivatedRouteSnapshot,
@@ -30,21 +31,39 @@ export class AuthGuard implements CanActivate {
 		| UrlTree {
 		const permission = route.data["permission"]
 
-		if (
-			this.userService.getIsLoggedIn() &&
-			permission.only.includes(this.userService.getUserType())
-		) {
-			return true
-		} else {
-			this.message.add({
-				severity: "error",
-				summary: "You do not have permission to access this page",
-				detail: "Please upgrade your account to Pro or Pro+ via the profile page to access this page",
-				closable: false,
-				life: 5000,
-			})
-			this.router.navigate(["/404"])
-			return false
-		}
+		return new Promise(async (resolve, reject) => {
+			if (
+				this.userService.getIsLoggedIn()
+			) {
+				this.userService.getUserFromLocalStorage().subscribe(
+					(user) => {
+						if (permission.only.includes(user.type)){
+							resolve(true)
+						} else {
+							this.message.add({
+								severity: "error",
+								summary:
+									"You do not have permission to access this page",
+								detail: "Please upgrade your account to Pro or Pro+ via the profile page to access this page",
+								closable: false,
+								life: 5000,
+							})
+							this.router.navigate(["/404"])
+							resolve(false)
+						}
+					}
+				)
+			} else {
+				this.message.add({
+					severity: "error",
+					summary: "You do not have permission to access this page",
+					detail: "Please upgrade your account to Pro or Pro+ via the profile page to access this page",
+					closable: false,
+					life: 5000,
+				})
+				this.router.navigate(["/404"])
+				resolve(false)
+			}
+		})
 	}
 }
