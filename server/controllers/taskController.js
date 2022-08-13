@@ -123,11 +123,14 @@ function addSubTask(req, res) {
     const dueDate = req.body.dueDate
     const priority = req.body.priority
 
+    const subTaskId = new ObjectID()
+
     db.collection("tasks").updateOne(
         { _id: new ObjectID(taskId) },
         {
             $push: {
                 subTask: {
+                    _id: subTaskId,
                     creatorId: new ObjectID(creatorId),
                     name: name,
                     dueDate: new Date(dueDate),
@@ -141,7 +144,7 @@ function addSubTask(req, res) {
                 res.status(500).send(err)
             } else {
                 res.status(200).send({
-                    _id: result.insertedId,
+                    _id: subTaskId,
                     creatorId: new ObjectID(creatorId),
                     name: name,
                     dueDate: new Date(dueDate),
@@ -168,53 +171,91 @@ function updateTask(req, res) {
                 priority: priority,
             },
         },
-		(err, result) => {
-			if (err) {
-				res.status(500).send(err)
-			} else {
-				res.status(200).send({
-					_id: taskId,
-					name: name,
-					dueDate: new Date(dueDate),
-					priority: priority,
-				})
-			}
-		}
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send({
+                    _id: taskId,
+                    name: name,
+                    dueDate: new Date(dueDate),
+                    priority: priority,
+                })
+            }
+        },
     )
 }
 
 function updateSubTask(req, res) {
-	const taskId = req.params.id
-	const subTaskId = req.params.subTaskId
-	const name = req.body.name
-	const dueDate = req.body.dueDate
-	const priority = req.body.priority
+    const taskId = req.params.id
+    const subTaskId = req.params.subTaskId
+    const name = req.body.name
+    const dueDate = req.body.dueDate
+    const priority = req.body.priority
 
-	db.collection("tasks").updateOne(
-		{
-			_id: new ObjectID(taskId),
-			subTask: { $elemMatch: { _id: new ObjectID(subTaskId) } },
-		},
-		{
-			$set: {
-				"subTask.$.name": name,
-				"subTask.$.dueDate": new Date(dueDate),
-				"subTask.$.priority": priority,
-			},
-		},
-		(err, result) => {
-			if (err) {
-				res.status(500).send(err)
-			} else {
-				res.status(200).send({
-					_id: subTaskId,
-					name: name,
-					dueDate: new Date(dueDate),
-					priority: priority,
-				})
-			}
-		},
-	)
+    db.collection("tasks").updateOne(
+        {
+            _id: new ObjectID(taskId),
+            subTask: { $elemMatch: { _id: new ObjectID(subTaskId) } },
+        },
+        {
+            $set: {
+                "subTask.$.name": name,
+                "subTask.$.dueDate": new Date(dueDate),
+                "subTask.$.priority": priority,
+            },
+        },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send({
+                    _id: subTaskId,
+                    name: name,
+                    dueDate: new Date(dueDate),
+                    priority: priority,
+                })
+            }
+        },
+    )
+}
+
+function deleteTask(req, res) {
+    const taskId = req.params.id
+
+    db.collection("tasks").deleteOne(
+        { _id: new ObjectID(taskId) },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send(result)
+            }
+        },
+    )
+}
+
+function deleteSubTask(req, res) {
+    const taskId = req.params.id
+    const subTaskId = req.params.subTaskId
+
+    db.collection("tasks").updateOne(
+        { _id: new ObjectID(taskId) },
+        {
+            $pull: {
+                subTask: {
+                    _id: new ObjectID(subTaskId),
+                },
+            },
+        },
+        (err, result) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.status(200).send(result)
+            }
+        },
+    )
 }
 
 module.exports = {
@@ -224,6 +265,8 @@ module.exports = {
     setSubTaskCompleteState,
     addTask,
     addSubTask,
-	updateTask,
-	updateSubTask,
+    updateTask,
+    updateSubTask,
+    deleteTask,
+    deleteSubTask,
 }

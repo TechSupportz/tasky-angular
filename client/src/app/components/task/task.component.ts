@@ -34,6 +34,7 @@ export class TaskComponent implements OnInit {
 	isEditTaskDialogVisible: boolean = false
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	editTaskForm: FormGroup
+	isSubTaskDeleted: boolean = false
 
 	constructor(
 		private taskService: TaskService,
@@ -50,6 +51,8 @@ export class TaskComponent implements OnInit {
 			taskDueDate: [this.task.dueDate, Validators.required],
 			taskPriority: [this.task.priority, Validators.required],
 		})
+
+		console.log(this.task)
 
 		this.isTaskCompleted = this.task.isCompleted
 
@@ -177,19 +180,27 @@ export class TaskComponent implements OnInit {
 
 	deleteTask() {
 		if (this.isSubTask) {
-			console.log("what?")
 			this.confirmationService.confirm({
 				header: "Delete Subtask",
 				message:
 					"Are you sure that you want to delete this subtask? This is NOT reversible",
 				accept: () => {
-					this.taskService.deleteSubTask(this.parentId, this.task._id)
-					this.editTaskForm.reset()
-					this.isEditTaskDialogVisible = false
-					this.message.add({
-						severity: "success",
-						summary: "Out of sight, out of mind... right?",
-						detail: "Subtask deleted successfully",
+					console.log(this.task._id)
+					this.taskService.deleteSubTask(this.parentId, this.task._id).subscribe((res) => {
+						this.editTaskForm.reset()
+						this.isEditTaskDialogVisible = false
+						this.isSubTaskDeleted = true
+						this.message.add({
+							severity: "success",
+							summary: "Out of sight, out of mind... right?",
+							detail: "Subtask deleted successfully",
+						})
+					}, (err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Error deleting subtask",
+						})
 					})
 				},
 			})
@@ -199,17 +210,27 @@ export class TaskComponent implements OnInit {
 				message:
 					"Are you sure that you want to delete this task? THIS WILL DELETE ALL SUBTASKS!",
 				accept: () => {
-					this.taskService.deleteTask(this.parentId)
-					this.editTaskForm.reset()
-					this.isEditTaskDialogVisible = false
-					setTimeout(() => {
-						this.isDeleted.emit(true)
-					}, 150)
-					this.message.add({
-						severity: "success",
-						summary: "Out of sight, out of mind... right?",
-						detail: "Task deleted successfully",
-					})
+					this.taskService.deleteTask(this.parentId).subscribe(
+						(res) => {
+							this.editTaskForm.reset()
+							this.isEditTaskDialogVisible = false
+							setTimeout(() => {
+								this.isDeleted.emit(true)
+							}, 150)
+							this.message.add({
+								severity: "success",
+								summary: "Out of sight, out of mind... right?",
+								detail: "Task deleted successfully",
+							})
+						},
+						(err) => {
+							this.message.add({
+								severity: "error",
+								summary: "Error",
+								detail: "Error deleting task",
+							})
+						},
+					)
 				},
 			})
 		}

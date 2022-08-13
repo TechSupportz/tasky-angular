@@ -159,23 +159,11 @@ export class TaskService {
 		})
 	}
 
-	deleteTask(id: string): void {
-		const index = taskList.findIndex((t) => t._id == id)
-		taskList.splice(index, 1)
+	deleteTask(id: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/task/${id}/delete`)
 	}
 
-	deleteTaskByCategoryId(categoryId: string): void {
-		taskList.forEach((task) => {
-			if (task.categoryId == categoryId) {
-				const index = taskList.findIndex((t) => t._id == task._id)
-				taskList.splice(index, 1)
-			}
-		})
-	}
-
-	deleteSubTask(taskId: string, subTaskId: string): void {
-		const task = taskList.find((t) => t._id == taskId)
-		const index = task!.subTask.findIndex((t) => t._id == subTaskId)
-		task!.subTask.splice(index, 1)
+	deleteSubTask(taskId: string, subTaskId: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/task/${taskId}/subTask/${subTaskId}/delete`)
 	}
 }

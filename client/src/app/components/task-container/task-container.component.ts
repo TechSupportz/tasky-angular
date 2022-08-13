@@ -89,13 +89,23 @@ export class TaskContainerComponent implements OnInit {
 			message:
 				"Are you sure you want to delete this task? This is NOT reversible",
 			accept: () => {
-				this.taskService.deleteTask(this.task._id)
-				this.isDeleted = true
-				this.message.add({
-					severity: "success",
-					summary: "Into the trash it goes!",
-					detail: "Task deleted successfully",
-				})
+				this.taskService.deleteTask(this.task._id).subscribe(
+					(res) => {
+						this.isDeleted = true
+						this.message.add({
+							severity: "success",
+							summary: "Into the trash it goes!",
+							detail: "Task deleted successfully",
+						})
+					},
+					(err) => {
+						this.message.add({
+							severity: "error",
+							summary: "Error",
+							detail: "Something went wrong",
+						})
+					},
+				)
 			},
 		})
 	}

@@ -246,7 +246,8 @@ export class GroupCategoryComponent implements OnInit {
 		this.confirmationService.confirm({
 			header: "Delete category",
 			message:
-				"Are you sure you want to delete this category? This is NOT reversible",
+				"Are you sure you want to delete this category? ALL TASKS WILL BE PERMANENTLY DELETED. This is NOT reversible",
+
 			accept: () => {
 				this.categoryService.deleteCategory(this.categoryId).subscribe(
 					(response) => {

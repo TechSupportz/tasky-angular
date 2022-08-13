@@ -197,12 +197,19 @@ function deleteCategory(req, res) {
             if (err) {
                 res.status(500).send(err)
             } else {
-                res.status(200).send(result)
+                db.collection("tasks").deleteMany(
+                    { categoryId: new ObjectID(categoryId) },
+                    (err, result) => {
+                        if (err) {
+                            res.status(500).send(err)
+                        } else {
+                            res.status(200).send(result)
+                        }
+                    },
+                )
             }
         },
     )
-
-    // delete all tasks in that category also
 }
 
 module.exports = {

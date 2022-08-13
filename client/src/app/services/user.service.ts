@@ -21,6 +21,13 @@ export class UserService {
 	constructor(private http: HttpClient, private router: Router) {}
 
 	getIsLoggedIn() {
+		if (localStorage.getItem("userId")) {
+			this.isLoggedIn = true
+			
+			return true
+		} else if (!this.isLoggedIn) {
+			return false
+		}
 		return this.isLoggedIn
 	}
 
