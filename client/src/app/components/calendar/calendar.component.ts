@@ -74,7 +74,6 @@ export class CalendarComponent implements OnChanges {
 		const _eventTaskList = tasks.map((task) => ({
 			title: task.name,
 			date: task.dueDate.split("T")[0],
-			url: `/category/${task.categoryId}`,
 			color:
 				task.priority === "Low"
 					? "green"
@@ -87,7 +86,6 @@ export class CalendarComponent implements OnChanges {
 			task.subTask.map((subTask) => ({
 				title: subTask.name,
 				date: subTask.dueDate.split("T")[0],
-				url: `/category/${task.categoryId}`,
 				color:
 					subTask.priority === "Low"
 						? "green"
@@ -97,10 +95,5 @@ export class CalendarComponent implements OnChanges {
 			})),
 		)
 		this.calendarOptions.events = _eventTaskList.concat(_eventSubTaskList)
-	}
-
-	eventClick(info: any): void {
-		info.jsEvent.preventDefault()
-		this.router.navigate(["/category/1"])
 	}
 }

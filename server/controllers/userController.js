@@ -221,9 +221,48 @@ function deleteUser(req, res) {
             { _id: new ObjectID(userId) },
             (err, user) => {
                 if (user) {
-                    res.status(200).send({
-                        username: user.username,
-                    })
+                    // res.status(200).send({
+                    //     username: user.username,
+                    // })
+                    db.collection("categories").deleteMany(
+                        { creatorId: new ObjectID(userId) },
+                        (err, result) => {
+                            if (err) {
+                                res.status(500).send(err)
+                            } else {
+                                db.collection("tasks").deleteMany(
+                                    { creatorId: new ObjectID(userId) },
+                                    (err, result) => {
+                                        if (err) {
+                                            res.status(500).send(err)
+                                        } else {
+                                            db.collection(
+                                                "bookmarks",
+                                            ).deleteMany(
+                                                {
+                                                    userId: new ObjectID(
+                                                        userId,
+                                                    ),
+                                                },
+                                                (err, result) => {
+                                                    if (err) {
+                                                        res.status(500).send(
+                                                            err,
+                                                        )
+                                                    } else {
+                                                        res.status(200).send({
+                                                            username:
+                                                                user.username,
+                                                        })
+                                                    }
+                                                },
+                                            )
+                                        }
+                                    },
+                                )
+                            }
+                        },
+                    )
                 } else if (err) {
                     res.status(500).send(err)
                 } else {

@@ -4,7 +4,12 @@ import { Category, CategoryType } from "src/app/models/category"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { UserService } from "src/app/services/user.service"
 import { User, UserType } from "src/app/models/user"
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router"
+import {
+	ActivatedRoute,
+	NavigationEnd,
+	Router,
+	RouterLink,
+} from "@angular/router"
 import { Subscription } from "rxjs"
 
 @Component({
@@ -48,8 +53,11 @@ export class NavbarComponent implements OnInit {
 					})
 
 				this.isDisabled =
-					this.user.type === UserType.FREE &&
-					this.categoryList.length >= 8
+					this.user.type === UserType.FREE
+						? this.categoryList.length >= 4
+						: this.user.type === UserType.PRO
+						? this.categoryList.length >= 6
+						: false
 			}
 		})
 
@@ -57,14 +65,6 @@ export class NavbarComponent implements OnInit {
 			categoryName: ["", Validators.required],
 			categoryType: [],
 		})
-	}
-
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes.categoryList) {
-			this.isDisabled =
-				this.user.type === UserType.FREE &&
-				this.categoryList.length >= 8
-		}
 	}
 
 	showAddDialog() {
@@ -85,7 +85,14 @@ export class NavbarComponent implements OnInit {
 				this.addCategoryForm.value.categoryName,
 				categoryType,
 			)
-			.subscribe((category) => this.categoryList.push(category))
+			.subscribe((category) => {
+				this.categoryList.push(category)
+				if (categoryType === CategoryType.INDIV) {
+					this.router.navigate(["/category", category._id])
+				} else {
+					this.router.navigate(["/group", category._id])
+				}
+			})
 		this.isAddDialogVisible = false
 		this.addCategoryForm.reset()
 	}
