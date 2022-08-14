@@ -22,6 +22,7 @@
 	<p-dialog
 		header="Edit Task"
 		[(visible)]="isEditTaskDialogVisible"
+		(visibleChange)="onDialogVisibleChange($event)"
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"

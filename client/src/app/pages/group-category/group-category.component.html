@@ -25,6 +25,7 @@
 
 			<div class="flex flex-column gap-3 p-1">
 				<app-task-container
+					(isEditing)="setIsEditing($event)"
 					*ngFor="let task of taskList"
 					[task]="task"
 				></app-task-container>

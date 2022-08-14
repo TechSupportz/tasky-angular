@@ -116,13 +116,20 @@ export class GroupCategoryComponent implements OnInit {
 		}
 	}
 
+	setIsEditing(isEditing: boolean) {
+		console.log(isEditing)
+		if (isEditing) {
+			this.timer.unsubscribe()
+		} else {
+			this.startTimer()
+		}
+	}
+
 	showAddMemberDialog() {
-		this.timer.unsubscribe()
 		this.isAddMemberDialogVisible = true
 	}
 
 	showAddTaskDialog() {
-		this.timer.unsubscribe()
 		this.isAddTaskDialogVisible = true
 	}
 
@@ -135,7 +142,6 @@ export class GroupCategoryComponent implements OnInit {
 			.subscribe((res) => {
 				this.category!.name = res.name
 				this.isSettingsDialogVisible = false
-				this.startTimer()
 				this.message.add({
 					severity: "success",
 					summary: "Updated!",
@@ -186,7 +192,6 @@ export class GroupCategoryComponent implements OnInit {
 								this.isAddMemberDialogVisible = false
 								this.isSettingsDialogVisible = false
 								this.newMemberUsername = ""
-								this.startTimer
 								this.message.add({
 									severity: "success",
 									summary: `${newMember.username} has joined the game`,
@@ -199,7 +204,6 @@ export class GroupCategoryComponent implements OnInit {
 							},
 							(err) => {
 								console.error(err)
-								this.startTimer
 								this.message.add({
 									severity: "error",
 									summary: "Something went wrong",

@@ -3,6 +3,7 @@
 		<app-task
 			(isDeleted)="setIsDelete($event)"
 			(isCompleted)="setIsCompleted($event)"
+			(isEditing)="setIsEditing($event)"
 			[task]="task"
 			[parentId]="task._id"
 			[isSubTask]="false"
@@ -40,6 +41,7 @@
 		<div class="flex flex-column gap-3 ml-5">
 			<app-task
 				*ngFor="let subTask of task.subTask"
+				(isEditing)="setIsEditing($event)"
 				[task]="subTask"
 				[parentId]="task._id"
 				[isSubTask]="true"
@@ -53,6 +55,7 @@
 	<p-dialog
 		header="Add Sub-Task"
 		[(visible)]="isAddSubTaskDialogVisible"
+		(visibleChange)="onIsAddSubTaskDialogVisibleChange($event)"
 		[modal]="true"
 		[draggable]="false"
 		[resizable]="false"

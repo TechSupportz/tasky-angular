@@ -5,6 +5,7 @@ import {
 	Output,
 	EventEmitter,
 	ChangeDetectorRef,
+	SimpleChanges,
 } from "@angular/core"
 import { SubTask, Tasks } from "src/app/models/task"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
@@ -27,6 +28,7 @@ export class TaskComponent implements OnInit {
 
 	@Output() isDeleted = new EventEmitter<boolean>()
 	@Output() isCompleted = new EventEmitter<boolean>()
+	@Output() isEditing = new EventEmitter<boolean>()
 
 	username: string
 	isGroupTask: boolean
@@ -52,7 +54,7 @@ export class TaskComponent implements OnInit {
 			taskPriority: [this.task.priority, Validators.required],
 		})
 
-		console.log(this.task)
+		// console.log(this.task)
 
 		this.isTaskCompleted = this.task.isCompleted
 
@@ -65,10 +67,16 @@ export class TaskComponent implements OnInit {
 			.subscribe((user) => (this.username = user.username))
 	}
 
+	onDialogVisibleChange(isVisible: boolean) {
+		console.log(isVisible)
+		this.isEditing.emit(isVisible)
+	}
+
 	showEditTaskDialog(e: Event) {
 		if (!this.isTaskCompleted) {
 			e.preventDefault()
 			this.isEditTaskDialogVisible = true
+			this.isEditing.emit(true)
 		}
 	}
 
@@ -133,6 +141,7 @@ export class TaskComponent implements OnInit {
 						this.task.dueDate = res.dueDate
 						this.task.priority = res.priority
 						this.isEditTaskDialogVisible = false
+						this.isEditing.emit(false)
 						this.message.add({
 							severity: "success",
 							summary: "Success",
@@ -161,6 +170,8 @@ export class TaskComponent implements OnInit {
 						this.task.dueDate = res.dueDate
 						this.task.priority = res.priority
 						this.isEditTaskDialogVisible = false
+						this.isEditing.emit(false)
+
 						this.message.add({
 							severity: "success",
 							summary: "Success",
@@ -186,22 +197,30 @@ export class TaskComponent implements OnInit {
 					"Are you sure that you want to delete this subtask? This is NOT reversible",
 				accept: () => {
 					console.log(this.task._id)
-					this.taskService.deleteSubTask(this.parentId, this.task._id).subscribe((res) => {
-						this.editTaskForm.reset()
-						this.isEditTaskDialogVisible = false
-						this.isSubTaskDeleted = true
-						this.message.add({
-							severity: "success",
-							summary: "Out of sight, out of mind... right?",
-							detail: "Subtask deleted successfully",
-						})
-					}, (err) => {
-						this.message.add({
-							severity: "error",
-							summary: "Error",
-							detail: "Error deleting subtask",
-						})
-					})
+					this.taskService
+						.deleteSubTask(this.parentId, this.task._id)
+						.subscribe(
+							(res) => {
+								this.editTaskForm.reset()
+								this.isEditTaskDialogVisible = false
+								this.isEditing.emit(false)
+
+								this.isSubTaskDeleted = true
+								this.message.add({
+									severity: "success",
+									summary:
+										"Out of sight, out of mind... right?",
+									detail: "Subtask deleted successfully",
+								})
+							},
+							(err) => {
+								this.message.add({
+									severity: "error",
+									summary: "Error",
+									detail: "Error deleting subtask",
+								})
+							},
+						)
 				},
 			})
 		} else {
@@ -214,6 +233,7 @@ export class TaskComponent implements OnInit {
 						(res) => {
 							this.editTaskForm.reset()
 							this.isEditTaskDialogVisible = false
+							this.isEditing.emit(false)
 							setTimeout(() => {
 								this.isDeleted.emit(true)
 							}, 150)

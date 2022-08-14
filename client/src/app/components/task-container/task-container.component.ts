@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core"
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { Router } from "@angular/router"
 import { ConfirmationService, MessageService } from "primeng/api"
@@ -15,6 +15,8 @@ import { User } from "src/app/models/user"
 export class TaskContainerComponent implements OnInit {
 	@Input() isHomePage: boolean = false
 	@Input() task: Tasks
+
+	@Output() isEditing = new EventEmitter<boolean>()
 
 	user: User
 	isAddSubTaskDialogVisible: boolean = false
@@ -50,6 +52,7 @@ export class TaskContainerComponent implements OnInit {
 
 	showAddSubTaskDialog(): void {
 		this.isAddSubTaskDialogVisible = true
+		this.setIsEditing(true)
 	}
 
 	addSubTask(): void {
@@ -65,6 +68,7 @@ export class TaskContainerComponent implements OnInit {
 				(res) => {
 					this.task.subTask.push(res)
 					this.isAddSubTaskDialogVisible = false
+					this.setIsEditing(false)
 					this.addSubTaskForm.reset()
 					this.message.add({
 						severity: "success",
@@ -92,6 +96,7 @@ export class TaskContainerComponent implements OnInit {
 				this.taskService.deleteTask(this.task._id).subscribe(
 					(res) => {
 						this.isDeleted = true
+						this.setIsEditing(false)
 						this.message.add({
 							severity: "success",
 							summary: "Into the trash it goes!",
@@ -116,6 +121,17 @@ export class TaskContainerComponent implements OnInit {
 
 	setIsCompleted(isCompleted: boolean): void {
 		this.isCompleted = isCompleted
+	}
+
+	setIsEditing(isEditing: boolean): void {
+		console.log(isEditing)
+		this.isEditing.emit(isEditing)
+	}
+
+	onIsAddSubTaskDialogVisibleChange(
+		isAddSubTaskDialogVisible: boolean,
+	): void {
+		this.setIsEditing(isAddSubTaskDialogVisible)
 	}
 
 	undoTaskCompletion(): void {
