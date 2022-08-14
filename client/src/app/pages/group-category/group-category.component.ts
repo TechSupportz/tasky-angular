@@ -53,6 +53,7 @@ export class GroupCategoryComponent implements OnInit {
 		})
 
 		this.fetchGroupData()
+		this.initializeWhiteboard()
 	}
 
 	startTimer() {
@@ -109,7 +110,7 @@ export class GroupCategoryComponent implements OnInit {
 		let pixel = new Comet({
 			room: "ce6439e5-d84a-42e0-8ee0-f254ae6eda29",
 			key: "Y9nfehnLjZuJg65UIThwtx5DETDB8X11IAlkuiJM",
-			name: this.user.username,
+			name: "hello",
 		})
 	}
 
