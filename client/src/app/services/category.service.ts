@@ -42,12 +42,16 @@ export class CategoryService {
 		})
 	}
 
-	addMember(categoryId: string, userId: string, username: string): Observable<any> {
+	addMember(
+		categoryId: string,
+		userId: string,
+		username: string,
+	): Observable<any> {
 		return this.http.put(
 			`${APIConfig.BASE_URL}/category/${categoryId}/addMember`,
 			{
 				userId: userId,
-				username:username,
+				username: username,
 			},
 		)
 	}
@@ -68,7 +72,9 @@ export class CategoryService {
 	public readonly notifyDeleteCategory$: Observable<number> =
 		new Subject<number>()
 
-	deleteCategory(id: string): Observable<any> {
-		return this.http.delete(`${APIConfig.BASE_URL}/category/${id}/delete`)
+	deleteCategory(id: string, boardId?: string): Observable<any> {
+		return this.http.delete(`${APIConfig.BASE_URL}/category/${id}/delete`, {
+			body: boardId ? { boardId: boardId } : null,
+		})
 	}
 }
