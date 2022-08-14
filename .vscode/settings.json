@@ -1,3 +1,14 @@
 {
-	"cSpell.words": ["bson", "dismissable", "INDIV", "primeflex", "primeicons", "primeng", "Tasky"]
+	"cSpell.words": [
+		"bson",
+		"dismissable",
+		"INDIV",
+		"PIXELPAPER",
+		"primeflex",
+		"primeicons",
+		"primeng",
+		"Tasky"
+	],
+	"appService.defaultWebAppToDeploy": "/subscriptions/259dd386-c263-4d1a-a437-66d208537572/microsoft.web/sites/subscriptions/259dd386-c263-4d1a-a437-66d208537572/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/tasky-node",
+	"appService.deploySubpath": "server"
 }

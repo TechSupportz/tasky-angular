@@ -4,6 +4,7 @@ export interface Category {
 	creatorId: string
 	name: string
 	type: CategoryType
+	boardId?: string
 	members?: CategoryMember[]
 }
 
