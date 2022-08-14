@@ -1,5 +1,6 @@
 const db = require("../dbConnections")
 const { ObjectID } = require("bson")
+const { default: axios } = require("axios")
 
 function getCategoriesByUserId(req, res) {
     const userId = req.params.id
@@ -37,6 +38,7 @@ function getCategoryById(req, res) {
                         creatorId: category.creatorId,
                         name: category.name,
                         type: category.type,
+                        boardId: category.boardId,
                         members: category.members,
                     })
                 } else {
@@ -52,16 +54,28 @@ function getCategoryById(req, res) {
     )
 }
 
-function addCategory(req, res) {
+async function addCategory(req, res) {
     const categoryType = req.body.type
-
     try {
         if (categoryType === "GRP") {
-            var category = {
-                creatorId: new ObjectID(req.body.creatorId),
-                name: req.body.name,
-                type: categoryType,
-                members: [],
+            const boardRes = await axios
+                .post("https://hq.pixelpaper.io/api/board", null, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${process.env.PIXELPAPER_API_KEY}`,
+                    },
+                })
+              
+            if(boardRes.status === 201) {
+                var category = {
+                    creatorId: new ObjectID(req.body.creatorId),
+                    name: req.body.name,
+                    type: categoryType,
+                    boardId: boardRes.data.room_id,
+                    members: [],
+                }
+            } else {
+                res.status(500).send("Error creating pixel board")
             }
         } else {
             var category = {
@@ -82,6 +96,7 @@ function addCategory(req, res) {
                         creatorId: category.creatorId,
                         name: category.name,
                         type: category.type,
+                        boardId: category.boardId,
                         members: category.members,
                     })
                 } else {
@@ -188,6 +203,7 @@ function removeMemberFromCategory(req, res) {
 
 function deleteCategory(req, res) {
     const categoryId = req.params.id
+    const boardId = req.body.boardId
     console.log(categoryId)
 
     db.collection("categories").deleteOne(
@@ -196,6 +212,12 @@ function deleteCategory(req, res) {
             if (err) {
                 res.status(500).send(err)
             } else {
+                axios.delete(`https://hq.pixelpaper.io/api/board/${boardId}`, {
+                    headers: {
+                        Accept: "application/json",
+                        Authorization: `Bearer ${process.env.PIXELPAPER_API_KEY}`,
+                    },
+                })
                 db.collection("tasks").deleteMany(
                     { categoryId: new ObjectID(categoryId) },
                     (err, result) => {
