@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, OnInit, SimpleChange, SimpleChanges } from "@angular/core"
 import { ActivatedRoute, Router } from "@angular/router"
 import { Category, CategoryMember } from "src/app/models/category"
 import { Tasks } from "src/app/models/task"
@@ -30,6 +30,7 @@ export class GroupCategoryComponent implements OnInit {
 	addTaskForm: FormGroup
 	priorityOptions: string[] = ["High", "Medium", "Low"]
 	timer: Subscription
+	pixel: any
 	private routeSubscription: Subscription
 
 	constructor(
@@ -51,23 +52,20 @@ export class GroupCategoryComponent implements OnInit {
 			taskDueDate: ["", Validators.required],
 			taskPriority: ["", Validators.required],
 		})
-
-		this.fetchGroupData()
-		this.initializeWhiteboard()
+		this.fetchGroupData(false)
 	}
 
 	startTimer() {
 		this.timer = interval(5000).subscribe(() => {
 			console.log("refreshing")
-			this.fetchGroupData()
+			this.fetchGroupData(true)
 		})
 	}
 
-	fetchGroupData() {
+	fetchGroupData(refresh: boolean) {
 		this.routeSubscription = this.route.params.subscribe((params) => {
 			console.log(params)
 			this.categoryId = params["id"]
-
 			this.categoryService
 				.getCategoryById(this.categoryId)
 				.subscribe((category) => {
@@ -87,13 +85,26 @@ export class GroupCategoryComponent implements OnInit {
 								(member) => member.userId !== user._id,
 							)
 						}
+
+						if (!refresh) {
+							if (this.pixel) {
+								this.pixel.disconnect()
+							}
+
+							console.log(category.boardId, user.username)
+
+							this.initializeWhiteboard(
+								this.category?.boardId!,
+								user.username,
+							)
+						}
 					})
 
 					this.taskService
 						.getTaskByCategoryId(this.categoryId)
 						.subscribe((tasks) => {
 							this.taskList = tasks
-							console.log(tasks)
+							// console.log(tasks)
 						})
 
 					this.categorySettingsForm = this.fb.group({
@@ -106,12 +117,16 @@ export class GroupCategoryComponent implements OnInit {
 		})
 	}
 
-	initializeWhiteboard() {
-		let pixel = new Comet({
-			room: "ce6439e5-d84a-42e0-8ee0-f254ae6eda29",
+	initializeWhiteboard(roomId: string, username: string) {
+		this.pixel = new Comet({
+			room: roomId,
 			key: "Y9nfehnLjZuJg65UIThwtx5DETDB8X11IAlkuiJM",
-			name: "hello",
+			name: username,
 		})
+	}
+
+	disconnectWhiteboard(pixel: any) {
+		pixel.disconnect()
 	}
 
 	showSettingsDialog() {

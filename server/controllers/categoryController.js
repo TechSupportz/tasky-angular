@@ -38,6 +38,7 @@ function getCategoryById(req, res) {
                         creatorId: category.creatorId,
                         name: category.name,
                         type: category.type,
+                        boardId: category.boardId,
                         members: category.members,
                     })
                 } else {
