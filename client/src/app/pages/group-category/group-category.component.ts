@@ -9,6 +9,7 @@ import { ConfirmationService, MessageService } from "primeng/api"
 import { FormBuilder, FormGroup, Validators } from "@angular/forms"
 import { UserService } from "src/app/services/user.service"
 import { User, UserType } from "src/app/models/user"
+declare let Comet: any
 
 @Component({
 	selector: "app-group-category",
@@ -101,6 +102,14 @@ export class GroupCategoryComponent implements OnInit {
 						],
 					})
 				})
+		})
+	}
+
+	initializeWhiteboard() {
+		let pixel = new Comet({
+			room: "ce6439e5-d84a-42e0-8ee0-f254ae6eda29",
+			key: "Y9nfehnLjZuJg65UIThwtx5DETDB8X11IAlkuiJM",
+			name: this.user.username,
 		})
 	}
 
